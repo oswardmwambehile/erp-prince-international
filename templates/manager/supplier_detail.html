@@ -1,0 +1,597 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<!-- MAIN -->
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <!-- TOP -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-6">
+
+        <!-- LEFT -->
+        <div>
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-14 h-14 rounded-2xl border border-gray-300
+                            flex items-center justify-center bg-white">
+
+                    <i class="fa fa-building text-2xl text-gray-700"></i>
+
+                </div>
+
+                <div>
+
+                    <h1 class="text-2xl font-semibold text-gray-800">
+                        {{ supplier.company_name }}
+                    </h1>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        {{ supplier.contact_person|default:"No contact person" }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="flex flex-wrap items-center gap-3">
+
+            <!-- EDIT -->
+            <a href="{% url 'supplier_update' supplier.id %}"
+               class="inline-flex items-center gap-2 px-5 py-3
+                      border border-gray-300 rounded-xl
+                      hover:bg-gray-100 transition text-sm font-medium">
+
+                <i class="fa fa-pen"></i>
+
+                Edit Supplier
+
+            </a>
+
+            <!-- DELETE -->
+            <a href="{% url 'supplier_delete' supplier.id %}"
+               onclick="return confirm('Delete supplier?')"
+               class="inline-flex items-center gap-2 px-5 py-3
+                      bg-red-600 hover:bg-red-700
+                      text-white rounded-xl transition text-sm font-medium">
+
+                <i class="fa fa-trash"></i>
+
+                Delete
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- STATUS + CODE -->
+    <div class="flex flex-wrap items-center gap-3 mb-6">
+
+        <!-- CODE -->
+        <div class="px-4 py-2 rounded-xl border border-gray-300 bg-white">
+
+            <span class="text-xs text-gray-500 block">
+                Supplier Code
+            </span>
+
+            <span class="font-semibold text-gray-800">
+                {{ supplier.supplier_code }}
+            </span>
+
+        </div>
+
+        <!-- STATUS -->
+        <div class="px-4 py-2 rounded-xl border bg-white
+            {% if supplier.is_active %}
+                border-green-300
+            {% else %}
+                border-red-300
+            {% endif %}
+        ">
+
+            <span class="text-xs text-gray-500 block">
+                Status
+            </span>
+
+            {% if supplier.is_active %}
+
+                <span class="font-semibold text-green-700">
+                    Active
+                </span>
+
+            {% else %}
+
+                <span class="font-semibold text-red-700">
+                    Inactive
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- GRID -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+        <!-- LEFT -->
+        <div class="xl:col-span-2 space-y-6">
+
+            <!-- BASIC INFO -->
+            <div class="border border-gray-300 rounded-2xl bg-white overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="px-6 py-5 border-b border-gray-200">
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Supplier Information
+                    </h2>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="p-6">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- COMPANY -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Company Name
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.company_name }}
+                            </h3>
+
+                        </div>
+
+                        <!-- CONTACT -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Contact Person
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.contact_person|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- PHONE -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Phone Number
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.phone|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- ALT PHONE -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Alternative Phone
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.alternative_phone|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- EMAIL -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Email Address
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.email|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- WEBSITE -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Website
+                            </p>
+
+                            {% if supplier.website %}
+
+                                <a href="{{ supplier.website }}"
+                                   target="_blank"
+                                   class="font-medium text-blue-600 hover:underline mt-1 inline-block">
+
+                                    {{ supplier.website }}
+
+                                </a>
+
+                            {% else %}
+
+                                <h3 class="font-medium text-gray-800 mt-1">
+                                    -
+                                </h3>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- CREATED -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Created At
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.created_at }}
+                            </h3>
+
+                        </div>
+
+                        <!-- UPDATED -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Last Updated
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.updated_at }}
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TAX -->
+            <div class="border border-gray-300 rounded-2xl bg-white overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="px-6 py-5 border-b border-gray-200">
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Tax Information
+                    </h2>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="p-6">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- TIN -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                TIN Number
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.tin_number|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- VRN -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                VRN Number
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.vrn_number|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ADDRESS -->
+            <div class="border border-gray-300 rounded-2xl bg-white overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="px-6 py-5 border-b border-gray-200">
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Address Information
+                    </h2>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="p-6">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- COUNTRY -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Country
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.country|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- REGION -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                Region
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.region|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- DISTRICT -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                District
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.district|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                        <!-- CITY -->
+                        <div>
+
+                            <p class="text-sm text-gray-500">
+                                City
+                            </p>
+
+                            <h3 class="font-medium text-gray-800 mt-1">
+                                {{ supplier.city|default:"-" }}
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ADDRESS -->
+                    <div class="mt-6">
+
+                        <p class="text-sm text-gray-500">
+                            Full Address
+                        </p>
+
+                        <div class="mt-2 p-4 rounded-xl border border-gray-200 bg-gray-50 text-gray-700">
+
+                            {{ supplier.address|default:"No address available" }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="space-y-6">
+
+            <!-- BANK -->
+            <div class="border border-gray-300 rounded-2xl bg-white overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="px-6 py-5 border-b border-gray-200">
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Banking Information
+                    </h2>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="p-6 space-y-5">
+
+                    <!-- BANK NAME -->
+                    <div>
+
+                        <p class="text-sm text-gray-500">
+                            Bank Name
+                        </p>
+
+                        <h3 class="font-medium text-gray-800 mt-1">
+                            {{ supplier.bank_name|default:"-" }}
+                        </h3>
+
+                    </div>
+
+                    <!-- ACCOUNT -->
+                    <div>
+
+                        <p class="text-sm text-gray-500">
+                            Account Number
+                        </p>
+
+                        <h3 class="font-medium text-gray-800 mt-1">
+                            {{ supplier.bank_account_number|default:"-" }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- NOTES -->
+            <div class="border border-gray-300 rounded-2xl bg-white overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="px-6 py-5 border-b border-gray-200">
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Notes
+                    </h2>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="p-6">
+
+                    {% if supplier.notes %}
+
+                        <div class="text-gray-700 leading-relaxed whitespace-pre-line">
+
+                            {{ supplier.notes }}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="text-gray-400 text-sm">
+                            No notes available
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="border border-gray-300 rounded-2xl bg-white overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="px-6 py-5 border-b border-gray-200">
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Supplier Summary
+                    </h2>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="p-6 space-y-5">
+
+                    <!-- STATUS -->
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-gray-500 text-sm">
+                            Status
+                        </span>
+
+                        {% if supplier.is_active %}
+
+                            <span class="font-medium text-green-700">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="font-medium text-red-700">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-gray-500 text-sm">
+                            Email
+                        </span>
+
+                        <span class="font-medium text-gray-800">
+
+                            {% if supplier.email %}
+                                Available
+                            {% else %}
+                                Missing
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                    <!-- WEBSITE -->
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-gray-500 text-sm">
+                            Website
+                        </span>
+
+                        <span class="font-medium text-gray-800">
+
+                            {% if supplier.website %}
+                                Available
+                            {% else %}
+                                Missing
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                    <!-- PHONE -->
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-gray-500 text-sm">
+                            Phone
+                        </span>
+
+                        <span class="font-medium text-gray-800">
+
+                            {% if supplier.phone %}
+                                Available
+                            {% else %}
+                                Missing
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

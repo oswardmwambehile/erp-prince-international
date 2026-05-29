@@ -1,0 +1,606 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+{% include 'sales/nav.html' %}
+{% include 'sales/sidebar.html' %}
+
+<div class="sm:ml-64 pt-20 px-6 pb-10  min-h-screen">
+
+    <!-- ACTION -->
+    <div class="flex items-center gap-3 mb-6">
+
+        <a href="{% url 'quotations:quotation_pdf' quotation.id %}"
+           class="bg-green-700 text-white px-6 py-3 rounded-xl shadow hover:bg-green-800 transition font-semibold">
+            Generate performa invoice
+        </a>
+
+    </div>
+
+<div class="max-w-7xl mx-auto">
+    <!-- ================= TAGLINE ================= -->
+    
+<!-- ================= LOGOS (OUTSIDE BOX) ================= -->
+<div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+    width:100%;
+">
+
+    <!-- LEFT LOGO -->
+    <div style="width:140px; text-align:left;">
+        
+    </div>
+
+    <!-- CENTER LOGO -->
+    <div style="width:140px; text-align:center;">
+        <img src="{% static 'img/logo.png' %}" style="height:95px; object-fit:contain;">
+    </div>
+
+    <!-- RIGHT LOGO -->
+    <div style="width:140px; text-align:right;">
+        <img src="{% static 'img/logo1.PNG' %}" style="height:85px; object-fit:contain;">
+    </div>
+
+</div>
+<br><br>
+<!-- ================= HEADER BOX ================= -->
+<div style="
+    font-family:'Times New Roman', serif;
+    color:#111;
+    border:2px solid #000;
+    padding:18px;
+    margin-bottom:18px;
+    font-style:italic;
+">
+
+    <!-- ================= COMPANY TITLE (VERY BLACK + VERY BOLD) ================= -->
+    <div style="
+        text-align:center;
+        font-size:28px;
+        font-weight:900;
+        font-style:italic;
+        color:#000;
+        letter-spacing:1px;
+        text-transform:uppercase;
+        margin-bottom:8px;
+    ">
+        CIVIL & BUILDING CONTRACTOR <br> 
+        EXPERTS FENESTRATION ENGINEERING TECHNOLOGY
+    </div>
+
+    <!-- ================= SERVICES (FULL CLEAN PROFESSIONAL) ================= -->
+<!-- ================= SERVICES (FULL CLEAN PROFESSIONAL) ================= -->
+<div style="
+    font-family:'Times New Roman', serif;
+    font-style:italic;
+    font-size:18.5px;
+    line-height:1.5;
+    text-align:justify;
+    text-align-last:center;
+    max-width:900px;
+    margin:0 auto;
+    padding:0 10px;
+">
+    Pi dealers: supply & fix: aluminium, upvc & frameless glass works, balustrades, sensor windows & doors,
+    kitchen & wardrobe cabinets, skylight structure, steel structure, pergola structure, prefabricated containers,
+    welding, swimming pool, skimming/paint, electric fences, CCTV camera, elevator works, carpentry & roofing works.
+</div>
+
+    <!-- ================= CONTACT ================= -->
+    <div style="
+        text-align:center;
+        font-size:17.5px;
+        line-height:1.5;
+        font-style:italic;
+        border-top:1px solid #000;
+        padding-top:10px;
+    ">
+      <span style="font-weight: bold;"> We are Conviniently Located @: HQ: Mwenge Cocacola Road | Branch Office Mbezi Beach Jogoo Opp Interchick | Tegeta Azania | Zanzibar |</span><br> 
+        P.O.Box 14491 Dar Es Salaam, Tanzania |
+        <span style="color: #c8932e;">Email: info@princeinternational.co.tz |
+        Web: www.princeinternational.co.tz |</span>
+        Tel: +255 712 328 862
+    </div>
+
+</div>
+
+<!-- ================= INVOICE TITLE + META ================= -->
+<div style="font-family: Arial, Helvetica, sans-serif; margin:15px 0; border-bottom:2px solid #000; padding-bottom:10px;">
+
+   <!-- TITLE -->
+<div style="
+    text-align:center;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:3px;
+    font-family:'Times New Roman', serif;
+    color:#c8932e;
+    margin:12px 0 8px 0;
+">
+    INVOICE
+</div>
+
+  <!-- ================= INVOICE 3-COLUMN ROW ================= -->
+<div style="display:flex; justify-content:space-between; align-items:flex-start; font-family:'Times New Roman', serif; margin-top:10px;">
+
+    <!-- LEFT: QUOTATION NO -->
+    <div style="width:33%; text-align:left; color:#c8932e;">
+
+        
+
+        <div style="margin-top:6px; font-size:20px; font-weight:900; color:#c8932e;">
+            {{ quotation.quotation_no }}
+        </div>
+
+    </div>
+
+    <!-- CENTER: TIN NO -->
+    <div style="width:33%; text-align:center; color:#c8932e;">
+
+        
+
+        <div style="margin-top:6px; font-size:20px; font-weight:900;">
+            TIN NO:-119-708-125
+        </div>
+
+    </div>
+
+    <!-- RIGHT: DATE + TIME -->
+    <div style="width:33%; text-align:right; font-family:'Times New Roman', serif;">
+
+        
+        <div style="margin-top:6px; font-size:18px; font-weight:900;">
+            {{ quotation.quotation_date }}
+        </div>
+
+        <div style="font-size:16px; font-weight:900; margin-top:4px;">
+            TIME: {{ quotation.created_at|date:"H:i" }} EST
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<hr>
+
+
+<!-- ================= INVOICE META ================= -->
+<div style="display:flex; justify-content:space-between; font-family:'Times New Roman', serif; text-transform:uppercase; margin-top:10px; font-size:14px; line-height:1.8;">
+
+    <!-- LEFT: ISSUER DETAILS -->
+    <div style="width:48%;">
+        <div style="font-weight:900; font-size:20px; color: #c8932e;">
+           address Details
+        </div>
+
+
+        <div style="font-weight:900; font-size:15px;">
+            CREATED BY: {{ request.user.get_full_name|default_if_none:request.user }}
+        </div>
+
+        <div style="font-weight:700;">
+            P.O.BOX, DODOMA
+        </div>
+
+        <div style="font-weight:700;">
+            MOBILE: +255 …………….
+        </div>
+
+       
+
+    </div>
+
+    <!-- RIGHT: CUSTOMER DETAILS -->
+    <div style="width:48%; text-align:right;">
+        <div style="font-weight:900; font-size:20px; color: #c8932e;">
+           customer details
+        </div>
+
+        <div style="font-weight:900; font-size:15px;">
+        name :    {{ quotation.customer.full_name }}
+        </div>
+
+       
+
+        <div style="font-weight:700;">
+           Project location : {{ quotation.project_location }}
+        </div>
+
+        <div style="font-weight:900; margin-top:5px;">
+            PHONE: {{ quotation.customer.phone|default:"N/A" }}
+        </div>
+
+    </div>
+
+</div>
+
+<div style="border-top:1px solid #000; margin:18px 0;"></div>
+
+<!-- ================= PROFORMA ACCEPTANCE ================= -->
+<div style="
+    font-family:'Times New Roman', serif;
+    font-size:19px;
+    font-weight:700;
+    text-transform: lowercase;
+    max-width:900px;
+    line-height:1.8;
+">
+
+    PLEASE ACCEPT OUR PROFORMA INVOICE AS FOLLOWS:
+
+</div>
+
+<!-- ================= SECTION I: PURPOSE ================= -->
+<div style="
+    font-family:'Times New Roman', serif;
+    font-size:16px;
+    line-height:2;
+    margin:10px auto;
+    max-width:900px;
+    font-weight:700;
+    text-align:center;
+">
+
+    <span>SECTION I:- PURPOSE:</span> <br>
+    PROFORMA INVOICE FOR
+
+    <span style="text-transform:uppercase; font-weight:900;">
+        {{ products_list }}
+    </span>
+
+    
+
+    TRANSPORTATION AND INSTALLATION <br> INVOLVED PLUS COMMISSIONING OF PRODUCTS AND SERVICES FOR USE ONLY.
+
+</div>
+
+
+        <!-- ============================= -->
+        <!-- MAIN TABLE -->
+        <!-- ============================= -->
+ <div class="overflow-x-auto border border-gray-300 rounded-2xl shadow-sm bg-white">
+
+<table class="w-full text-base border-collapse">
+
+    <thead class="bg-gray-100 text-gray-800">
+
+        <!-- MAIN HEADER -->
+        <tr class="border-b border-gray-300">
+
+            <th class="p-4 text-left border-r" rowspan="2">S/NO</th>
+            <th class="p-4 text-left border-r" rowspan="2">Methodology</th>
+
+            <!-- TYPE -->
+            <th class="p-4 text-center border-r" colspan="2">Type</th>
+
+            <!-- SIZE -->
+            <th class="p-4 text-center border-r" colspan="2">Size (MM)</th>
+
+            <th class="p-4 text-center border-r" rowspan="2">Qty</th>
+            <th class="p-4 text-center border-r" rowspan="2">m²</th>
+            <th class="p-4 text-center border-r" rowspan="2">Total m²</th>
+            <th class="p-4 text-right border-r" rowspan="2">Unit Price (Tshs)</th>
+            <th class="p-4 text-right border-r" rowspan="2">Total Price (Tshs)</th>
+
+            <!-- CTS -->
+            <th class="p-4 text-right" rowspan="2">CTS</th>
+
+        </tr>
+
+        <!-- SUB HEADER -->
+        <tr class="border-b border-gray-300 bg-gray-50">
+
+            <th class="p-4 text-center border-r">Aluminium</th>
+            <th class="p-4 text-center border-r">Glass</th>
+
+            <th class="p-4 text-center border-r">Width</th>
+            <th class="p-4 text-center border-r">Height</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for group in grouped_data %}
+
+            {% for item in group.items %}
+
+            <tr class="border-b border-gray-200 hover:bg-gray-50">
+
+                <td class="p-4 border-r font-semibold text-gray-700">
+                    {{ item.item_code }}
+                </td>
+
+                <td class="p-4 border-r">
+                     {{ item.product.name }}
+                </td>
+
+                <!-- TYPE -->
+                <td class="p-4 text-center border-r">
+                    {{ item.aluminium_profile|default:"-" }}
+                </td>
+
+                <td class="p-4 text-center border-r">
+                    {{ item.glass|default:"-" }}
+                </td>
+
+                <!-- SIZE -->
+                <td class="p-4 text-center border-r">
+                    {{ item.width|floatformat:0 }}
+                </td>
+
+                <td class="p-4 text-center border-r">
+                    {{ item.height|floatformat:0 }}
+                </td>
+
+                <td class="p-4 text-center border-r">
+                    {{ item.quantity }}
+                </td>
+
+                <td class="p-4 text-center border-r">
+                    {{ item.sqm|floatformat:2 }}
+                </td>
+
+                <td class="p-4 text-center border-r font-semibold">
+                    {{ item.total_sqm|floatformat:2 }}
+                </td>
+
+                <td class="p-4 text-right border-r">
+                    {{ item.unit_price|floatformat:0|intcomma }}
+                </td>
+
+                <td class="p-4 text-right font-semibold border-r">
+                    {{ item.total_price|floatformat:0|intcomma }}
+                </td>
+
+                <!-- CTS -->
+                <td class="p-4 text-right font-semibold">
+                    {{ item.cts|default:0.00 }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            <!-- SUBTOTAL ROW -->
+            <tr class="bg-[#c8932e] border-b-2 border-gray-300 font-bold">
+
+                <td colspan="6" class="p-4 text-right border-r text-gray-800">
+                    Subtotal for {{ group.product_name }}
+                </td>
+
+                <td class="p-4 text-center border-r">
+                    {{ group.subtotal_qty }}
+                </td>
+
+                <td class="p-4 text-center border-r">
+                    {{ group.subtotal_sqm|floatformat:2 }}
+                </td>
+
+                <td class="p-4 text-center border-r">
+                    {{ group.subtotal_total_sqm|floatformat:2 }}
+                </td>
+
+                <td class="p-4 text-right border-r">
+                    {{ group.subtotal_unit_price|floatformat:0|intcomma }}
+                </td>
+
+                <td class="p-4 text-right border-r">
+                    {{ group.subtotal_total_price|floatformat:0|intcomma }}
+                </td>
+
+                <!-- CTS SUBTOTAL -->
+                <td class="p-4 text-right bg-[#c8932e] text-indigo-900 text-lg">
+                    {{ group.subtotal_cts|default:0 }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+        </div>
+
+       <!-- ============================= -->
+<!-- BOQ SUMMARY -->
+<div class="mt-12 bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
+
+    <div class="mb-8">
+
+        <h2 class="text-3xl font-bold text-gray-800">
+            BOQ SUMMARY
+        </h2>
+
+        
+
+    </div>
+
+    <div class="overflow-x-auto">
+
+<table class="w-full text-base border-collapse border border-gray-300">
+
+    <thead class="bg-gray-100">
+
+        <tr class="border-b border-gray-300">
+
+            <!-- DESCRIPTION -->
+            <th class="p-4 border-r text-left font-bold">
+              
+            </th>
+
+            <!-- EMPTY COLUMNS -->
+            <th class="p-4 border-r text-center text-gray-300"></th>
+            <th class="p-4 border-r text-center text-gray-300"></th>
+            <th class="p-4 border-r text-center text-gray-300"></th>
+            <th class="p-4 border-r text-center text-gray-300"></th>
+            <th class="p-4 border-r text-center text-gray-300"></th>
+
+            <!-- VALUES -->
+            <th class="p-4 border-r text-center font-bold">
+                
+            </th>
+
+            <th class="p-4 border-r text-center font-bold">
+                
+            </th>
+
+            <th class="p-4 border-r text-center font-bold">
+                
+            </th>
+
+            <th class="p-4 border-r text-right font-bold">
+            
+            </th>
+
+            <th class="p-4 text-right font-bold">
+                
+            </th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for row in summary_rows %}
+
+        <tr class="border-b border-gray-200 hover:bg-gray-50">
+
+            <!-- DESCRIPTION -->
+            <td class="p-4 font-semibold border-r uppercase">
+                {{ row.label }}
+            </td>
+
+            <!-- EMPTY COLUMNS -->
+            <td class="p-4 border-r text-center text-gray-300">—</td>
+            <td class="p-4 border-r text-center text-gray-300">—</td>
+            <td class="p-4 border-r text-center text-gray-300">—</td>
+            <td class="p-4 border-r text-center text-gray-300">—</td>
+            <td class="p-4 border-r text-center text-gray-300">—</td>
+
+            <!-- DATA -->
+            <td class="p-4 text-center border-r">
+                {{ row.qty }}
+            </td>
+
+            <td class="p-4 text-center border-r">
+                {{ row.sqm|floatformat:2 }}
+            </td>
+
+            <td class="p-4 text-center border-r">
+                {{ row.total_sqm|floatformat:2 }}
+            </td>
+
+            <td class="p-4 text-right border-r">
+                {{ row.unit_price|floatformat:0|intcomma }}
+            </td>
+
+            <td class="p-4 text-right font-bold bg-[#c8932e] text-black">
+                {{ row.value|floatformat:0|intcomma }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        <!-- SUBTOTAL -->
+        <tr class="bg-[#c8932e] font-bold text-lg">
+
+            <td class="p-5 text-right border-r font-bold uppercase">
+                SUBTOTAL
+            </td>
+
+            <!-- 5 EMPTY COLUMNS -->
+            <td class="p-5 border-r"></td>
+            <td class="p-5 border-r"></td>
+            <td class="p-5 border-r"></td>
+            <td class="p-5 border-r"></td>
+            <td class="p-5 border-r"></td>
+
+            <!-- TOTALS -->
+            <td class="p-5 text-center border-r">
+                {{ total_qty }}
+            </td>
+
+            <td class="p-5 text-center border-r">
+                {{ total_sqm|floatformat:2 }}
+            </td>
+
+            <td class="p-5 text-center border-r">
+                {{ total_total_sqm|floatformat:2 }}
+            </td>
+
+            <td class="p-5 text-right border-r">
+                {{ total_unit_price|floatformat:0|intcomma }}
+            </td>
+
+            <td class="p-5 text-right font-bold text-gray-900">
+                {{ total_subtotal|floatformat:0|intcomma }} TZS
+            </td>
+
+        </tr>
+
+        <!-- DISCOUNT -->
+        <tr class="bg-red-50 font-semibold text-lg">
+
+            <td colspan="10" class="p-5 text-right border-r text-red-700 uppercase">
+                DISCOUNT
+            </td>
+
+            <td class="p-5 text-right text-red-700 font-bold">
+                {{ quotation.discount_amount|floatformat:0|intcomma }}
+            </td>
+
+        </tr>
+
+        <!-- VAT -->
+        <tr class="bg-green-50 font-semibold text-lg">
+
+            <td colspan="10" class="p-5 text-right border-r text-green-700 uppercase">
+                VAT ({{ quotation.vat_percentage }}%)
+            </td>
+
+            <td class="p-5 text-right text-green-700 font-bold">
+                {{ vat_amount|floatformat:0|intcomma }}
+            </td>
+
+        </tr>
+
+        <!-- FINAL TOTAL -->
+        <tr class="bg-gray-900 text-white font-bold text-2xl">
+
+            <td colspan="10" class="p-6 text-right border-r uppercase">
+                FINAL GRAND TOTAL
+            </td>
+
+            <td class="p-6 text-right bg-gray-900 text-white">
+                {{ grand_total|floatformat:0|intcomma }} TZS
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+    </div>
+
+</div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,274 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- PAGE CARD -->
+        <div class="border border-gray-300 rounded-2xl overflow-hidden">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-300 px-8 py-6">
+
+                <div class="flex items-center justify-between flex-wrap gap-4">
+
+                    <div>
+
+                        <h1 class="text-2xl font-semibold text-gray-800">
+                            Add Quotation Item
+                        </h1>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Add BOQ line item to quotation
+                        </p>
+
+                    </div>
+
+                    <div class="text-right">
+
+                        <p class="text-sm text-gray-500">
+                            Quotation Number
+                        </p>
+
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            {{ quotation.quotation_no }}
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FORM -->
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                <!-- ITEM INFORMATION -->
+                <div class="mb-10">
+
+                    <h2 class="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-3 mb-6">
+                        Item Information
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- PRODUCT -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Product
+                            </label>
+
+                            {{ form.product }}
+
+                            {% if form.product.errors %}
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ form.product.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                        <!-- ITEM CODE -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Item Code
+                            </label>
+
+                            {{ form.item_code }}
+
+                            {% if form.item_code.errors %}
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ form.item_code.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                        <!-- ITEM TYPE -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Item Type
+                            </label>
+
+                            {{ form.item_type }}
+
+                            {% if form.item_type.errors %}
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ form.item_type.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                        <!-- METHODOLOGY -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Methodology
+                            </label>
+
+                            {{ form.methodology }}
+
+                        </div>
+
+                        <!-- ALUMINIUM PROFILE -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Aluminium Profile
+                            </label>
+
+                            {{ form.aluminium_profile }}
+
+                        </div>
+
+                        <!-- GLASS TYPE -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Glass Type
+                            </label>
+
+                            {{ form.glass_type }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DIMENSIONS -->
+                <div class="mb-10">
+
+                    <h2 class="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-3 mb-6">
+                        Measurements & Pricing
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                        <!-- WIDTH -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Width (MM)
+                            </label>
+
+                            {{ form.width }}
+
+                        </div>
+
+                        <!-- HEIGHT -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Height (MM)
+                            </label>
+
+                            {{ form.height }}
+
+                        </div>
+
+                        <!-- QUANTITY -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Quantity
+                            </label>
+
+                            {{ form.quantity }}
+
+                        </div>
+
+                        <!-- UNIT PRICE -->
+                        <div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Unit Price (TZS)
+                            </label>
+
+                            {{ form.unit_price }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- REMARKS -->
+                <div class="mb-10">
+
+                    <h2 class="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-3 mb-6">
+                        Additional Remarks
+                    </h2>
+
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Remarks
+                        </label>
+
+                        {{ form.remarks }}
+
+                    </div>
+
+                </div>
+
+                <!-- AUTO CALCULATION INFO -->
+                <div class="border border-blue-200 rounded-xl p-5 mb-8">
+
+                    <h3 class="font-semibold text-gray-800 mb-2">
+                        Auto Calculation
+                    </h3>
+
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        The system automatically calculates:
+                    </p>
+
+                    <ul class="text-sm text-gray-700 mt-2 space-y-1 list-disc list-inside">
+                        <li>Square Meter (m²)</li>
+                        <li>Total Square Meter</li>
+                        <li>Total Item Price</li>
+                        <li>Quotation Grand Total</li>
+                        <li>18% VAT Calculation</li>
+                    </ul>
+
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="flex flex-wrap items-center gap-4 border-t border-gray-300 pt-6">
+
+                    <button type="submit"
+                        class="px-8 py-3 border border-gray-800 text-gray-800 rounded-xl hover:bg-gray-100 transition">
+
+                        Save Item
+
+                    </button>
+
+                    <a href="{% url 'quotation_detail' quotation.id %}"
+                        class="px-8 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition">
+
+                        Back to Quotation
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

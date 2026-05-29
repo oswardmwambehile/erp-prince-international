@@ -1,0 +1,347 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen  pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-6xl mx-auto">
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-200 px-8 py-6">
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Create Expense
+                </h1>
+
+                
+
+            </div>
+
+            <!-- FORM -->
+            <form method="POST"
+                  enctype="multipart/form-data"
+                  class="p-8">
+
+                {% csrf_token %}
+
+                <div class="space-y-6">
+
+                    <!-- CATEGORY -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Expense Category
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="flex-1">
+                                    {{ expense_form.category }}
+                                </div>
+
+                                <!-- GREEN ADD BUTTON -->
+                                <button
+                                    type="button"
+                                    onclick="openCategoryModal()"
+                                    class="w-11 h-11 flex items-center justify-center rounded-xl bg-green-600 hover:bg-green-700 text-white text-2xl font-bold transition">
+
+                                    +
+
+                                </button>
+
+                            </div>
+
+                            {% if expense_form.category.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ expense_form.category.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- TITLE -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Expense Title
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ expense_form.title }}
+
+                            {% if expense_form.title.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ expense_form.title.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Description
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ expense_form.description }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- AMOUNT -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Amount
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ expense_form.amount }}
+
+                            {% if expense_form.amount.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ expense_form.amount.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- EXPENSE DATE -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Expense Date
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ expense_form.expense_date }}
+
+                            {% if expense_form.expense_date.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ expense_form.expense_date.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- ATTACHMENT -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Attachment
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ expense_form.attachment }}
+
+                            {% if expense_form.attachment.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ expense_form.attachment.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="mt-10 pt-6 border-t border-gray-200 flex items-center gap-4">
+
+                    <button type="submit"
+                            class="px-6 py-3 bg-green-700 hover:bg-green-800 text-white rounded-xl transition">
+
+                        Save Expense
+
+                    </button>
+
+                    <a href="#"
+                       class="px-6 py-3 bg-red-800 border border-red-800 hover:bg-red-800 text-white rounded-xl transition">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CATEGORY MODAL -->
+<div id="categoryModal"
+     class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden">
+
+        <!-- MODAL HEADER -->
+        <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+
+            <h2 class="text-xl font-semibold text-gray-800">
+                Add Expense Category
+            </h2>
+
+            <button type="button"
+                    onclick="closeCategoryModal()"
+                    class="text-gray-500 hover:text-black text-xl">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <!-- MODAL FORM -->
+        <form method="POST" class="p-6">
+
+            {% csrf_token %}
+
+            <input type="hidden"
+                   name="save_category"
+                   value="1">
+
+            <div class="space-y-5">
+
+                <!-- COMPANY -->
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Company
+                    </label>
+
+                    {{ category_form.company }}
+
+                </div>
+
+                <!-- CATEGORY NAME -->
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Category Name
+                    </label>
+
+                    {{ category_form.name }}
+
+                    {% if category_form.name.errors %}
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ category_form.name.errors.0 }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+                <!-- CATEGORY CODE -->
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Category Code
+                    </label>
+
+                    {{ category_form.code }}
+
+                    {% if category_form.code.errors %}
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ category_form.code.errors.0 }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Description
+                    </label>
+
+                    {{ category_form.description }}
+
+                </div>
+
+                <!-- ACTIVE -->
+                <div class="flex items-center gap-3">
+
+                    {{ category_form.is_active }}
+
+                    <label class="text-sm text-gray-700">
+                        Active Category
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- MODAL BUTTONS -->
+            <div class="mt-8 flex justify-end gap-3">
+
+                <button type="button"
+                        onclick="closeCategoryModal()"
+                        class="px-5 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+
+                    Cancel
+
+                </button>
+
+                <button type="submit"
+                        class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl transition">
+
+                    Save Category
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+function openCategoryModal() {
+
+    document
+        .getElementById('categoryModal')
+        .classList.remove('hidden');
+}
+
+function closeCategoryModal() {
+
+    document
+        .getElementById('categoryModal')
+        .classList.add('hidden');
+}
+
+</script>
+
+{% endblock %}

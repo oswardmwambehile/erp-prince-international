@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
+
+    <h2 class="text-xl font-bold mb-4">Add Section</h2>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+            <label>Title</label>
+            {{ form.title }}
+        </div>
+
+        <div>
+            <label>Description</label>
+            {{ form.description }}
+        </div>
+
+        <div>
+            <label>Order</label>
+            {{ form.order }}
+        </div>
+
+        <button class="bg-blue-600 text-white w-full py-2 rounded">
+            Save Section
+        </button>
+    </form>
+
+</div>
+
+{% endblock %}

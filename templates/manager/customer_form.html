@@ -1,0 +1,336 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <!-- PAGE WRAPPER -->
+    <div class="w-full max-w-6xl">
+
+        <!-- CONTAINER -->
+        <div class="border border-gray-300 rounded-2xl overflow-hidden">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-300 px-8 py-5">
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+
+                    {% if customer %}
+                        Update Customer
+                    {% else %}
+                        Create Customer
+                    {% endif %}
+
+                </h1>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Customer information management
+                </p>
+
+            </div>
+
+            <!-- FORM -->
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                <!-- TABLE STYLE FORM -->
+                <div class="space-y-5">
+
+                    <!-- CUSTOMER TYPE -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Customer Type
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.customer_type }}
+
+                            {% if form.customer_type.errors %}
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ form.customer_type.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- FULL NAME -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Full Name
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.full_name }}
+                        </div>
+
+                    </div>
+
+                    <!-- COMPANY -->
+                    <div id="companyField" class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Company Name
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.company_name }}
+
+                            {% if form.company_name.errors %}
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ form.company_name.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- PHONE -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Phone Number
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.phone }}
+                        </div>
+
+                    </div>
+
+                    <!-- ALT PHONE -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Alternative Phone
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.alternative_phone }}
+                        </div>
+
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Email Address
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.email }}
+                        </div>
+
+                    </div>
+
+                    <!-- TIN -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            TIN Number
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.tin_number }}
+                        </div>
+
+                    </div>
+
+                    <!-- VRN -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            VRN Number
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.vrn_number }}
+                        </div>
+
+                    </div>
+
+                    <!-- ADDRESS -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Address
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.address }}
+                        </div>
+
+                    </div>
+
+                    <!-- COUNTRY -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Country
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.country }}
+                        </div>
+
+                    </div>
+
+                    <!-- REGION -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Region
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.region }}
+                        </div>
+
+                    </div>
+
+                    <!-- DISTRICT -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            District
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.district }}
+                        </div>
+
+                    </div>
+
+                    <!-- WARD -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Ward
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.ward }}
+                        </div>
+
+                    </div>
+
+                    <!-- CITY -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            City
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.city }}
+                        </div>
+
+                    </div>
+
+                    <!-- POSTAL -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Postal Code
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.postal_code }}
+                        </div>
+
+                    </div>
+
+                    <!-- NOTES -->
+                    <div class="grid grid-cols-12 items-start gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Notes
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.notes }}
+                        </div>
+
+                    </div>
+
+                    <!-- ACTIVE -->
+                    <div class="grid grid-cols-12 items-center gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700">
+                            Status
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9 flex items-center gap-3">
+
+                            {{ form.is_active }}
+
+                            <span class="text-sm text-gray-700">
+                                Active Customer
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="mt-10 flex items-center gap-4 border-t border-gray-300 pt-6">
+
+                    <button type="submit"
+                        class="px-6 py-3 bg-green-800 border border-green-800 text-white rounded-xl hover:bg-green-800 transition">
+
+                        Save Customer
+
+                    </button>
+
+                    <a href="{% url 'customer_list' %}"
+                        class="px-6 bg-red-800 py-3 border border-red-300 text-white rounded-xl hover:bg-red-800 transition">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    const customerType = document.getElementById("id_customer_type");
+    const companyField = document.getElementById("companyField");
+
+    function toggleCompanyField() {
+
+        if (customerType.value === "company") {
+            companyField.style.display = "grid";
+        } else {
+            companyField.style.display = "none";
+        }
+
+    }
+
+    toggleCompanyField();
+
+    customerType.addEventListener("change", toggleCompanyField);
+
+</script>
+
+{% endblock %}

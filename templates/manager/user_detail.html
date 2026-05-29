@@ -1,0 +1,358 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<div class="sm:ml-64 min-h-screen bg-gray-50 p-6 mt-16">
+
+    <!-- TOP CARD -->
+    <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
+
+        <!-- COVER -->
+        <div class="h-40 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600">
+        </div>
+
+        <!-- PROFILE -->
+        <div class="px-8 pb-8">
+
+            <!-- AVATAR -->
+            <div class="-mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+
+                <div class="flex items-end gap-5">
+
+                    <!-- IMAGE -->
+                    <div class="w-32 h-32 rounded-3xl bg-white p-1 shadow-lg">
+
+                        <div class="w-full h-full rounded-3xl bg-blue-100
+                                    flex items-center justify-center text-5xl text-blue-700 font-bold">
+
+                            {{ user.first_name|first }}{{ user.last_name|first }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- NAME -->
+                    <div class="pb-3">
+
+                        <h1 class="text-3xl font-bold text-gray-800">
+                            {{ user.first_name }} {{ user.last_name }}
+                        </h1>
+
+                        <p class="text-gray-500 mt-1">
+                            {{ user.position }}
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 mt-3">
+
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs">
+                                {{ user.company }}
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+                                {{ user.branch }}
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs">
+                                {{ user.department }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="flex gap-3">
+
+                    <a href="{% url 'user_view' %}"
+                       class="px-5 py-2.5 rounded-xl border bg-white hover:bg-gray-50 text-gray-700">
+
+                        <i class="fa fa-arrow-left"></i>
+                        Back
+                    </a>
+
+                    <button onclick="window.print()"
+                            class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white">
+
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+
+        <!-- LEFT -->
+        <div class="lg:col-span-1 space-y-6">
+
+            <!-- CONTACT -->
+            <div class="bg-white rounded-3xl shadow-sm border p-6">
+
+                <h2 class="text-lg font-semibold text-gray-800 mb-5">
+                    Contact Information
+                </h2>
+
+                <div class="space-y-5">
+
+                    <!-- EMAIL -->
+                    <div class="flex gap-4">
+
+                        <div class="w-11 h-11 rounded-xl bg-blue-100
+                                    text-blue-700 flex items-center justify-center">
+
+                            <i class="fa fa-envelope"></i>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-xs text-gray-400 uppercase">
+                                Email
+                            </p>
+
+                            <p class="text-gray-700 font-medium">
+                                {{ user.email }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- PHONE -->
+                    <div class="flex gap-4">
+
+                        <div class="w-11 h-11 rounded-xl bg-green-100
+                                    text-green-700 flex items-center justify-center">
+
+                            <i class="fa fa-phone"></i>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-xs text-gray-400 uppercase">
+                                Contact
+                            </p>
+
+                            <p class="text-gray-700 font-medium">
+                                {{ user.contact }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- DATE -->
+                    <div class="flex gap-4">
+
+                        <div class="w-11 h-11 rounded-xl bg-purple-100
+                                    text-purple-700 flex items-center justify-center">
+
+                            <i class="fa fa-calendar"></i>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-xs text-gray-400 uppercase">
+                                Joined
+                            </p>
+
+                            <p class="text-gray-700 font-medium">
+                                {{ user.date_joined }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACCOUNT -->
+            <div class="bg-white rounded-3xl shadow-sm border p-6">
+
+                <h2 class="text-lg font-semibold text-gray-800 mb-5">
+                    Account Status
+                </h2>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-gray-600">
+                            Active
+                        </span>
+
+                        {% if user.is_active %}
+                            <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+                                Active
+                            </span>
+                        {% else %}
+                            <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs">
+                                Disabled
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-gray-600">
+                            Staff
+                        </span>
+
+                        {% if user.is_staff %}
+                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs">
+                                Yes
+                            </span>
+                        {% else %}
+                            <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs">
+                                No
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-gray-600">
+                            Superuser
+                        </span>
+
+                        {% if user.is_superuser %}
+                            <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-xs">
+                                Yes
+                            </span>
+                        {% else %}
+                            <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs">
+                                No
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- ABOUT -->
+            <div class="bg-white rounded-3xl shadow-sm border p-6">
+
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    User Overview
+                </h2>
+
+                <p class="text-gray-600 leading-7">
+
+                    {{ user.first_name }} {{ user.last_name }}
+                    works as
+                    <strong>{{ user.position }}</strong>
+                    in the
+                    <strong>{{ user.department }}</strong>
+                    department at
+                    <strong>{{ user.company }}</strong>.
+
+                </p>
+
+            </div>
+
+            <!-- DETAILS -->
+            <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
+
+                <div class="p-6 border-b">
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Full Information
+                    </h2>
+
+                </div>
+
+                <div class="divide-y">
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">First Name</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.first_name }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">Last Name</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.last_name }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">Company</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.company }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">Branch</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.branch }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">Department</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.department }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">Position</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.position }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">Email</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.email }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 p-5">
+                        <span class="text-gray-500">Contact</span>
+                        <span class="font-medium text-gray-800">
+                            {{ user.contact }}
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

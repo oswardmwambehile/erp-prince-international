@@ -1,0 +1,582 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-24 px-3 sm:px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between">
+
+            <h1 class="text-1xl md:text-2xl text-gray-800">
+                {% if is_update %}
+                    Update Quotation
+                {% else %}
+                    Create Quotation
+                {% endif %}
+            </h1>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="space-y-6">
+
+            {% csrf_token %}
+
+            <!-- ERRORS -->
+            {% if quotation_form.errors or item_formset.errors or item_formset.non_form_errors %}
+            <div class="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-2xl">
+                Please fix the errors below.
+            </div>
+            {% endif %}
+
+            <!-- ===================================== -->
+            <!-- QUOTATION DETAILS -->
+            <!-- ===================================== -->
+            <div class="bg-white border border-gray-100 shadow-sm rounded-3xl p-4 md:p-6">
+
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        Quotation Details
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+                    {% for field in quotation_form %}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-600 mb-2">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.errors %}
+                        <p class="text-xs text-red-500 mt-1">
+                            {{ field.errors.0 }}
+                        </p>
+                        {% endif %}
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <!-- ===================================== -->
+            <!-- QUOTATION ITEMS -->
+            <!-- ===================================== -->
+            <div class="bg-white border border-gray-100 shadow-sm rounded-3xl p-4 md:p-6">
+
+                {{ item_formset.management_form }}
+
+                <!-- TITLE -->
+                <div class="mb-6">
+
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        Quotation Items
+                    </h2>
+
+                </div>
+
+                <!-- ITEMS CONTAINER -->
+                <div id="items-container" class="space-y-5">
+
+                    {% for form in item_formset %}
+                    <div class="item-form bg-gray-50 border border-gray-200 rounded-2xl p-4 md:p-5">
+
+                        <!-- HIDDEN FIELDS -->
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
+                        <!-- FORM GRID -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+
+                            <!-- PRODUCT -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Product
+                                </label>
+                                {{ form.product }}
+                            </div>
+
+                            <!-- CODE -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Item Code
+                                </label>
+                                {{ form.item_code }}
+                            </div>
+
+                            <!-- METHOD -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Methodology
+                                </label>
+                                {{ form.methodology }}
+                            </div>
+
+                            <!-- PROFILE -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Aluminium Profile
+                                </label>
+                                {{ form.aluminium_profile }}
+                            </div>
+
+                            <!-- GLASS -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Glass
+                                </label>
+                                {{ form.glass }}
+                            </div>
+
+                            <!-- WIDTH -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Width (MM)
+                                </label>
+                                {{ form.width }}
+                            </div>
+
+                            <!-- HEIGHT -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Height (MM)
+                                </label>
+                                {{ form.height }}
+                            </div>
+
+                            <!-- QTY -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Quantity
+                                </label>
+                                {{ form.quantity }}
+                            </div>
+
+                            <!-- SQM -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    SQM
+                                </label>
+                                {{ form.sqm }}
+                            </div>
+
+                            <!-- TOTAL SQM -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Total SQM
+                                </label>
+                                {{ form.total_sqm }}
+                            </div>
+
+                            <!-- UNIT PRICE -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Unit Price
+                                </label>
+                                {{ form.unit_price }}
+                            </div>
+
+                            <!-- TOTAL PRICE -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                                    Total Price
+                                </label>
+                                {{ form.total_price }}
+                            </div>
+
+                        </div>
+
+                        <!-- REMOVE -->
+                        <div class="mt-5 flex justify-end">
+
+                            {{ form.DELETE }}
+
+                            <button type="button"
+                                    onclick="removeItem(this)"
+                                    class="px-5 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-xl text-sm font-medium transition">
+
+                                Remove
+
+                            </button>
+
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <!-- ADD ITEM BUTTON -->
+                <div class="mt-6">
+
+                    <button type="button"
+                            onclick="addItem()"
+                            class="w-full md:w-auto px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-medium transition">
+
+                        + Add Item
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- SAVE -->
+            <div class="flex justify-end">
+
+                <button type="submit"
+                        class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl shadow-sm font-medium transition">
+
+                    Save Quotation
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- EMPTY FORM -->
+<!-- ===================================== -->
+<div id="empty-form" class="hidden">
+
+    <div class="item-form bg-gray-50 border border-gray-200 rounded-2xl p-4 md:p-5">
+
+        {% for hidden in item_formset.empty_form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Product
+                </label>
+                {{ item_formset.empty_form.product }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Item Code
+                </label>
+                {{ item_formset.empty_form.item_code }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Methodology
+                </label>
+                {{ item_formset.empty_form.methodology }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Aluminium Profile
+                </label>
+                {{ item_formset.empty_form.aluminium_profile }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Glass
+                </label>
+                {{ item_formset.empty_form.glass }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Width (MM)
+                </label>
+                {{ item_formset.empty_form.width }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Height (MM)
+                </label>
+                {{ item_formset.empty_form.height }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Quantity
+                </label>
+                {{ item_formset.empty_form.quantity }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    SQM
+                </label>
+                {{ item_formset.empty_form.sqm }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Total SQM
+                </label>
+                {{ item_formset.empty_form.total_sqm }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Unit Price
+                </label>
+                {{ item_formset.empty_form.unit_price }}
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">
+                    Total Price
+                </label>
+                {{ item_formset.empty_form.total_price }}
+            </div>
+
+        </div>
+
+        <!-- REMOVE -->
+        <div class="mt-5 flex justify-end">
+
+            <button type="button"
+                    onclick="removeItem(this)"
+                    class="px-5 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-xl text-sm font-medium transition">
+
+                Remove
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const container = document.getElementById("items-container");
+
+    const totalFormsInput = document.getElementById("id_items-TOTAL_FORMS");
+
+    let formIndex = parseInt(totalFormsInput.value);
+
+    // =====================================
+    // ROUND TOTAL SQM ONLY
+    // =====================================
+    function roundTotalSQM(value) {
+
+        value = parseFloat(value || 0);
+
+        let integerPart = Math.floor(value);
+
+        let decimalPart = value - integerPart;
+
+        // 3.5 => 4
+        // 3.6 => 4
+        if (decimalPart >= 0.5) {
+            return integerPart + 1;
+        }
+
+        // 3.2 => 3.2
+        return parseFloat(value.toFixed(1));
+    }
+
+    // =====================================
+    // CALCULATE ROW
+    // =====================================
+    function calculateRow(row) {
+
+        // INPUTS
+        const widthInput = row.querySelector("input[name$='-width']");
+        const heightInput = row.querySelector("input[name$='-height']");
+        const qtyInput = row.querySelector("input[name$='-quantity']");
+        const sqmInput = row.querySelector("input[name$='-sqm']");
+        const totalSQMInput = row.querySelector("input[name$='-total_sqm']");
+        const unitPriceInput = row.querySelector("input[name$='-unit_price']");
+        const totalPriceInput = row.querySelector("input[name$='-total_price']");
+
+        // VALUES
+        let width = parseFloat(widthInput?.value) || 0;
+        let height = parseFloat(heightInput?.value) || 0;
+
+        // DEFAULT QTY = 1
+        let qty = parseFloat(qtyInput?.value) || 1;
+
+        let unitPrice = parseFloat(unitPriceInput?.value) || 0;
+
+        // =====================================
+        // SQM = WIDTH × HEIGHT / 1000000
+        // =====================================
+        let sqm = (width * height) / 1000000;
+
+        sqm = parseFloat(sqm.toFixed(1));
+
+        // AUTO FILL SQM
+        if (sqmInput) {
+
+            sqmInput.value = sqm;
+
+        }
+
+        // =====================================
+        // TOTAL SQM = SQM × QTY
+        // =====================================
+        let totalSQM = sqm * qty;
+
+        totalSQM = roundTotalSQM(totalSQM);
+
+        // AUTO FILL TOTAL SQM
+        if (totalSQMInput) {
+
+            totalSQMInput.value = totalSQM;
+
+        }
+
+        // =====================================
+        // TOTAL PRICE = TOTAL SQM × UNIT PRICE
+        // =====================================
+        let totalPrice = totalSQM * unitPrice;
+
+        // AUTO FILL TOTAL PRICE
+        if (totalPriceInput) {
+
+            totalPriceInput.value = totalPrice.toFixed(2);
+
+        }
+
+    }
+
+    // =====================================
+    // BIND EVENTS
+    // =====================================
+    function bindEvents(row) {
+
+        const widthInput = row.querySelector("input[name$='-width']");
+        const heightInput = row.querySelector("input[name$='-height']");
+        const qtyInput = row.querySelector("input[name$='-quantity']");
+        const unitPriceInput = row.querySelector("input[name$='-unit_price']");
+
+        // WIDTH
+        if (widthInput) {
+
+            widthInput.addEventListener("input", function () {
+
+                calculateRow(row);
+
+            });
+
+        }
+
+        // HEIGHT
+        if (heightInput) {
+
+            heightInput.addEventListener("input", function () {
+
+                calculateRow(row);
+
+            });
+
+        }
+
+        // QUANTITY
+        if (qtyInput) {
+
+            qtyInput.addEventListener("input", function () {
+
+                calculateRow(row);
+
+            });
+
+        }
+
+        // UNIT PRICE
+        if (unitPriceInput) {
+
+            unitPriceInput.addEventListener("input", function () {
+
+                calculateRow(row);
+
+            });
+
+        }
+
+        // INITIAL CALCULATION
+        calculateRow(row);
+
+    }
+
+    // =====================================
+    // EXISTING ROWS
+    // =====================================
+    document.querySelectorAll(".item-form").forEach(function (row) {
+
+        bindEvents(row);
+
+    });
+
+    // =====================================
+    // ADD ITEM
+    // =====================================
+    window.addItem = function () {
+
+        let template = document.getElementById("empty-form").innerHTML;
+
+        template = template.replace(/__prefix__/g, formIndex);
+
+        container.insertAdjacentHTML("beforeend", template);
+
+        const newRow = container.lastElementChild;
+
+        bindEvents(newRow);
+
+        formIndex++;
+
+        totalFormsInput.value = formIndex;
+
+    };
+
+    // =====================================
+    // REMOVE ITEM
+    // =====================================
+    window.removeItem = function (button) {
+
+        const row = button.closest(".item-form");
+
+        const deleteInput = row.querySelector(
+            "input[type='checkbox'][name$='-DELETE']"
+        );
+
+        if (deleteInput) {
+
+            deleteInput.checked = true;
+
+            row.style.display = "none";
+
+        } else {
+
+            row.remove();
+
+        }
+
+    };
+
+});
+</script>
+
+{% endblock %}

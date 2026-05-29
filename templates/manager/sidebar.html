@@ -1,0 +1,412 @@
+<!-- FONT AWESOME -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- SIDEBAR -->
+<aside id="logo-sidebar"
+    class="fixed top-14 left-0 z-40 w-64 h-[calc(100vh-3.5rem)] bg-white border-r border-gray-200">
+
+    <!-- CONTENT -->
+    <div class="h-full px-4 pb-6 overflow-y-auto relative">
+
+        <!-- TITLE -->
+        <div class="mb-8 px-3 pt-4">
+
+            <h2 class="text-xs font-semibold tracking-widest text-gray-500 uppercase">
+                
+            </h2>
+
+        </div>
+
+        <!-- MENU -->
+        <ul class="space-y-2 font-medium">
+
+            <!-- DASHBOARD -->
+            <li>
+
+                <a href="{%url 'dashboard' %}"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
+
+                    <i class="fa-solid fa-chart-line text-base"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+            </li>
+
+            <!-- USERS -->
+            <li>
+
+                <a href="{%url 'customer_list' %}"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
+
+                    <i class="fa-solid fa-users text-base"></i>
+
+                    <span>Customers</span>
+
+                </a>
+
+            </li>
+           
+            <!-- USERS -->
+            <li>
+
+                <a href="{%url 'supplier_list' %}"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
+
+                    <i class="fa-solid fa-users text-base"></i>
+
+                    <span>Supplier</span>
+
+                </a>
+
+            </li>
+
+            <!-- COMPANY DIRECTORY -->
+            <li>
+
+                <!-- BUTTON -->
+                <button
+                    type="button"
+                    class="flex items-center justify-between w-full px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200"
+                    aria-controls="dropdown-example"
+                    data-collapse-toggle="dropdown-example">
+
+                    <div class="flex items-center gap-3">
+
+                        <i class="fa-solid fa-building text-base"></i>
+
+                        <span>Company Directory</span>
+
+                    </div>
+
+                    <!-- ARROW -->
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+
+                </button>
+
+                <!-- DROPDOWN -->
+                <ul id="dropdown-example" class="hidden py-2 pl-4 space-y-2">
+
+                    <!-- BRANCH -->
+                    <li>
+
+                        <a href="{% url 'branch_view' %}"
+                        class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                            <i class="fa-solid fa-code-branch text-sm"></i>
+
+                            Manage Branches
+
+                        </a>
+
+                    </li>
+
+                    <!-- DEPARTMENT -->
+                    <li>
+
+                        <a href="{% url 'department_view' %}"
+                        class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                            <i class="fa-solid fa-building-user text-sm"></i>
+
+                            Manage Departments
+
+                        </a>
+
+                    </li>
+
+                    <!-- POSITION -->
+                    <li>
+
+                        <a href="{% url 'position_view' %}"
+                        class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                            <i class="fa-solid fa-briefcase text-sm"></i>
+
+                            Manage Positions
+
+                        </a>
+
+                    </li>
+
+                    <!-- COMPANY -->
+                    <li>
+
+                        <a href="{% url 'company_view' %}"
+                        class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                            <i class="fa-solid fa-city text-sm"></i>
+
+                            Manage Companies
+
+                        </a>
+
+                    </li>
+
+                    <!-- USERS -->
+                    <li>
+
+                        <a href="{% url 'user_view' %}"
+                        class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-blue-600 transition">
+
+                            <i class="fa-solid fa-user-gear text-sm"></i>
+
+                            Manage Users
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </li>
+
+            <!-- ANALYTICS -->
+            <li>
+
+                <a href="{% url 'quotations:quotation_list' %}"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
+
+                    <i class="fa-solid fa-chart-pie text-base"></i>
+
+                    <span>Manage Quotation</span>
+
+                </a>
+
+            </li>
+            <!-- ANALYTICS -->
+            <li>
+
+                <a href="{% url 'expense_list' %}"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
+
+                    <i class="fa-solid fa-chart-pie text-base"></i>
+
+                    <span>Expenses</span>
+
+                </a>
+
+            </li>
+
+            <!-- INVENTORY -->
+<li>
+
+    <!-- BUTTON -->
+    <button
+        type="button"
+        class="flex items-center justify-between w-full px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200"
+        aria-controls="inventory-dropdown"
+        data-collapse-toggle="inventory-dropdown">
+
+        <div class="flex items-center gap-3">
+
+            <i class="fa-solid fa-boxes-stacked text-base"></i>
+
+            <span>Inventory</span>
+
+        </div>
+
+        <!-- ARROW -->
+        <i class="fa-solid fa-chevron-down text-xs"></i>
+
+    </button>
+
+    <!-- DROPDOWN -->
+    <ul id="inventory-dropdown" class="hidden py-2 pl-4 space-y-2">
+
+       
+        <!-- PRODUCTS -->
+        <li>
+
+            <a href="{% url 'product_list' %}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-box text-sm"></i>
+
+                Products
+
+            </a>
+
+        </li>
+
+        <!-- ADD PRODUCT -->
+        <li>
+
+            <a href="{% url 'product_create' %}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-plus text-sm"></i>
+
+                Add Product
+
+            </a>
+
+        </li>
+
+        <!-- CATEGORIES -->
+        <li>
+
+            <a href=""
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-layer-group text-sm"></i>
+
+                Categories
+
+            </a>
+
+        </li>
+
+        <!-- UNITS -->
+        <li>
+
+            <a href=""
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-ruler-combined text-sm"></i>
+
+                Units
+
+            </a>
+
+        </li>
+
+        <!-- WAREHOUSES -->
+        <li>
+
+            <a href="{%url 'warehouse_list'%}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-warehouse text-sm"></i>
+
+                Warehouses
+
+            </a>
+
+        </li>
+
+        <!-- CURRENT STOCK -->
+        <li>
+
+            <a href="{%url 'stock_list' %}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-cubes text-sm"></i>
+
+                Current Stock
+
+            </a>
+
+        </li>
+
+        <!-- STOCK IN -->
+        <li>
+
+            <a href="{%url 'stock_in'%}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-green-600 transition">
+
+                <i class="fa-solid fa-arrow-down text-sm"></i>
+
+                Stock In
+
+            </a>
+
+        </li>
+
+        <!-- STOCK OUT -->
+        <li>
+
+            <a href="{%url 'stock_out' %}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-red-600 transition">
+
+                <i class="fa-solid fa-arrow-up text-sm"></i>
+
+                Stock Out
+
+            </a>
+
+        </li>
+
+        <!-- STOCK TRANSFER -->
+        <li>
+
+            <a href="{%url 'stock_transfer'%}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-right-left text-sm"></i>
+
+                Stock Transfer
+
+            </a>
+
+        </li>
+
+        <!-- STOCK ADJUSTMENT -->
+        <li>
+
+            <a href="{%url 'stock_adjustment'%}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-yellow-600 transition">
+
+                <i class="fa-solid fa-sliders text-sm"></i>
+
+                Stock Adjustment
+
+            </a>
+
+        </li>
+
+        <!-- STOCK MOVEMENTS -->
+        <li>
+
+            <a href="{%url 'stock_movements' %}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-indigo-600 transition">
+
+                <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+
+                Stock Movements
+
+            </a>
+
+        </li>
+
+        <!-- LOW STOCK -->
+        <li>
+
+            <a href="{%url 'low_stock_list'%}"
+            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 rounded-xl hover:bg-gray-50 hover:text-orange-600 transition">
+
+                <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+
+                Low Stock Alerts
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</li>
+
+            <!-- SETTINGS -->
+            <li>
+
+                <a href="#"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
+
+                    <i class="fa-solid fa-gear text-base"></i>
+
+                    <span>Settings</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+       
+
+    </div>
+
+</aside>

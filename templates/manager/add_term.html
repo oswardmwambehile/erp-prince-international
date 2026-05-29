@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
+
+    <h2 class="text-xl font-bold mb-4">Add Payment Term</h2>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+            <label>Title</label>
+            {{ form.title }}
+        </div>
+
+        <div>
+            <label>Percentage</label>
+            {{ form.percentage }}
+        </div>
+
+        <div>
+            <label>Amount</label>
+            {{ form.amount }}
+        </div>
+
+        <div>
+            <label>Description</label>
+            {{ form.description }}
+        </div>
+
+        <button class="bg-yellow-600 text-white w-full py-2 rounded">
+            Save Payment Term
+        </button>
+    </form>
+
+</div>
+
+{% endblock %}

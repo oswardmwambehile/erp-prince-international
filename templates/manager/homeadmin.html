@@ -1,0 +1,187 @@
+{% extends 'manager/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    {% include 'manager/nav.html' %}
+    {% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 mt-16 px-3 py-4">
+
+    <div class="w-full">
+
+        <!-- STATS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
+
+            <!-- USERS -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Total Users</p>
+                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                            {{ total_users }}
+                        </h2>
+                    </div>
+
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100">
+                        <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 10a4 4 0 100-8 4 4 0 000 8zM3 18a7 7 0 1114 0H3z"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- REVENUE -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Revenue</p>
+                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                            TZS {{ total_quotation_amount|floatformat:2|intcomma }}
+                        </h2>
+                    </div>
+
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-100">
+                        <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 10a8 8 0 1116 0A8 8 0 012 10zm9-4a1 1 0 10-2 0v5a1 1 0 00.293.707l3 3a1 1 0 101.414-1.414L11 10.586V6z"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ORDERS -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Quotations</p>
+                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                            {{ total_quotations }}
+                        </h2>
+                    </div>
+
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-100">
+                        <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 16a2 2 0 104 0H8zm6-2V7a6 6 0 10-12 0v7l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- EXPENSES -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Expenses</p>
+                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                            {{ total_expenses }}
+                        </h2>
+
+                        <p class="text-xs text-red-500 mt-1">
+                            TZS {{ total_expense_amount|floatformat:2|intcomma }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-red-100">
+                        <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v1l-8 5-8-5V5zm0 3.236l7.386 4.616a1 1 0 001.228 0L18 8.236V15a2 2 0 01-2 2H4a2 2 0 01-2-2V8.236z"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CHARTS -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+
+            <!-- PIE -->
+            <div class="xl:col-span-1 bg-white border border-gray-200 rounded-lg p-5">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    ERP Modules Overview
+                </h2>
+
+                <canvas id="erpPieChart"></canvas>
+            </div>
+
+            <!-- BAR -->
+            <div class="xl:col-span-2 bg-white border border-gray-200 rounded-lg p-5">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    Business Performance (Monthly)
+                </h2>
+
+                <canvas id="erpBarChart"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const pieCtx = document.getElementById('erpPieChart');
+
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: [
+                'Quotations',
+                'Expenses',
+                'Products',
+                'Stock',
+                'Users'
+            ],
+            datasets: [{
+                data: [
+                    {{ total_quotations }},
+                    {{ total_expenses }},
+                    {{ total_products }},
+                    {{ total_stock }},
+                    {{ total_users }}
+                ],
+                backgroundColor: [
+                    '#3B82F6',
+                    '#EF4444',
+                    '#10B981',
+                    '#F59E0B',
+                    '#8B5CF6'
+                ]
+            }]
+        }
+    });
+
+    const barCtx = document.getElementById('erpBarChart');
+
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Summary'],
+            datasets: [
+                {
+                    label: 'Quotation Value',
+                    data: [{{ total_quotation_amount|default:0 }}]
+                },
+                {
+                    label: 'Expense Value',
+                    data: [{{ total_expense_amount|default:0 }}]
+                }
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

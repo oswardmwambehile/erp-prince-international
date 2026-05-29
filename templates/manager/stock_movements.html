@@ -1,0 +1,236 @@
+{% extends 'manager/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen  pt-20 px-4 md:px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+
+            <div>
+
+                <h1 class="text-3xltext-gray-800">
+                    Stock Movements
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    Full inventory history (IN / OUT / TRANSFER / ADJUSTMENT)
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+
+            <!-- TOP BAR -->
+            <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+                    <!-- TITLE -->
+                    <div>
+
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Movement List
+                        </h2>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Total Records :
+                            <span class="font-semibold text-gray-700">
+                                {{ movements.count }}
+                            </span>
+                        </p>
+
+                    </div>
+
+                    <!-- SEARCH -->
+                    <div class="w-full lg:w-96">
+
+                        <div class="relative">
+
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+
+                            <input
+                                type="text"
+                                id="movementSearch"
+                                placeholder="Search product, warehouse, type..."
+                                class="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+            <div class="overflow-x-auto">
+
+                <table class="w-full">
+
+                    <thead class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
+
+                        <tr>
+
+                            <th class="px-6 py-4 text-left">Product</th>
+                            <th class="px-6 py-4 text-left">Warehouse</th>
+                            <th class="px-6 py-4 text-left">Type</th>
+                            <th class="px-6 py-4 text-center">Quantity</th>
+                            <th class="px-6 py-4 text-left">Date</th>
+                            <th class="px-6 py-4 text-center">Balance After</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="movementTable" class="divide-y divide-gray-200 bg-white">
+
+                        {% for m in movements %}
+
+                        <tr class="movement-row hover:bg-gray-50 transition"
+
+                            data-product="{{ m.product.name|lower }}"
+                            data-warehouse="{{ m.warehouse.name|lower }}"
+                            data-type="{{ m.movement_type|lower }}"
+                        >
+
+                            <!-- PRODUCT -->
+                            <td class="px-6 py-5 font-medium text-gray-800">
+                                {{ m.product.name }}
+                            </td>
+
+                            <!-- WAREHOUSE -->
+                            <td class="px-6 py-5 text-gray-700">
+                                {{ m.warehouse.name }}
+                            </td>
+
+                            <!-- TYPE -->
+                            <td class="px-6 py-5">
+
+                                {% if m.movement_type == 'IN' %}
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">IN</span>
+
+                                {% elif m.movement_type == 'OUT' %}
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">OUT</span>
+
+                                {% elif m.movement_type == 'TRANSFER' %}
+                                    <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs">TRANSFER</span>
+
+                                {% else %}
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">ADJUST</span>
+                                {% endif %}
+
+                            </td>
+
+                            <!-- QUANTITY -->
+                            <td class="px-6 py-5 text-center font-semibold">
+                                {{ m.quantity }}
+                            </td>
+                            <td class="px-6 py-5 text-gray-500">
+                                {{ m.created_at }}
+                            </td>
+
+                            <!-- BALANCE -->
+                            <td class="px-6 py-5 text-center text-indigo-600 font-semibold">
+                                {{ m.balance_after }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="5" class="px-6 py-20 text-center text-gray-500">
+                                No movements found
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                        <!-- NO RESULT -->
+                        <tr id="noMovementRow" class="hidden">
+
+                            <td colspan="5" class="px-6 py-20 text-center">
+
+                                <div class="text-gray-500">
+                                    No matching movements found
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- JS SEARCH (LIKE YOUR PRODUCT PAGE) -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const searchInput = document.getElementById('movementSearch');
+
+    const rows = document.querySelectorAll('.movement-row');
+
+    const noResults = document.getElementById('noMovementRow');
+
+    searchInput.addEventListener('keyup', function () {
+
+        const value = this.value.toLowerCase().trim();
+
+        let count = 0;
+
+        rows.forEach(row => {
+
+            const product = row.dataset.product;
+            const warehouse = row.dataset.warehouse;
+            const type = row.dataset.type;
+
+            const match =
+                product.includes(value) ||
+                warehouse.includes(value) ||
+                type.includes(value);
+
+            if (match) {
+                row.style.display = '';
+                count++;
+            } else {
+                row.style.display = 'none';
+            }
+
+        });
+
+        if (count === 0) {
+            noResults.classList.remove('hidden');
+        } else {
+            noResults.classList.add('hidden');
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

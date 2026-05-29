@@ -1,0 +1,129 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+
+{% include 'inventory/nav.html' %}
+{% include 'inventory/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-6xl mx-auto">
+
+        <!-- CONTAINER -->
+        <div class="border border-gray-300 rounded-2xl overflow-hidden bg-white">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-300 px-8 py-5">
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Stock Transfer
+                </h1>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Move stock between warehouses
+                </p>
+
+            </div>
+
+            <!-- FORM -->
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                <div class="space-y-6">
+
+                    <!-- PRODUCT -->
+                    <div class="grid grid-cols-12 gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Product
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.product }}
+                        </div>
+
+                    </div>
+
+                    <!-- FROM WAREHOUSE -->
+                    <div class="grid grid-cols-12 gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            From Warehouse
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.from_warehouse }}
+                        </div>
+
+                    </div>
+
+                    <!-- TO WAREHOUSE -->
+                    <div class="grid grid-cols-12 gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            To Warehouse
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.to_warehouse }}
+                        </div>
+
+                    </div>
+
+                    <!-- QUANTITY -->
+                    <div class="grid grid-cols-12 gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Quantity
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.quantity }}
+                        </div>
+
+                    </div>
+
+                    <!-- REFERENCE -->
+                    <div class="grid grid-cols-12 gap-6">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Reference ID
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.reference_id }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="mt-10 flex items-center gap-4 border-t border-gray-300 pt-6">
+
+                    <button type="submit"
+                        class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700">
+
+                        Transfer Stock
+
+                    </button>
+
+                    <a href="{% url 'stock_list' %}"
+                        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

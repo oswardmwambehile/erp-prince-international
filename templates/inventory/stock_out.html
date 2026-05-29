@@ -1,0 +1,138 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+
+{% include 'inventory/nav.html' %}
+{% include 'inventory/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-6xl mx-auto">
+
+        <!-- CONTAINER -->
+        <div class="border border-gray-300 rounded-2xl overflow-hidden bg-white">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-300 px-8 py-5">
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Stock Out
+                </h1>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Remove product stock from warehouse
+                </p>
+
+            </div>
+
+            <!-- FORM -->
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                <div class="space-y-6">
+
+                    <!-- PRODUCT -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Product
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.product }}
+                            {% if form.product.errors %}
+                                <p class="text-red-500 text-sm">{{ form.product.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <!-- WAREHOUSE -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Warehouse
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.warehouse }}
+                            {% if form.warehouse.errors %}
+                                <p class="text-red-500 text-sm">{{ form.warehouse.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <!-- QUANTITY -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Quantity
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.quantity }}
+                            {% if form.quantity.errors %}
+                                <p class="text-red-500 text-sm">{{ form.quantity.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <!-- REFERENCE TYPE -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Reference Type
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.reference_type }}
+                        </div>
+
+                    </div>
+
+                    <!-- REFERENCE ID -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-medium text-gray-700 pt-3">
+                            Reference ID
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ form.reference_id }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="mt-10 flex items-center gap-4 border-t border-gray-300 pt-6">
+
+                    <button type="submit"
+                        class="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition">
+
+                        Save Stock Out
+
+                    </button>
+
+                    <a href="{% url 'stock_list' %}"
+                        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+
+{% include 'inventory/nav.html' %}
+{% include 'inventory/sidebar.html' %}
+
+<!-- MAIN WRAPPER -->
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+
+            <div>
+                <h1 class="text-2xl text-gray-800">
+                    Manage warehouse stock levels
+                </h1>
+
+                
+            </div>
+
+            <!-- SEARCH BOX -->
+            <div class="w-full lg:w-96">
+
+                <div class="relative">
+
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+
+                    <input
+                        type="text"
+                        id="stockSearch"
+                        placeholder="Search product or warehouse..."
+                        class="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE CARD -->
+        <div class="bg-white rounded-2xl shadow overflow-hidden">
+
+            <table class="w-full text-sm">
+
+                <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="p-4 text-left">Product</th>
+                        <th class="p-4 text-left">Warehouse</th>
+                        <th class="p-4 text-left">Quantity</th>
+                        <th class="p-4 text-left">Last Updated</th>
+                    </tr>
+                </thead>
+
+                <tbody id="stockTable">
+
+                    {% for stock in stocks %}
+
+                    <tr
+                        class="stock-row border-t hover:bg-gray-50 transition"
+
+                        data-product="{{ stock.product.name|lower }}"
+                        data-warehouse="{{ stock.warehouse.name|lower }}"
+                    >
+
+                        <td class="p-4">
+                            {{ stock.product.name }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ stock.warehouse.name }}
+                        </td>
+
+                        <td class="p-4 font-semibold text-indigo-600">
+                            {{ stock.quantity }}
+                        </td>
+
+                        <td class="p-4 text-gray-500">
+                            {{ stock.last_updated }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4" class="p-6 text-center text-gray-500">
+                            No stock available yet
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                    <!-- NO RESULT ROW -->
+                    <tr id="noStockResults" class="hidden">
+                        <td colspan="4" class="p-6 text-center text-gray-500">
+                            No matching stock found
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT SEARCH -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const searchInput = document.getElementById('stockSearch');
+
+    const rows = document.querySelectorAll('.stock-row');
+
+    const noResults = document.getElementById('noStockResults');
+
+    searchInput.addEventListener('keyup', function () {
+
+        const value = this.value.toLowerCase().trim();
+
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+
+            const product = row.dataset.product;
+            const warehouse = row.dataset.warehouse;
+
+            const match =
+                product.includes(value) ||
+                warehouse.includes(value);
+
+            if (match) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+
+        });
+
+        if (visibleCount === 0) {
+            noResults.classList.remove('hidden');
+        } else {
+            noResults.classList.add('hidden');
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

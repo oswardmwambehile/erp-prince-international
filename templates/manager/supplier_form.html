@@ -1,0 +1,413 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<!-- MAIN -->
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <!-- PAGE HEADER -->
+    <div class="mb-6">
+
+        <h1 class="text-2xl font-semibold text-gray-800">
+
+            {% if supplier %}
+                Update Supplier
+            {% else %}
+                Create Supplier
+            {% endif %}
+
+        </h1>
+
+        <p class="text-sm text-gray-500 mt-1">
+            Manage supplier information
+        </p>
+
+    </div>
+
+    <!-- FORM CONTAINER -->
+    <div class="border border-gray-300 rounded-2xl overflow-hidden">
+
+        <!-- FORM -->
+        <form method="POST" class="p-6">
+
+            {% csrf_token %}
+
+            <!-- COMPANY -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Company Name
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.company_name }}
+
+                    {% if form.company_name.errors %}
+                        <p class="mt-2 text-sm text-red-500">
+                            {{ form.company_name.errors.0 }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- CONTACT PERSON -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Contact Person
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.contact_person }}
+
+                </div>
+
+            </div>
+
+            <!-- PHONE -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Phone Number
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.phone }}
+
+                    {% if form.phone.errors %}
+                        <p class="mt-2 text-sm text-red-500">
+                            {{ form.phone.errors.0 }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- ALT PHONE -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Alternative Phone
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.alternative_phone }}
+
+                </div>
+
+            </div>
+
+            <!-- EMAIL -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Email Address
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.email }}
+
+                </div>
+
+            </div>
+
+            <!-- TIN -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        TIN Number
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.tin_number }}
+
+                </div>
+
+            </div>
+
+            <!-- VRN -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        VRN Number
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.vrn_number }}
+
+                </div>
+
+            </div>
+
+            <!-- WEBSITE -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Website
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.website }}
+
+                </div>
+
+            </div>
+
+            <!-- ADDRESS -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Address
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.address }}
+
+                </div>
+
+            </div>
+
+            <!-- COUNTRY -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Country
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.country }}
+
+                </div>
+
+            </div>
+
+            <!-- REGION -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Region
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.region }}
+
+                </div>
+
+            </div>
+
+            <!-- DISTRICT -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        District
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.district }}
+
+                </div>
+
+            </div>
+
+            <!-- CITY -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        City
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.city }}
+
+                </div>
+
+            </div>
+
+            <!-- BANK NAME -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Bank Name
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.bank_name }}
+
+                </div>
+
+            </div>
+
+            <!-- ACCOUNT -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Account Number
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.bank_account_number }}
+
+                </div>
+
+            </div>
+
+            <!-- NOTES -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 border-b border-gray-200">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Notes
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5">
+
+                    {{ form.notes }}
+
+                </div>
+
+            </div>
+
+            <!-- STATUS -->
+            <div class="grid grid-cols-1 lg:grid-cols-4">
+
+                <div class="py-5 lg:pr-6">
+
+                    <label class="text-sm font-medium text-gray-700">
+                        Supplier Status
+                    </label>
+
+                </div>
+
+                <div class="lg:col-span-3 py-5 flex items-center gap-3">
+
+                    {{ form.is_active }}
+
+                    <span class="text-sm text-gray-700">
+                        Active Supplier
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex items-center gap-3 pt-8">
+
+                <!-- SAVE -->
+                <button type="submit"
+                        class="inline-flex items-center gap-2 px-6 py-3
+                               bg-green-600 hover:bg-green-700
+                               text-white rounded-xl
+                               transition text-sm font-medium">
+
+                    <i class="fa fa-save"></i>
+
+                    Save Supplier
+
+                </button>
+
+                <!-- CANCEL -->
+                <a href="{% url 'supplier_list' %}"
+                   class="inline-flex items-center gap-2 px-6 py-3
+                          border border-gray-300 rounded-xl
+                          hover:bg-gray-100 transition text-sm font-medium">
+
+                    <i class="fa fa-arrow-left"></i>
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

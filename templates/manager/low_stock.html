@@ -1,0 +1,112 @@
+{% extends 'manager/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10 bg-gray-50">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">
+                Low Stock Alerts ⚠
+            </h1>
+            <p class="text-gray-500">
+                Items that are at or below minimum stock level
+            </p>
+        </div>
+
+        <!-- TABLE CARD -->
+        <div class="bg-white rounded-3xl shadow border overflow-hidden">
+
+            <div class="px-6 py-4 border-b bg-gray-50">
+                <h2 class="font-semibold text-gray-700">
+                    Low Stock Items ({{ low_stock_items.count }})
+                </h2>
+            </div>
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full">
+
+                    <thead class="bg-gray-100 text-xs uppercase text-gray-600">
+                        <tr>
+                            <th class="px-6 py-4 text-left">Product</th>
+                            <th class="px-6 py-4 text-left">Warehouse</th>
+                            <th class="px-6 py-4 text-center">Current Stock</th>
+                            <th class="px-6 py-4 text-center">Minimum Stock</th>
+                            <th class="px-6 py-4 text-center">Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y">
+
+                        {% for stock in low_stock_items %}
+
+                        <tr class="hover:bg-gray-50">
+
+                            <!-- PRODUCT -->
+                            <td class="px-6 py-4 font-medium">
+                                {{ stock.product.name }}
+                            </td>
+
+                            <!-- WAREHOUSE -->
+                            <td class="px-6 py-4 text-gray-600">
+                                {{ stock.warehouse.name }}
+                            </td>
+
+                            <!-- CURRENT -->
+                            <td class="px-6 py-4 text-center font-bold text-red-600">
+                                {{ stock.quantity }}
+                            </td>
+
+                            <!-- MINIMUM -->
+                            <td class="px-6 py-4 text-center text-gray-700">
+                                {{ stock.product.minimum_stock }}
+                            </td>
+
+                            <!-- STATUS -->
+                            <td class="px-6 py-4 text-center">
+
+                                {% if stock.quantity == 0 %}
+                                    <span class="px-3 py-1 text-xs rounded-full bg-red-200 text-red-800">
+                                        OUT OF STOCK
+                                    </span>
+
+                                {% else %}
+                                    <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
+                                        LOW STOCK
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="5" class="text-center py-10 text-gray-500">
+                                🎉 All stock levels are healthy
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,562 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<div class="sm:ml-64 mt-16 px-4 py-5 min-h-screen">
+
+    <div class="w-full">
+
+        <!-- ===================================================== -->
+        <!-- HEADER -->
+        <!-- ===================================================== -->
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
+            <div>
+
+                <h1 class="text-2xl text-gray-800">
+                    Warehouse Management
+                </h1>
+
+               
+            </div>
+
+            <!-- ADD BUTTON -->
+            <button
+                onclick="openCreateModal()"
+                class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-200 shadow-sm">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Warehouse
+
+            </button>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- SEARCH -->
+        <!-- ===================================================== -->
+
+        <div class="mb-5">
+
+            <div class="relative max-w-md">
+
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                </span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search warehouse..."
+                    class="w-full h-12 pl-11 pr-4 rounded-2xl border border-gray-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- TABLE -->
+        <!-- ===================================================== -->
+
+        <div class="overflow-x-auto bg-white rounded-3xl border border-gray-200 shadow-sm">
+
+            <!-- TABLE HEADER -->
+            <div class="px-6 py-5 border-b border-gray-200">
+
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Warehouse List
+                </h2>
+
+            </div>
+
+            <table class="w-full text-sm text-left text-gray-600">
+
+                <!-- TABLE HEAD -->
+                <thead class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500">
+
+                    <tr>
+
+                        <th class="px-6 py-4">
+                            Warehouse
+                        </th>
+
+                        <th class="px-6 py-4">
+                            Location
+                        </th>
+
+                        <th class="px-6 py-4">
+                            Manager
+                        </th>
+
+                        <th class="px-6 py-4 text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <!-- TABLE BODY -->
+                <tbody id="warehouseTableBody">
+
+                    {% if warehouses %}
+
+                        {% for warehouse in warehouses %}
+
+                        <tr class="warehouse-row border-b border-gray-100 hover:bg-gray-50 transition">
+
+                            <td class="px-6 py-4 font-medium text-gray-800">
+                                {{ warehouse.name }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ warehouse.location }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ warehouse.manager }}
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="px-6 py-4">
+
+                                <div class="flex items-center justify-center gap-2">
+
+                                    <!-- EDIT -->
+                                    <button
+                                        onclick="openEditModal(
+                                            '{{ warehouse.id }}',
+                                            '{{ warehouse.name }}',
+                                            '{{ warehouse.location }}',
+                                            '{{ warehouse.manager.id }}'
+                                        )"
+                                        class="inline-flex items-center gap-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 py-2 rounded-xl text-xs transition">
+
+                                        <i class="fa-solid fa-pen-to-square"></i>
+
+                                        Edit
+
+                                    </button>
+
+                                    <!-- DELETE -->
+                                    <form method="POST">
+
+                                        {% csrf_token %}
+
+                                        <input
+                                            type="hidden"
+                                            name="warehouse_id"
+                                            value="{{ warehouse.id }}">
+
+                                        <button
+                                            type="submit"
+                                            name="delete_warehouse"
+                                            onclick="return confirm('Delete this warehouse?')"
+                                            class="inline-flex items-center gap-2 bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl text-xs transition">
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="4" class="px-6 py-20 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <i class="fa-solid fa-warehouse text-5xl text-gray-300 mb-4"></i>
+
+                                <h2 class="text-lg font-semibold text-gray-700">
+                                    No Warehouses Found
+                                </h2>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+                    <!-- SEARCH EMPTY -->
+                    <tr id="emptySearchRow" class="hidden">
+
+                        <td colspan="4" class="px-6 py-20 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <i class="fa-solid fa-magnifying-glass text-5xl text-gray-300 mb-4"></i>
+
+                                <h2 class="text-lg font-semibold text-gray-700">
+                                    No matching warehouse found
+                                </h2>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- CREATE MODAL -->
+<!-- ===================================================== -->
+
+<div
+    id="createModal"
+    class="fixed inset-0 hidden items-center justify-center z-50 px-4">
+
+    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-xl border border-gray-100 animate-modal">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Add Warehouse
+            </h2>
+
+            <button
+                onclick="closeCreateModal()"
+                class="w-10 h-10 rounded-xl hover:bg-gray-100 transition">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Warehouse Name
+                </label>
+
+                {{ form.name }}
+
+            </div>
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                </label>
+
+                {{ form.location }}
+
+            </div>
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Manager
+                </label>
+
+                {{ form.manager }}
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex justify-end gap-3 pt-4">
+
+                <button
+                    type="button"
+                    onclick="closeCreateModal()"
+                    class="px-5 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="submit"
+                    name="create_warehouse"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm">
+
+                    Save Warehouse
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- EDIT MODAL -->
+<!-- ===================================================== -->
+
+<div
+    id="editModal"
+    class="fixed inset-0 hidden items-center justify-center z-50 px-4">
+
+    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-xl border border-gray-100 animate-modal">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Edit Warehouse
+            </h2>
+
+            <button
+                onclick="closeEditModal()"
+                class="w-10 h-10 rounded-xl hover:bg-gray-100 transition">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="warehouse_id"
+                id="edit_warehouse_id">
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Warehouse Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    id="edit_name"
+                    class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+
+            </div>
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    name="location"
+                    id="edit_location"
+                    class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+
+            </div>
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Manager
+                </label>
+
+                <select
+                    name="manager"
+                    id="edit_manager"
+                    class="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+
+                    {% for user in form.manager.field.queryset %}
+
+                    <option value="{{ user.id }}">
+                        {{ user }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex justify-end gap-3 pt-4">
+
+                <button
+                    type="button"
+                    onclick="closeEditModal()"
+                    class="px-5 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="submit"
+                    name="update_warehouse"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl text-sm">
+
+                    Update Warehouse
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================================== -->
+
+<script>
+
+function openCreateModal() {
+
+    const modal = document.getElementById('createModal');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeCreateModal() {
+
+    const modal = document.getElementById('createModal');
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function openEditModal(id, name, location, manager) {
+
+    document.getElementById('edit_warehouse_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_location').value = location;
+    document.getElementById('edit_manager').value = manager;
+
+    const modal = document.getElementById('editModal');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeEditModal() {
+
+    const modal = document.getElementById('editModal');
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+</script>
+
+<!-- ===================================================== -->
+<!-- SEARCH SCRIPT -->
+<!-- ===================================================== -->
+
+<script>
+
+const searchInput = document.getElementById('searchInput');
+
+searchInput.addEventListener('keyup', function() {
+
+    const filter = searchInput.value.toLowerCase();
+
+    const rows = document.querySelectorAll('.warehouse-row');
+
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+
+        const text = row.innerText.toLowerCase();
+
+        if (text.includes(filter)) {
+
+            row.style.display = '';
+
+            visibleCount++;
+
+        } else {
+
+            row.style.display = 'none';
+        }
+
+    });
+
+    const emptyRow = document.getElementById('emptySearchRow');
+
+    if (visibleCount === 0) {
+
+        emptyRow.classList.remove('hidden');
+
+    } else {
+
+        emptyRow.classList.add('hidden');
+    }
+
+});
+
+</script>
+
+<!-- ===================================================== -->
+<!-- MODAL ANIMATION -->
+<!-- ===================================================== -->
+
+<style>
+
+@keyframes modalFade {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-modal {
+
+    animation: modalFade 0.25s ease;
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,234 @@
+{% extends 'accounting/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<!-- MAIN WRAPPER (IMPORTANT: prevents sidebar overlap) -->
+<div class="sm:ml-64 min-h-screen pt-20 px-4 md:px-6 pb-10">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-6">
+
+            <!-- LEFT -->
+            <div class="flex items-center gap-4">
+
+                <div class="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center text-green-600 text-2xl">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-800">
+                        {{ expense.title }}
+                    </h1>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Expense No: {{ expense.expense_number }}
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="flex items-center gap-3">
+
+                <a href="{% url 'account_expense_list' %}"
+                   class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 transition">
+                    Back
+                </a>
+
+                
+
+            </div>
+
+        </div>
+
+        <!-- TOP INFO CARDS -->
+        <div class="flex flex-wrap gap-3 mb-6">
+
+            <!-- STATUS -->
+            <div class="px-4 py-3 rounded-xl border bg-white">
+
+                <span class="text-xs text-gray-500 block">Status</span>
+
+                {% if expense.status == 'approved' %}
+                    <span class="font-semibold text-green-700">Approved</span>
+                {% elif expense.status == 'rejected' %}
+                    <span class="font-semibold text-red-700">Rejected</span>
+                {% elif expense.status == 'paid' %}
+                    <span class="font-semibold text-blue-700">Paid</span>
+                {% else %}
+                    <span class="font-semibold text-yellow-700">Draft</span>
+                {% endif %}
+
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="px-4 py-3 rounded-xl border bg-white">
+
+                <span class="text-xs text-gray-500 block">Category</span>
+                <span class="font-semibold text-gray-800">
+                    {{ expense.category.name }}
+                </span>
+
+            </div>
+
+            <!-- AMOUNT (HUMANIZE FIX) -->
+            <div class="px-4 py-3 rounded-xl border bg-white">
+
+                <span class="text-xs text-gray-500 block">Amount</span>
+                <span class="font-bold text-green-600">
+                    TZS {{ expense.amount|intcomma }}
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- GRID -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+            <!-- LEFT -->
+            <div class="xl:col-span-2 space-y-6">
+
+                <!-- INFO CARD -->
+                <div class="bg-white border rounded-2xl overflow-hidden">
+
+                    <div class="px-6 py-5 border-b">
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Expense Information
+                        </h2>
+                    </div>
+
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <div>
+                            <p class="text-sm text-gray-500">Title</p>
+                            <p class="font-medium text-gray-800">{{ expense.title }}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-gray-500">Expense Number</p>
+                            <p class="font-medium text-gray-800">{{ expense.expense_number }}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-gray-500">Date</p>
+                            <p class="font-medium text-gray-800">
+                                {{ expense.expense_date|date:"d M Y" }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-gray-500">Added By</p>
+                            <p class="font-medium text-gray-800">
+                                {{ expense.submitted_by }}
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="bg-white border rounded-2xl overflow-hidden">
+
+                    <div class="px-6 py-5 border-b">
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Description
+                        </h2>
+                    </div>
+
+                    <div class="p-6 text-gray-700 leading-relaxed whitespace-pre-line">
+                        {{ expense.description|default:"No description provided" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="space-y-6">
+
+                <!-- SUMMARY -->
+                <div class="bg-white border rounded-2xl overflow-hidden">
+
+                    <div class="px-6 py-5 border-b">
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Summary
+                        </h2>
+                    </div>
+
+                    <div class="p-6 space-y-4">
+
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 text-sm">Category</span>
+                            <span class="font-medium text-gray-800">
+                                {{ expense.category.name }}
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 text-sm">Amount</span>
+                            <span class="font-bold text-green-600">
+                                TZS {{ expense.amount|intcomma }}
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 text-sm">Status</span>
+                            <span class="font-medium text-gray-800">
+                                {{ expense.status|title }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ATTACHMENT -->
+                <div class="bg-white border rounded-2xl overflow-hidden">
+
+                    <div class="px-6 py-5 border-b">
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Attachment
+                        </h2>
+                    </div>
+
+                    <div class="p-6">
+
+                        {% if expense.attachment %}
+
+                            <a href="{{ expense.attachment.url }}"
+                               target="_blank"
+                               class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl">
+
+                                <i class="fa-solid fa-file"></i>
+                                View File
+
+                            </a>
+
+                        {% else %}
+
+                            <p class="text-gray-400 text-sm">
+                                No attachment uploaded
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

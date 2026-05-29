@@ -1,0 +1,353 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen bg-gray-50 pt-20 pb-10 px-6">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- ====================================== -->
+        <!-- HEADER -->
+        <!-- ====================================== -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+
+            <div class="p-8">
+
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+
+                    <!-- LEFT -->
+                    <div>
+
+                        <div class="flex items-center gap-3 mb-3">
+
+                            <span class="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
+                                {{ quotation.status }}
+                            </span>
+
+                            <span class="px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full">
+                                {{ quotation.payment_mode }}
+                            </span>
+
+                        </div>
+
+                        <h1 class="text-3xl font-bold text-gray-800">
+                            {{ quotation.quotation_no }}
+                        </h1>
+
+                        <p class="text-gray-500 mt-2">
+                            Proforma Invoice / Quotation Document
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Customer
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.customer }}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Contact Person
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.contact_person }}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Project Name
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.project_name }}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Project Location
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.project_location }}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Quotation Date
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.quotation_date }}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Expiry Date
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.expiry_date }}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Sales Person
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.sales_person }}
+                                </h3>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">
+                                    Created By
+                                </p>
+
+                                <h3 class="font-semibold text-gray-800">
+                                    {{ quotation.created_by }}
+                                </h3>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT TOTALS -->
+                    <div class="w-full lg:w-[350px]">
+
+                        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+
+                            <h2 class="text-lg font-bold text-gray-800 mb-6">
+                                Financial Summary
+                            </h2>
+
+                            <div class="space-y-4">
+
+                                <div class="flex justify-between">
+
+                                    <span class="text-gray-600">
+                                        Subtotal
+                                    </span>
+
+                                    <span class="font-semibold text-gray-800">
+                                        TZS {{ quotation.subtotal }}
+                                    </span>
+
+                                </div>
+
+                                <div class="flex justify-between">
+
+                                    <span class="text-gray-600">
+                                        VAT ({{ quotation.vat_percentage }}%)
+                                    </span>
+
+                                    <span class="font-semibold text-gray-800">
+                                        TZS {{ quotation.tax_amount }}
+                                    </span>
+
+                                </div>
+
+                                <div class="flex justify-between">
+
+                                    <span class="text-gray-600">
+                                        Discount
+                                    </span>
+
+                                    <span class="font-semibold text-red-600">
+                                        - TZS {{ quotation.discount_amount }}
+                                    </span>
+
+                                </div>
+
+                                <div class="border-t border-gray-300 pt-4 flex justify-between">
+
+                                    <span class="text-lg font-bold text-gray-800">
+                                        Grand Total
+                                    </span>
+
+                                    <span class="text-2xl font-bold text-green-600">
+                                        TZS {{ quotation.grand_total }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ====================================== -->
+        <!-- ACTION BUTTONS -->
+        <!-- ====================================== -->
+        <div class="flex flex-wrap gap-4">
+
+            <a href="{% url 'add_item' quotation.id %}"
+               class="px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition shadow-sm">
+
+                + Add BOQ Item
+
+            </a>
+
+            <a href="{% url 'add_section' quotation.id %}"
+               class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition shadow-sm">
+
+                + Add Section
+
+            </a>
+
+            <a href="{% url 'add_term' quotation.id %}"
+               class="px-5 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl transition shadow-sm">
+
+                + Payment Terms
+
+            </a>
+
+            <a href="{% url 'add_material' quotation.id %}"
+               class="px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition shadow-sm">
+
+                + Material Specs
+
+            </a>
+
+            <a href="{% url 'proforma_invoice' quotation.id %}"
+               class="ml-auto px-5 py-3 bg-black hover:bg-gray-900 text-white rounded-xl transition shadow-sm">
+
+                Generate Proforma Invoice
+
+            </a>
+
+        </div>
+
+        <!-- ====================================== -->
+        <!-- BOQ ITEMS -->
+        <!-- ====================================== -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+
+            <div class="border-b border-gray-200 px-6 py-4">
+
+                <h2 class="text-lg font-bold text-gray-800">
+                    BOQ Items
+                </h2>
+
+            </div>
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full text-sm">
+
+                    <thead class="bg-gray-100 text-gray-700">
+
+                        <tr>
+
+                            <th class="px-4 py-4 text-left font-semibold">Code</th>
+                            <th class="px-4 py-4 text-left font-semibold">Type</th>
+                            <th class="px-4 py-4 text-left font-semibold">Profile</th>
+                            <th class="px-4 py-4 text-left font-semibold">Glass</th>
+                            <th class="px-4 py-4 text-left font-semibold">Width</th>
+                            <th class="px-4 py-4 text-left font-semibold">Height</th>
+                            <th class="px-4 py-4 text-left font-semibold">Qty</th>
+                            <th class="px-4 py-4 text-left font-semibold">m²</th>
+                            <th class="px-4 py-4 text-left font-semibold">Unit Price</th>
+                            <th class="px-4 py-4 text-left font-semibold">Total</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+
+                        {% for item in items %}
+
+                        <tr class="hover:bg-gray-50 transition">
+
+                            <td class="px-4 py-4 font-medium text-gray-800">
+                                {{ item.item_code }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.item_type }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.aluminium_profile }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.glass_type }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.width }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.height }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.quantity }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.total_sqm }}
+                            </td>
+
+                            <td class="px-4 py-4">
+                                {{ item.unit_price }}
+                            </td>
+
+                            <td class="px-4 py-4 font-semibold text-green-700">
+                                {{ item.total_price }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="10" class="px-4 py-10 text-center text-gray-500">
+
+                                No quotation items added yet.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+s
+</div>
+
+{% endblock %}

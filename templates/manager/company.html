@@ -1,0 +1,565 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<!-- MAIN CONTENT -->
+<div class="sm:ml-64 mt-16 px-4 py-5 min-h-screen ">
+
+    <div class="w-full">
+
+        <!-- HEADER -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+
+            <div>
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Company Management
+                </h1>
+
+            </div>
+
+            <!-- ADD BUTTON -->
+            <button
+                onclick="openCreateModal()"
+                class="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white text-sm font-medium px-5 py-2.5 rounded-xl shadow-sm transition">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Company
+
+            </button>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="relative overflow-x-auto bg-white rounded-2xl border border-gray-200 shadow-sm">
+
+            <!-- HEADER -->
+            <div class="px-6 py-5 border-b border-gray-200">
+
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Company List
+                </h2>
+
+            </div>
+
+            <!-- TABLE -->
+            <table class="w-full text-sm text-left text-gray-600">
+
+                <thead class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500">
+
+                    <tr>
+
+                        <th class="px-6 py-4 font-semibold">
+                            Company
+                        </th>
+
+                        <th class="px-6 py-4 font-semibold">
+                            Code
+                        </th>
+
+                        <th class="px-6 py-4 font-semibold">
+                            Email
+                        </th>
+
+                        <th class="px-6 py-4 font-semibold">
+                            Phone
+                        </th>
+
+                        <th class="px-6 py-4 font-semibold">
+                            Status
+                        </th>
+
+                        <th class="px-6 py-4 font-semibold text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if companies %}
+
+                        {% for company in companies %}
+
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+
+                            <!-- NAME -->
+                            <td class="px-6 py-4 font-medium text-gray-800">
+                                {{ company.name }}
+                            </td>
+
+                            <!-- CODE -->
+                            <td class="px-6 py-4">
+                                {{ company.code }}
+                            </td>
+
+                            <!-- EMAIL -->
+                            <td class="px-6 py-4">
+                                {{ company.email }}
+                            </td>
+
+                            <!-- PHONE -->
+                            <td class="px-6 py-4">
+                                {{ company.phone }}
+                            </td>
+
+                            <!-- STATUS -->
+                            <td class="px-6 py-4">
+
+                                {% if company.is_active %}
+
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                    Active
+                                </span>
+
+                                {% else %}
+
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                    Inactive
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="px-6 py-4">
+
+                                <div class="flex items-center justify-center gap-2">
+
+                                    <!-- EDIT -->
+                                    <button
+                                        onclick="openEditModal(
+                                            '{{ company.id }}',
+                                            '{{ company.name }}',
+                                            '{{ company.code }}',
+                                            '{{ company.email }}',
+                                            '{{ company.phone }}',
+                                            `{{ company.address }}`,
+                                            '{{ company.is_active }}'
+                                        )"
+                                        class="inline-flex items-center gap-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 py-2 rounded-xl text-xs font-medium transition">
+
+                                        <i class="fa-solid fa-pen-to-square"></i>
+
+                                        Edit
+
+                                    </button>
+
+                                    <!-- DELETE -->
+                                    <form method="POST">
+
+                                        {% csrf_token %}
+
+                                        <input
+                                            type="hidden"
+                                            name="company_id"
+                                            value="{{ company.id }}">
+
+                                        <button
+                                            type="submit"
+                                            name="delete_company"
+                                            onclick="return confirm('Delete this company?')"
+                                            class="inline-flex items-center gap-2 bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl text-xs font-medium transition">
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                    <!-- EMPTY -->
+                    <tr>
+
+                        <td colspan="6" class="px-6 py-20 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <i class="fa-solid fa-building text-5xl text-gray-300 mb-4"></i>
+
+                                <h2 class="text-lg font-semibold text-gray-700">
+                                    No Results Available
+                                </h2>
+
+                                <p class="text-sm text-gray-400 mt-1">
+                                    No companies found.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CREATE MODAL -->
+<div
+    id="createModal"
+    class="fixed inset-0 hidden items-center justify-center z-50 px-4">
+
+    <!-- MODAL -->
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 animate-modal">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Add Company
+            </h2>
+
+            <button
+                onclick="closeCreateModal()"
+                class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+
+                <i class="fa-solid fa-xmark text-gray-600"></i>
+
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Company Name
+                    </label>
+
+                    {{ form.name }}
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Company Code
+                    </label>
+
+                    {{ form.code }}
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Email
+                    </label>
+
+                    {{ form.email }}
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Phone
+                    </label>
+
+                    {{ form.phone }}
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Address
+                </label>
+
+                {{ form.address }}
+
+            </div>
+
+            <div class="flex items-center gap-3">
+
+                {{ form.is_active }}
+
+                <label class="text-sm text-gray-700">
+                    Active Company
+                </label>
+
+            </div>
+
+            <!-- BUTTON -->
+            <div class="flex justify-end">
+
+                <button
+                    type="submit"
+                    name="create_company"
+                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Save Company
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- EDIT MODAL -->
+<div
+    id="editModal"
+    class="fixed inset-0 hidden items-center justify-center z-50 px-4">
+
+    <!-- MODAL -->
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 animate-modal">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Edit Company
+            </h2>
+
+            <button
+                onclick="closeEditModal()"
+                class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+
+                <i class="fa-solid fa-xmark text-gray-600"></i>
+
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="company_id"
+                id="edit_company_id">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Company Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        id="edit_name"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Company Code
+                    </label>
+
+                    <input
+                        type="text"
+                        name="code"
+                        id="edit_code"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        id="edit_email"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Phone
+                    </label>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        id="edit_phone"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Address
+                </label>
+
+                <textarea
+                    name="address"
+                    id="edit_address"
+                    rows="3"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+
+            </div>
+
+            <div class="flex items-center gap-3">
+
+                <input
+                    type="checkbox"
+                    name="is_active"
+                    id="edit_is_active"
+                    class="w-4 h-4">
+
+                <label class="text-sm text-gray-700">
+                    Active Company
+                </label>
+
+            </div>
+
+            <!-- BUTTON -->
+            <div class="flex justify-end">
+
+                <button
+                    type="submit"
+                    name="update_company"
+                    class="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition">
+
+                    <i class="fa-solid fa-pen"></i>
+
+                    Update Company
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+
+function openCreateModal() {
+
+    const modal = document.getElementById('createModal');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeCreateModal() {
+
+    const modal = document.getElementById('createModal');
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function openEditModal(id, name, code, email, phone, address, is_active) {
+
+    document.getElementById('edit_company_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_code').value = code;
+    document.getElementById('edit_email').value = email;
+    document.getElementById('edit_phone').value = phone;
+    document.getElementById('edit_address').value = address;
+
+    if (is_active == 'True') {
+
+        document.getElementById('edit_is_active').checked = true;
+
+    } else {
+
+        document.getElementById('edit_is_active').checked = false;
+    }
+
+    const modal = document.getElementById('editModal');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeEditModal() {
+
+    const modal = document.getElementById('editModal');
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+</script>
+
+<!-- ANIMATION -->
+<style>
+
+@keyframes modalFade {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-modal {
+
+    animation: modalFade 0.25s ease;
+}
+
+</style>
+
+{% endblock %}

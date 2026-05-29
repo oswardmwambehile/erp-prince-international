@@ -1,0 +1,400 @@
+{% extends 'sales/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'sales/nav.html' %}
+{% include 'sales/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-4 md:px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- PAGE HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+
+            <!-- LEFT -->
+            <div>
+
+                <h1 class="text-3xl  text-gray-800">
+                    Quotations List
+                </h1>
+
+                
+            </div>
+
+            <!-- CREATE BUTTON -->
+            <div>
+
+                <a href="{% url 'quotations:sales_create_quotation' %}"
+                   class="inline-flex items-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl shadow-sm transition duration-200">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    <span>
+                        Create Quotation
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+
+            <!-- TOP BAR -->
+            <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+                    <!-- LEFT -->
+                    <div>
+
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Quotation List
+                        </h2>
+
+                        <p class="text-sm text-gray-500 mt-1">
+
+                            Total Quotations :
+
+                            <span class="font-semibold text-gray-700">
+                                {{ quotations.count }}
+                            </span>
+
+                        </p>
+
+                    </div>
+
+                    <!-- SEARCH -->
+                    <div class="w-full lg:w-96">
+
+                        <div class="relative">
+
+                            <!-- ICON -->
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                            </div>
+
+                            <!-- INPUT -->
+                            <input
+                                type="text"
+                                id="quotationSearch"
+                                placeholder="Search quotation by number or customer..."
+                                class="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+           <!-- TABLE -->
+<div class="w-full overflow-x-auto rounded-2xl">
+
+    <table class="min-w-[1200px] w-full table-auto border-collapse">
+
+        <!-- TABLE HEAD -->
+        <thead class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
+
+            <tr>
+
+                <th class="px-6 py-4 text-left whitespace-nowrap">
+                    Quotation No
+                </th>
+
+                <th class="px-6 py-4 text-left whitespace-nowrap">
+                    Customer
+                </th>
+
+                <th class="px-6 py-4 text-left whitespace-nowrap">
+                    Date
+                </th>
+
+                <th class="px-6 py-4 text-left whitespace-nowrap">
+                    Grand Total
+                </th>
+
+                
+
+                <th class="px-6 py-4 text-center whitespace-nowrap">
+                    Status
+                </th>
+
+                <th class="px-6 py-4 text-center whitespace-nowrap">
+                    Actions
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <!-- TABLE BODY -->
+        <tbody id="quotationTable" class="divide-y divide-gray-200 bg-white">
+
+            {% for quotation in quotations %}
+
+            <tr
+                class="quotation-row hover:bg-gray-50 transition duration-150"
+                data-number="{{ quotation.quotation_number|default:''|lower }}"
+                data-customer="{{ quotation.customer|default:''|lower }}"
+            >
+
+                <!-- QUOTATION -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <div class="flex items-center gap-4">
+
+                        <!-- ICON -->
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center text-indigo-600 text-lg shrink-0">
+
+                            <i class="fa-solid fa-file-invoice"></i>
+
+                        </div>
+
+                        <!-- INFO -->
+                        <div>
+
+                            <h3 class="font-semibold text-gray-800 whitespace-nowrap">
+                                {{ quotation.quotation_no }}
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+                <!-- CUSTOMER -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <h3 class="font-medium text-gray-800 whitespace-nowrap">
+                        {{ quotation.customer }}
+                    </h3>
+
+                </td>
+
+                <!-- DATE -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <span class="text-gray-700 font-medium">
+
+                        {{ quotation.created_at|date:"d M Y" }}
+
+                    </span>
+
+                </td>
+
+                <!-- TOTAL -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <span class="font-bold text-green-600 text-sm">
+
+                        TZS {{ quotation.grand_total|floatformat:2|intcomma }}
+
+                    </span>
+
+                </td>
+
+                
+
+                <!-- STATUS -->
+                <td class="px-6 py-5 text-center whitespace-nowrap">
+
+                    {% if quotation.status == 'APPROVED' %}
+
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+
+                            Approved
+
+                        </span>
+
+                    {% elif quotation.status == 'PENDING' %}
+
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+
+                            Pending
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold">
+
+                            Draft
+
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <!-- ACTIONS -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <div class="flex items-center justify-center gap-2">
+
+                        <!-- VIEW -->
+                        <a href="{% url 'quotations:sales_quotation_detail' quotation.id %}"
+                           class="w-10 h-10 rounded-xl border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 flex items-center justify-center transition shrink-0">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </a>
+
+                        <!-- EDIT -->
+                        <a href="{% url 'quotations:sales_update_quotation' quotation.id %}"
+                           class="w-10 h-10 rounded-xl border border-amber-200 bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center transition shrink-0">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <!-- EMPTY -->
+            <tr>
+
+                <td colspan="7" class="px-6 py-20 text-center">
+
+                    <div class="flex flex-col items-center">
+
+                        <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-4xl mb-5">
+
+                            <i class="fa-solid fa-file-invoice"></i>
+
+                        </div>
+
+                        <h3 class="text-xl font-semibold text-gray-700">
+                            No Quotations Found
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-2">
+                            Start by creating your first quotation
+                        </p>
+
+                        <a href="{% url 'quotations:sales_create_quotation' %}"
+                           class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                            <span>
+                                Create Quotation
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            <!-- NO RESULTS -->
+            <tr id="noResultsRow" class="hidden">
+
+                <td colspan="7" class="px-6 py-16 text-center">
+
+                    <div class="flex flex-col items-center">
+
+                        <div class="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-3xl mb-4">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-gray-700">
+                            No matching quotations found
+                        </h3>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- DYNAMIC SEARCH -->
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const searchInput = document.getElementById('quotationSearch');
+
+    const rows = document.querySelectorAll('.quotation-row');
+
+    const noResultsRow = document.getElementById('noResultsRow');
+
+    searchInput.addEventListener('keyup', function () {
+
+        const searchValue = this.value.toLowerCase().trim();
+
+        let visibleCount = 0;
+
+        rows.forEach(function(row) {
+
+            const number = row.dataset.number;
+            const customer = row.dataset.customer;
+
+            const matched =
+
+                number.includes(searchValue) ||
+                customer.includes(searchValue);
+
+            if (matched) {
+
+                row.style.display = '';
+
+                visibleCount++;
+
+            } else {
+
+                row.style.display = 'none';
+
+            }
+
+        });
+
+        if (visibleCount === 0) {
+
+            noResultsRow.classList.remove('hidden');
+
+        } else {
+
+            noResultsRow.classList.add('hidden');
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

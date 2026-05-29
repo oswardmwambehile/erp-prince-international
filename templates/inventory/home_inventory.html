@@ -1,0 +1,370 @@
+{% extends 'inventory/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<!-- NAVBAR -->
+{% include 'inventory/nav.html' %}
+
+<!-- SIDEBAR -->
+{% include 'inventory/sidebar.html' %}
+
+<!-- MAIN -->
+<div class="sm:ml-64 mt-16 px-4 py-6 min-h-screen">
+
+    <!-- PAGE HEADER -->
+    <div class="mb-6">
+        <h1 class="text-2xl  text-gray-800">
+            Inventory Dashboard
+        </h1>
+
+        
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-6">
+
+        <!-- TOTAL PRODUCTS -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <p class="text-sm text-gray-500">
+                        Total Products
+                    </p>
+
+                    <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                        {{ total_products|intcomma }}
+                    </h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M20 13V7a2 2 0 00-2-2h-3V3H9v2H6a2 2 0 00-2 2v6m16 0l-8 5-8-5m16 0v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TOTAL STOCK -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <p class="text-sm text-gray-500">
+                        Total Stock Quantity
+                    </p>
+
+                    <h2 class="mt-2 text-3xl font-bold text-green-600">
+                        {{ total_stock|intcomma }}
+                    </h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3 7h18M3 12h18M3 17h18"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- WAREHOUSES -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <p class="text-sm text-gray-500">
+                        Warehouses
+                    </p>
+
+                    <h2 class="mt-2 text-3xl font-bold text-yellow-600">
+                        {{ total_warehouses|intcomma }}
+                    </h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl bg-yellow-100 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-yellow-600"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M8 3L4 7v13h16V7l-4-4H8z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- LOW STOCK -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <p class="text-sm text-gray-500">
+                        Low Stock Products
+                    </p>
+
+                    <h2 class="mt-2 text-3xl font-bold text-red-600">
+                        {{ low_stock_products|intcomma }}
+                    </h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl bg-red-100 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-red-600"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+
+        <!-- PIE CHART -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                Stock Movement Overview
+            </h2>
+
+            <canvas id="inventoryPieChart"></canvas>
+
+        </div>
+
+        <!-- BAR CHART -->
+        <div class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                Monthly Inventory Movement
+            </h2>
+
+            <canvas id="inventoryBarChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- RECENT STOCK MOVEMENTS -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+
+        <div class="flex items-center justify-between mb-5">
+
+            <div>
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Recent Stock Movements
+                </h2>
+
+                <p class="text-sm text-gray-500">
+                    Latest inventory transactions
+                </p>
+            </div>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm">
+
+                <thead>
+                    <tr class="border-b border-gray-100 text-left">
+
+                        <th class="py-3 px-2 font-semibold text-gray-600">
+                            Product
+                        </th>
+
+                        <th class="py-3 px-2 font-semibold text-gray-600">
+                            Warehouse
+                        </th>
+
+                        <th class="py-3 px-2 font-semibold text-gray-600">
+                            Type
+                        </th>
+
+                        <th class="py-3 px-2 font-semibold text-gray-600">
+                            Quantity
+                        </th>
+
+                        <th class="py-3 px-2 font-semibold text-gray-600">
+                            Balance
+                        </th>
+
+                        <th class="py-3 px-2 font-semibold text-gray-600">
+                            Date
+                        </th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for movement in recent_movements %}
+                    <tr class="border-b border-gray-50 hover:bg-gray-50">
+
+                        <td class="py-3 px-2">
+                            {{ movement.product.name }}
+                        </td>
+
+                        <td class="py-3 px-2">
+                            {{ movement.warehouse.name }}
+                        </td>
+
+                        <td class="py-3 px-2">
+
+                            {% if movement.movement_type == 'IN' %}
+                            <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700">
+                                STOCK IN
+                            </span>
+
+                            {% elif movement.movement_type == 'OUT' %}
+                            <span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">
+                                STOCK OUT
+                            </span>
+
+                            {% else %}
+                            <span class="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-700">
+                                {{ movement.movement_type }}
+                            </span>
+                            {% endif %}
+
+                        </td>
+
+                        <td class="py-3 px-2 font-semibold">
+                            {{ movement.quantity|intcomma }}
+                        </td>
+
+                        <td class="py-3 px-2">
+                            {{ movement.balance_after|intcomma }}
+                        </td>
+
+                        <td class="py-3 px-2 text-gray-500">
+                            {{ movement.created_at|date:"d M Y" }}
+                        </td>
+
+                    </tr>
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="6" class="text-center py-10 text-gray-400">
+                            No stock movement available
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART JS -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // PIE CHART
+    const pieCtx = document.getElementById('inventoryPieChart');
+
+    new Chart(pieCtx, {
+
+        type: 'pie',
+
+        data: {
+            labels: [
+                'Stock In',
+                'Stock Out',
+                'Adjustment',
+                'Transfer'
+            ],
+
+            datasets: [{
+                data: [
+                    {{ stock_in_count }},
+                    {{ stock_out_count }},
+                    {{ adjustment_count }},
+                    {{ transfer_count }}
+                ],
+
+                backgroundColor: [
+                    '#10B981',
+                    '#EF4444',
+                    '#F59E0B',
+                    '#3B82F6'
+                ]
+            }]
+        }
+
+    });
+
+    // BAR CHART
+    const barCtx = document.getElementById('inventoryBarChart');
+
+    new Chart(barCtx, {
+
+        type: 'bar',
+
+        data: {
+
+            labels: {{ months|safe }},
+
+            datasets: [
+
+                {
+                    label: 'Stock In',
+                    data: {{ stock_in_data|safe }},
+                    backgroundColor: '#10B981'
+                },
+
+                {
+                    label: 'Stock Out',
+                    data: {{ stock_out_data|safe }},
+                    backgroundColor: '#EF4444'
+                }
+
+            ]
+        },
+
+        options: {
+            responsive: true
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,481 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<div class="sm:ml-64 mt-16 px-4 py-5 min-h-screen">
+
+    <div class="w-full">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between mb-5">
+
+            <h1 class="text-2xl font-semibold text-gray-800">
+                Department Management
+            </h1>
+
+            <!-- ADD BUTTON -->
+            <button
+                onclick="openCreateModal()"
+                class="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white px-5 py-2.5 rounded-xl text-sm font-medium">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Department
+
+            </button>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="overflow-x-auto bg-white rounded-2xl border border-gray-200 shadow-sm">
+
+            <div class="px-6 py-5 border-b border-gray-200">
+
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Department List
+                </h2>
+
+            </div>
+
+            <table class="w-full text-sm text-left text-gray-600">
+
+                <thead class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500">
+
+                    <tr>
+
+                        <th class="px-6 py-4">
+                            Company
+                        </th>
+
+                        <th class="px-6 py-4">
+                            Department
+                        </th>
+
+                        <th class="px-6 py-4">
+                            Code
+                        </th>
+
+                        <th class="px-6 py-4">
+                            Status
+                        </th>
+
+                        <th class="px-6 py-4 text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if departments %}
+
+                        {% for department in departments %}
+
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+
+                            <td class="px-6 py-4">
+                                {{ department.company.name }}
+                            </td>
+
+                            <td class="px-6 py-4 font-medium text-gray-800">
+                                {{ department.name }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ department.code }}
+                            </td>
+
+                            <td class="px-6 py-4">
+
+                                {% if department.is_active %}
+
+                                <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700">
+                                    Active
+                                </span>
+
+                                {% else %}
+
+                                <span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">
+                                    Inactive
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td class="px-6 py-4">
+
+                                <div class="flex items-center justify-center gap-2">
+
+                                    <!-- EDIT -->
+                                    <button
+                                        onclick="openEditModal(
+                                            '{{ department.id }}',
+                                            '{{ department.company.id }}',
+                                            '{{ department.name }}',
+                                            '{{ department.code }}',
+                                            '{{ department.is_active }}'
+                                        )"
+                                        class="inline-flex items-center gap-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 py-2 rounded-xl text-xs">
+
+                                        <i class="fa-solid fa-pen-to-square"></i>
+
+                                        Edit
+
+                                    </button>
+
+                                    <!-- DELETE -->
+                                    <form method="POST">
+
+                                        {% csrf_token %}
+
+                                        <input
+                                            type="hidden"
+                                            name="department_id"
+                                            value="{{ department.id }}">
+
+                                        <button
+                                            type="submit"
+                                            name="delete_department"
+                                            onclick="return confirm('Delete this department?')"
+                                            class="inline-flex items-center gap-2 bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl text-xs">
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="5" class="px-6 py-20 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <i class="fa-solid fa-building text-5xl text-gray-300 mb-4"></i>
+
+                                <h2 class="text-lg font-semibold text-gray-700">
+                                    No Departments Found
+                                </h2>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CREATE MODAL -->
+<div
+    id="createModal"
+    class="fixed inset-0 hidden items-center justify-center z-50 px-4">
+
+    <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-gray-200 animate-modal">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Add Department
+            </h2>
+
+            <button
+                onclick="closeCreateModal()"
+                class="w-9 h-9 rounded-lg hover:bg-gray-100">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <div class="space-y-5">
+
+                <div>
+                    <label class="block text-sm mb-2">
+                        Company
+                    </label>
+
+                    {{ form.company }}
+                </div>
+
+                <div>
+                    <label class="block text-sm mb-2">
+                        Department Name
+                    </label>
+
+                    {{ form.name }}
+                </div>
+
+                <div>
+                    <label class="block text-sm mb-2">
+                        Department Code
+                    </label>
+
+                    {{ form.code }}
+                </div>
+
+                <div class="flex items-center gap-3">
+
+                    {{ form.is_active }}
+
+                    <label class="text-sm text-gray-700">
+                        Active Department
+                    </label>
+
+                </div>
+
+            </div>
+
+            <div class="flex justify-end">
+
+                <button
+                    type="submit"
+                    name="create_department"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm">
+
+                    Save Department
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- EDIT MODAL -->
+<div
+    id="editModal"
+    class="fixed inset-0 hidden items-center justify-center z-50 px-4">
+
+    <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-gray-200 animate-modal">
+
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+
+            <h2 class="text-xl font-bold text-gray-800">
+                Edit Department
+            </h2>
+
+            <button
+                onclick="closeEditModal()"
+                class="w-9 h-9 rounded-lg hover:bg-gray-100">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="p-6 space-y-5">
+
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="department_id"
+                id="edit_department_id">
+
+            <div class="space-y-5">
+
+                <div>
+
+                    <label class="block text-sm mb-2">
+                        Company
+                    </label>
+
+                    <select
+                        name="company"
+                        id="edit_company"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5">
+
+                        {% for company in form.company.field.queryset %}
+
+                        <option value="{{ company.id }}">
+                            {{ company.name }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm mb-2">
+                        Department Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        id="edit_name"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5">
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm mb-2">
+                        Department Code
+                    </label>
+
+                    <input
+                        type="text"
+                        name="code"
+                        id="edit_code"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-2.5">
+
+                </div>
+
+                <div class="flex items-center gap-3">
+
+                    <input
+                        type="checkbox"
+                        name="is_active"
+                        id="edit_is_active">
+
+                    <label class="text-sm text-gray-700">
+                        Active Department
+                    </label>
+
+                </div>
+
+            </div>
+
+            <div class="flex justify-end">
+
+                <button
+                    type="submit"
+                    name="update_department"
+                    class="bg-green-700 hover:bg-green-800 text-white px-6 py-2.5 rounded-xl text-sm">
+
+                    Update Department
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+
+function openCreateModal() {
+
+    const modal = document.getElementById('createModal');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeCreateModal() {
+
+    const modal = document.getElementById('createModal');
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function openEditModal(id, company, name, code, is_active) {
+
+    document.getElementById('edit_department_id').value = id;
+    document.getElementById('edit_company').value = company;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_code').value = code;
+
+    if (is_active == 'True') {
+
+        document.getElementById('edit_is_active').checked = true;
+
+    } else {
+
+        document.getElementById('edit_is_active').checked = false;
+    }
+
+    const modal = document.getElementById('editModal');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeEditModal() {
+
+    const modal = document.getElementById('editModal');
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+</script>
+
+<!-- ANIMATION -->
+<style>
+
+@keyframes modalFade {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-modal {
+
+    animation: modalFade 0.25s ease;
+}
+
+</style>
+
+{% endblock %}

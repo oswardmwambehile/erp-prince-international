@@ -1,0 +1,496 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Proforma Invoice</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #222;
+            margin: 25px;
+            line-height: 1.4;
+        }
+
+        /* ================= HEADER ================= */
+        .company-header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .company-info {
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        .invoice-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+
+        /* ================= ROWS ================= */
+        .row {
+            width: 100%;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .col {
+            width: 48%;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .box {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+        h3 {
+            margin: 0 0 5px 0;
+            font-size: 12px;
+        }
+
+        p {
+            margin: 2px 0;
+        }
+
+        /* ================= LINES ================= */
+        .line {
+            border-top: 1px solid #000;
+            margin: 10px 0;
+        }
+
+        /* ================= SECTION ================= */
+        .section-title {
+            font-weight: bold;
+            font-size: 12px;
+            margin: 10px 0 5px 0;
+            text-transform: uppercase;
+        }
+
+        /* ================= TABLE ================= */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 5px;
+            font-size: 10px;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .bold { font-weight: bold; }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            margin-top: 25px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            font-size: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- ================= COMPANY HEADER ================= -->
+<div class="company-header">
+
+    <div class="company-name">
+        Experts Fenestration Engineering Technology
+    </div>
+
+    <div class="company-info">
+        PI Dealers: Supply & Fix: Aluminium, UPVC & Frameless Glass Works, Balustrades, Sensor Windows & Doors,
+        Kitchen & Wardrobe Cabinets, Skylight Structure, Steel Structure, Pergola Structure, Prefabricated Containers,
+        Welding, Swimming Pool, Skimming/Paint, Electric Fences, CCTV Camera, Elevator Works, Carpentry & Roofing Works.
+    </div>
+
+    <div class="company-info">
+        HQ: Mwenge Cocacola Road | Mbezi Beach | Tegeta Branch | P.O.Box 14491 Dar Es Salaam, TZ |
+        Email: info@princeinternational.co.tz |
+        Web: www.princeinternational.co.tz |
+        Tel: +255 712 328 862
+    </div>
+
+</div>
+
+<!-- ================= TITLE ================= -->
+<div class="invoice-title">
+    PROFORMA INVOICE
+</div>
+
+<div class="line"></div>
+
+<!-- ================= INVOICE INFO ================= -->
+<div class="row">
+
+    <div class="col box">
+        <h3>INVOICE DETAILS</h3>
+        <p><b>No:</b> {{ quotation.quotation_no }}</p>
+        <p><b>Date:</b> {{ quotation.quotation_date }}</p>
+        <p><b>Time:</b> {{ quotation.created_at|date:"H:i" }}</p>
+    </div>
+
+    <div class="col box text-right">
+        <h3>CUSTOMER DETAILS</h3>
+        <p><b>{{ quotation.customer }}</b></p>
+        <p>{{ quotation.contact_person }}</p>
+        <p>{{ quotation.project_location }}</p>
+    </div>
+
+</div>
+
+<div class="line"></div>
+
+<!-- ================= SECTION I ================= -->
+<div class="section-title">
+    SECTION I: PURPOSE
+</div>
+
+<p>
+    PROFORMA INVOICE FOR POWDER COATED ALUMINIUM PROFILE WINDOWS,
+    TRANSPORTATION AND INSTALLATION INCLUDING COMMISSIONING OF PRODUCTS
+    AND SERVICES FOR BUILDING USE ONLY.
+</p>
+
+<div class="line"></div>
+
+<!-- ================= ITEMS ================= -->
+<!-- ================= ITEMS + BOQ SUMMARY IN ONE TABLE ================= -->
+
+
+
+<table style="
+    width:100%;
+    border-collapse:collapse;
+    font-family:Arial,sans-serif;
+    font-size:8px;
+    table-layout:fixed;
+">
+
+    <!-- ================= HEADER ================= -->
+
+    <thead>
+
+        <!-- TOP HEADER -->
+        <tr style="background:#e5e5e5;">
+
+            <th rowspan="2"
+                style="border:1px solid #000; padding:4px; width:8%;">
+                Code
+            </th>
+
+            <th rowspan="2"
+                style="border:1px solid #000; padding:4px; width:18%;">
+                Method
+            </th>
+
+            <!-- TYPE -->
+            <th colspan="2"
+                style="border:1px solid #000; padding:4px; text-align:center; width:20%;">
+                TYPE
+            </th>
+
+            <!-- SIZE -->
+            <th colspan="2"
+                style="border:1px solid #000; padding:4px; text-align:center; width:10%;">
+                SIZE (MM)
+            </th>
+
+            <th rowspan="2"
+                style="border:1px solid #000; padding:4px; width:6%; text-align:center;">
+                Qty
+            </th>
+
+            <th rowspan="2"
+                style="border:1px solid #000; padding:4px; width:8%; text-align:center;">
+                SQM
+            </th>
+
+            <th rowspan="2"
+                style="border:1px solid #000; padding:4px; width:10%; text-align:center;">
+                Total SQM
+            </th>
+
+            <th rowspan="2"
+                style="border:1px solid #000; padding:4px; width:10%; text-align:right;">
+                Unit Price
+            </th>
+
+            <th rowspan="2"
+                style="border:1px solid #000; padding:4px; width:10%; text-align:right;">
+                Total Price
+            </th>
+
+        </tr>
+
+        <!-- SUB HEADER -->
+        <tr style="background:#f2f2f2;">
+
+            <th style="border:1px solid #000; padding:4px;">
+                Aluminium
+            </th>
+
+            <th style="border:1px solid #000; padding:4px;">
+                Glass
+            </th>
+
+            <th style="border:1px solid #000; padding:4px; text-align:center;">
+                W
+            </th>
+
+            <th style="border:1px solid #000; padding:4px; text-align:center;">
+                H
+            </th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    <!-- ================= ITEMS ================= -->
+
+    {% for group in grouped_data %}
+
+        {% for item in group.items %}
+
+        <tr>
+
+            <td style="border:1px solid #000; padding:4px; word-wrap:break-word;">
+                {{ item.item_code }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; word-wrap:break-word;">
+                {{ item.product.name }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:center;">
+                {{ item.aluminium_profile|default:"-" }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:center;">
+                {{ item.glass|default:"-" }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:center;">
+                {{ item.width|floatformat:0 }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:center;">
+                {{ item.height|floatformat:0 }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:center;">
+                {{ item.quantity }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:center;">
+                {{ item.sqm|floatformat:2 }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:center;">
+                {{ item.total_sqm|floatformat:2 }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:right;">
+                {{ item.unit_price|floatformat:0|intcomma }}
+            </td>
+
+            <td style="border:1px solid #000; padding:4px; text-align:right;">
+                {{ item.total_price|floatformat:0|intcomma }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        <!-- ================= PRODUCT SUBTOTAL ================= -->
+
+        <tr style="background:#c8932e; font-weight:bold;">
+
+            <td colspan="6"
+                style="border:1px solid #000; padding:5px; text-align:right;">
+                SUBTOTAL
+            </td>
+
+            <td style="border:1px solid #000; padding:5px; text-align:center;">
+                {{ group.subtotal_qty }}
+            </td>
+
+            <td style="border:1px solid #000; padding:5px; text-align:center;">
+                {{ group.subtotal_sqm|floatformat:2 }}
+            </td>
+
+            <td style="border:1px solid #000; padding:5px; text-align:center;">
+                {{ group.subtotal_total_sqm|floatformat:2 }}
+            </td>
+
+            <td style="border:1px solid #000; padding:5px; text-align:right;">
+                {{ group.subtotal_unit_price|floatformat:0|intcomma }}
+            </td>
+
+            <td style="border:1px solid #000; padding:5px; text-align:right;">
+                {{ group.subtotal_total_price|floatformat:0|intcomma }}
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    <!-- ================= BOQ SUMMARY ================= -->
+
+    <tr style="background:#222; color:#fff; font-weight:bold;">
+
+        <td colspan="11"
+            style="border:1px solid #000; padding:6px; text-align:center; font-size:10px;">
+            BOQ SUMMARY
+        </td>
+
+    </tr>
+
+    {% for row in summary_rows %}
+
+    <tr>
+
+        <td colspan="6"
+            style="border:1px solid #000; padding:5px; font-weight:bold;">
+            {{ row.label }}
+        </td>
+
+        <td style="border:1px solid #000; padding:5px; text-align:center;">
+            {{ row.qty }}
+        </td>
+
+        <td style="border:1px solid #000; padding:5px; text-align:center;">
+            {{ row.sqm|floatformat:2 }}
+        </td>
+
+        <td style="border:1px solid #000; padding:5px; text-align:center;">
+            {{ row.total_sqm|floatformat:2 }}
+        </td>
+
+        <td style="border:1px solid #000; padding:5px; text-align:right;">
+            {{ row.unit_price|floatformat:0|intcomma }}
+        </td>
+
+        <td style="border:1px solid #000; padding:5px; text-align:right; font-weight:bold;">
+            {{ row.value|floatformat:0|intcomma }}
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+    <!-- ================= GRAND SUBTOTAL ================= -->
+
+    <tr style="background:#c8932e; font-weight:bold;">
+
+        <td colspan="6"
+            style="border:1px solid #000; padding:6px; text-align:right;">
+            SUBTOTAL
+        </td>
+
+        <td style="border:1px solid #000; padding:6px; text-align:center;">
+            {{ total_qty }}
+        </td>
+
+        <td style="border:1px solid #000; padding:6px; text-align:center;">
+            {{ total_sqm|floatformat:2 }}
+        </td>
+
+        <td style="border:1px solid #000; padding:6px; text-align:center;">
+            {{ total_total_sqm|floatformat:2 }}
+        </td>
+
+        <td style="border:1px solid #000; padding:6px; text-align:right;">
+            {{ total_unit_price|floatformat:0|intcomma }}
+        </td>
+
+        <td style="border:1px solid #000; padding:6px; text-align:right;">
+            {{ total_subtotal|floatformat:0|intcomma }}
+        </td>
+
+    </tr>
+
+    <!-- ================= DISCOUNT ================= -->
+
+    <tr>
+
+        <td colspan="10"
+            style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+            DISCOUNT
+        </td>
+
+        <td style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+            {{ quotation.discount_amount|floatformat:0|intcomma }}
+        </td>
+
+    </tr>
+
+    <!-- ================= VAT ================= -->
+
+    <tr>
+
+        <td colspan="10"
+            style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+            VAT ({{ quotation.vat_percentage }}%)
+        </td>
+
+        <td style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+            {{ vat_amount|floatformat:0|intcomma }}
+        </td>
+
+    </tr>
+
+    <!-- ================= GRAND TOTAL ================= -->
+
+    <tr style="background:#222; color:#fff; font-weight:bold;">
+
+        <td colspan="10"
+            style="border:1px solid #000; padding:8px; text-align:right;">
+            FINAL GRAND TOTAL
+        </td>
+
+        <td style="border:1px solid #000; padding:8px; text-align:right;">
+            {{ grand_total|floatformat:0|intcomma }} TZS
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+
+
+
+
+</body>
+</html>
