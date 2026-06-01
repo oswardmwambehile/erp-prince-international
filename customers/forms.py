@@ -41,17 +41,13 @@ class CustomerForm(forms.ModelForm):
             'phone',
             'alternative_phone',
             'email',
-            'tin_number',
-            'vrn_number',
+            
             'address',
             'country',
             'region',
-            'district',
-            'ward',
-            'city',
-            'postal_code',
+            
             'is_active',
-            'notes',
+            
         ]
 
         widgets = {
@@ -85,15 +81,7 @@ class CustomerForm(forms.ModelForm):
                 'placeholder': 'Enter email address'
             }),
 
-            'tin_number': forms.TextInput(attrs={
-                'class': TAILWIND_INPUT,
-                'placeholder': 'Enter TIN number'
-            }),
-
-            'vrn_number': forms.TextInput(attrs={
-                'class': TAILWIND_INPUT,
-                'placeholder': 'Enter VRN number'
-            }),
+            
 
             'address': forms.Textarea(attrs={
                 'class': TAILWIND_TEXTAREA,
@@ -111,35 +99,12 @@ class CustomerForm(forms.ModelForm):
                 'placeholder': 'Region'
             }),
 
-            'district': forms.TextInput(attrs={
-                'class': TAILWIND_INPUT,
-                'placeholder': 'District'
-            }),
-
-            'ward': forms.TextInput(attrs={
-                'class': TAILWIND_INPUT,
-                'placeholder': 'Ward'
-            }),
-
-            'city': forms.TextInput(attrs={
-                'class': TAILWIND_INPUT,
-                'placeholder': 'City'
-            }),
-
-            'postal_code': forms.TextInput(attrs={
-                'class': TAILWIND_INPUT,
-                'placeholder': 'Postal code'
-            }),
-
+            
             'is_active': forms.CheckboxInput(attrs={
                 'class': TAILWIND_CHECKBOX
             }),
 
-            'notes': forms.Textarea(attrs={
-                'class': TAILWIND_TEXTAREA,
-                'rows': 4,
-                'placeholder': 'Additional notes'
-            }),
+            
         }
 
     def clean(self):

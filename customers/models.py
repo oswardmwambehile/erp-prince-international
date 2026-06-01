@@ -44,17 +44,7 @@ class Customer(models.Model):
         null=True
     )
 
-    tin_number = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
-
-    vrn_number = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+   
 
     address = models.TextField(
         blank=True,
@@ -72,39 +62,14 @@ class Customer(models.Model):
         null=True
     )
 
-    district = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
-
-    ward = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
-
-    city = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
-
-    postal_code = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True
-    )
+   
+    
 
     is_active = models.BooleanField(
         default=True
     )
 
-    notes = models.TextField(
-        blank=True,
-        null=True
-    )
-
+    
     created_at = models.DateTimeField(
         auto_now_add=True
     )

@@ -1,0 +1,124 @@
+{% extends 'accounting/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center mb-6">
+
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Trial Balance
+                </h1>
+
+                <p class="text-sm text-gray-500">
+                    Summary of all account balances
+                </p>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+
+            <table class="w-full text-sm">
+
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="p-3 text-left">Account Code</th>
+                        <th class="p-3 text-left">Account Name</th>
+                        <th class="p-3 text-left">Debit</th>
+                        <th class="p-3 text-left">Credit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in trial_data %}
+
+                    <tr class="border-t hover:bg-gray-50">
+
+                        <!-- ✅ FIX: safe account code -->
+                        <td class="p-3 font-medium text-gray-700">
+                              {{ row.account.account_code|default:"-" }}
+                        </td>
+
+                        <!-- ✅ FIX: safe account name -->
+                        <td class="p-3">
+                            {{ row.account.account_name|default:"Unknown Account" }}
+                        </td>
+
+                        <!-- Debit -->
+                        <td class="p-3 text-green-700 font-medium">
+                            {{ row.debit|default:0|floatformat:2 }}
+                        </td>
+
+                        <!-- Credit -->
+                        <td class="p-3 text-red-700 font-medium">
+                            {{ row.credit|default:0|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4" class="p-6 text-center text-gray-500">
+                            No trial balance data found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+                <!-- TOTALS -->
+                <tfoot class="bg-gray-100 font-semibold">
+
+                    <tr>
+                        <td colspan="2" class="p-3 text-right">
+                            TOTAL
+                        </td>
+
+                        <td class="p-3 text-green-700">
+                            {{ total_debit|floatformat:2 }}
+                        </td>
+
+                        <td class="p-3 text-red-700">
+                            {{ total_credit|floatformat:2 }}
+                        </td>
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+        </div>
+
+        <!-- BALANCE STATUS -->
+        <div class="mt-4">
+
+            {% if total_debit == total_credit %}
+                <p class="text-green-600 font-medium">
+                    ✔ Trial Balance is balanced
+                </p>
+            {% else %}
+                <p class="text-red-600 font-medium">
+                    ✖ Trial Balance is not balanced
+                </p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

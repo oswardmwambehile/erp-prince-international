@@ -342,6 +342,152 @@ def product_delete(request, pk):
         "product_list"
     )
 
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Category
+from .forms import CategoryForm
+
+def category_page(request):
+
+    categories = Category.objects.all().order_by('-id')
+    form = CategoryForm()
+
+    # ---------------- CREATE ----------------
+    if request.method == "POST" and "create_category" in request.POST:
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_page')
+
+    # ---------------- UPDATE ----------------
+    if request.method == "POST" and "update_category" in request.POST:
+        category_id = request.POST.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category_page')
+
+    # ---------------- DELETE ----------------
+    if request.method == "POST" and "delete_category" in request.POST:
+        category_id = request.POST.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+        category.delete()
+        return redirect('category_page')
+
+    return render(request, "inventory/category.html", {
+        "categories": categories,
+        "form": form
+    })
+
+def admin_category_page(request):
+
+    categories = Category.objects.all().order_by('-id')
+    form = CategoryForm()
+
+    # ---------------- CREATE ----------------
+    if request.method == "POST" and "create_category" in request.POST:
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_page')
+
+    # ---------------- UPDATE ----------------
+    if request.method == "POST" and "update_category" in request.POST:
+        category_id = request.POST.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category_page')
+
+    # ---------------- DELETE ----------------
+    if request.method == "POST" and "delete_category" in request.POST:
+        category_id = request.POST.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+        category.delete()
+        return redirect('category_page')
+
+    return render(request, "manager/category.html", {
+        "categories": categories,
+        "form": form
+    })
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Unit
+from .forms import UnitForm
+
+
+def unit_page(request):
+
+    units = Unit.objects.all().order_by('-id')
+    form = UnitForm()
+
+    # ---------------- CREATE ----------------
+    if request.method == "POST" and "create_unit" in request.POST:
+        form = UnitForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('unit_page')
+
+    # ---------------- UPDATE ----------------
+    if request.method == "POST" and "update_unit" in request.POST:
+        unit_id = request.POST.get("unit_id")
+        unit = get_object_or_404(Unit, id=unit_id)
+
+        form = UnitForm(request.POST, instance=unit)
+        if form.is_valid():
+            form.save()
+            return redirect('unit_page')
+
+    # ---------------- DELETE ----------------
+    if request.method == "POST" and "delete_unit" in request.POST:
+        unit_id = request.POST.get("unit_id")
+        unit = get_object_or_404(Unit, id=unit_id)
+        unit.delete()
+        return redirect('unit_page')
+
+    return render(request, 'inventory/unit_page.html', {
+        'units': units,
+        'form': form
+    })
+
+def admin_unit_page(request):
+
+    units = Unit.objects.all().order_by('-id')
+    form = UnitForm()
+
+    # ---------------- CREATE ----------------
+    if request.method == "POST" and "create_unit" in request.POST:
+        form = UnitForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('unit_page')
+
+    # ---------------- UPDATE ----------------
+    if request.method == "POST" and "update_unit" in request.POST:
+        unit_id = request.POST.get("unit_id")
+        unit = get_object_or_404(Unit, id=unit_id)
+
+        form = UnitForm(request.POST, instance=unit)
+        if form.is_valid():
+            form.save()
+            return redirect('unit_page')
+
+    # ---------------- DELETE ----------------
+    if request.method == "POST" and "delete_unit" in request.POST:
+        unit_id = request.POST.get("unit_id")
+        unit = get_object_or_404(Unit, id=unit_id)
+        unit.delete()
+        return redirect('unit_page')
+
+    return render(request, 'manager/unit_page.html', {
+        'units': units,
+        'form': form
+    })
+
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages

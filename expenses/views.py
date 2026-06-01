@@ -259,36 +259,56 @@ from django.shortcuts import render
 from .models import Expense
 
 
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.templatetags.static import static
+from django.conf import settings
+
 @login_required
 def account_expense_list(request):
 
     company = request.user.company
 
-    expenses_list = Expense.objects.filter(
-        company=company
-    ).select_related(
+    expenses_list = Expense.objects.filter(company=company).select_related(
         'category',
         'submitted_by'
-    ).order_by('-created_at')
+    )
+    logo_url = request.build_absolute_uri(static("img/logo.png"))
 
-    # ✅ PAGINATION (10 per page)
+    # =========================
+    # FILTER LOGIC (FIXED)
+    # =========================
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    single_date = request.GET.get("date")
+
+    if single_date:
+        expenses_list = expenses_list.filter(expense_date=single_date)
+
+    if start_date and end_date:
+        expenses_list = expenses_list.filter(expense_date__range=[start_date, end_date])
+
+    elif start_date:
+        expenses_list = expenses_list.filter(expense_date__gte=start_date)
+
+    elif end_date:
+        expenses_list = expenses_list.filter(expense_date__lte=end_date)
+
+    expenses_list = expenses_list.order_by('-created_at')
+
+    # =========================
+    # PAGINATION
+    # =========================
     paginator = Paginator(expenses_list, 10)
-
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        'expenses': page_obj,   # IMPORTANT (replace queryset)
-        'page_obj': page_obj
-    }
-
-    return render(
-        request,
-        'accounting/expense_list.html',
-        context
-    )
-
-
+    return render(request, 'accounting/expense_list.html', {
+        'expenses': page_obj,
+        'page_obj': page_obj,
+         'logo_url': logo_url,
+    })
 # =========================================
 # EXPENSE DETAIL
 # =========================================
@@ -358,7 +378,7 @@ def delete_expense(request, id):
         )
 
     return redirect(
-        'eexpense_list'
+        'expense_list'
     )
 
 
@@ -431,3 +451,66 @@ def account_dashboard(request):
         'total_expenses': total_expenses,
     })
 
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
+
+from xhtml2pdf import pisa
+from io import BytesIO
+
+from django.db.models import Sum
+
+from .models import Expense
+
+
+@login_required(login_url='login')
+def expense_report_pdf(request):
+
+    company = request.user.company
+
+    # ================= FILTER =================
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    single_date = request.GET.get('date')
+    logo_url = request.build_absolute_uri(static("img/logo.png"))
+
+    expenses = Expense.objects.filter(company=company)
+
+    if single_date:
+        expenses = expenses.filter(expense_date=single_date)
+
+    if start_date and end_date:
+        expenses = expenses.filter(expense_date__range=[start_date, end_date])
+
+    total = expenses.aggregate(total=Sum('amount'))['total'] or 0
+
+    # ================= CONTEXT =================
+    context = {
+        "company": company,
+        "expenses": expenses,
+        "total": total,
+        "start_date": start_date,
+        "end_date": end_date,
+        "single_date": single_date,
+        "logo_url": logo_url
+    }
+
+    # ================= TEMPLATE =================
+    html_string = render_to_string(
+        "accounting/expense_report.html",
+        context,
+        request=request
+    )
+
+    result = BytesIO()
+
+    pdf = pisa.pisaDocument(BytesIO(html_string.encode("UTF-8")), result)
+
+    if pdf.err:
+        return HttpResponse("Error generating PDF", status=500)
+
+    response = HttpResponse(result.getvalue(), content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="expense_report.pdf"'
+
+    return response

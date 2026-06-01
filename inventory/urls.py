@@ -43,6 +43,10 @@ path('inventory_dashboard/', views.inventory_dashboard, name='inventory_dashboar
         views.sales_product_detail,
         name="sales_product_detail"
     ),
+    path("inventory_categories/", views.category_page, name="category_page"),
+    path('units/', views.unit_page, name='unit_page'),
+    path("categories/", views.admin_category_page, name="admin_category_page"),
+    path('admin_units/', views.admin_unit_page, name='admin_unit_page'),
 
     
 

@@ -63,6 +63,7 @@ path(
     views.update_expense_status,
     name='update_expense_status'
 ),
+path('expenses/report/pdf/', views.expense_report_pdf, name='expense_report_pdf'),
 
 path(
     'accountant_dashboard/',

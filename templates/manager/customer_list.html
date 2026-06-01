@@ -14,7 +14,7 @@
         <div>
 
             <h1 class="text-2xl font-semibold text-gray-800">
-               Manage Customers
+               Manage Customers List
             </h1>
 
             
@@ -37,19 +37,55 @@
     </div>
 
     <!-- ALERTS -->
-    {% if messages %}
+{% if messages %}
+
+    <div class="space-y-3 mb-5">
 
         {% for message in messages %}
 
-            <div class="mb-4 px-5 py-4 rounded-xl border border-gray-300 text-sm text-gray-700">
+            {% if message.tags == "success" %}
+                <div class="flex items-center gap-3 px-5 py-4 rounded-xl border border-green-200 bg-green-50 text-green-800 text-sm">
 
-                {{ message }}
+                    <i class="fa-solid fa-circle-check text-green-600"></i>
 
-            </div>
+                    <span>{{ message }}</span>
+
+                </div>
+
+            {% elif message.tags == "error" %}
+                <div class="flex items-center gap-3 px-5 py-4 rounded-xl border border-red-200 bg-red-50 text-red-800 text-sm">
+
+                    <i class="fa-solid fa-circle-xmark text-red-600"></i>
+
+                    <span>{{ message }}</span>
+
+                </div>
+
+            {% elif message.tags == "warning" %}
+                <div class="flex items-center gap-3 px-5 py-4 rounded-xl border border-yellow-200 bg-yellow-50 text-yellow-800 text-sm">
+
+                    <i class="fa-solid fa-triangle-exclamation text-yellow-600"></i>
+
+                    <span>{{ message }}</span>
+
+                </div>
+
+            {% else %}
+                <div class="flex items-center gap-3 px-5 py-4 rounded-xl border border-blue-200 bg-blue-50 text-blue-800 text-sm">
+
+                    <i class="fa-solid fa-info-circle text-blue-600"></i>
+
+                    <span>{{ message }}</span>
+
+                </div>
+
+            {% endif %}
 
         {% endfor %}
 
-    {% endif %}
+    </div>
+
+{% endif %}
 
     <!-- TABLE WRAPPER -->
     <div class="border border-gray-300 rounded-2xl overflow-hidden bg-white">
@@ -220,7 +256,7 @@
 
                             {% if customer.is_active %}
 
-                                <span class="px-3 py-1 rounded-full text-xs border border-green-300 text-green-700">
+                                <span class="px-3 py-1 rounded-full text-xs border bg-green-700  border-green-700 text-white">
 
                                     Active
 
@@ -228,7 +264,7 @@
 
                             {% else %}
 
-                                <span class="px-3 py-1 rounded-full text-xs border border-red-300 text-red-700">
+                                <span class="px-3 py-1 rounded-full text-xs bg-red-700 border border-red-700 text-white">
 
                                     Inactive
 

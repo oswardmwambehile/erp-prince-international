@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'quotations',
     'inventory',
     'expenses',
+    'accounting',
+    
     
    
     

@@ -651,7 +651,6 @@ def user_detail_view(request, pk):
 def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
-        messages.success(request,'Logout sucessfullly')
         return redirect('login')
     else:
         messages.error(request,'You must login first to access the page')

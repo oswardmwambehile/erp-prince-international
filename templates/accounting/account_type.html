@@ -1,0 +1,121 @@
+{% extends 'accounting/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-semibold text-gray-800">
+                Account Types
+            </h1>
+            <p class="text-sm text-gray-500">
+                Create and manage account categories
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- FORM CARD -->
+            <div class="md:col-span-1 bg-white border rounded-2xl p-6 shadow-sm">
+
+                <h2 class="text-lg font-semibold mb-4">
+                    {% if edit_instance %}Update{% else %}Create{% endif %} Account Type
+                </h2>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% if edit_instance %}
+                        <input type="hidden" name="id" value="{{ edit_instance.id }}">
+                    {% endif %}
+
+                    <div class="space-y-4">
+
+                        <div>
+                            <label class="text-sm text-gray-600">Name</label>
+                            {{ form.name }}
+                        </div>
+
+                        
+
+                    </div>
+
+                    <button type="submit"
+                        class="mt-5 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl">
+
+                        {% if edit_instance %}Update{% else %}Save{% endif %}
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- TABLE -->
+            <div class="md:col-span-2 bg-white border rounded-2xl shadow-sm overflow-hidden">
+
+                <div class="p-4 border-b">
+                    <h2 class="font-semibold text-gray-700">All Account Types</h2>
+                </div>
+
+                <table class="w-full text-sm">
+
+                    <thead class="bg-gray-100 text-left">
+                        <tr>
+                            <th class="p-3">Name</th>
+                            <th class="p-3">Code</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for type in account_types %}
+                        <tr class="border-t">
+
+                            <td class="p-3">{{ type.name }}</td>
+                            <td class="p-3">{{ type.code }}</td>
+
+                            <td class="p-3">
+                                {% if type.is_active %}
+                                    <span class="text-green-600">Active</span>
+                                {% else %}
+                                    <span class="text-red-500">Inactive</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="p-3">
+
+                                <a href="?edit={{ type.id }}"
+                                   class="text-blue-600 hover:underline">
+
+                                    Edit
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- MAIN WRAPPER (FIXED ALIGNMENT) -->
+<div class="ml-64 pt-20 px-4 py-5 min-h-screen">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-6">
+
+        <h1 class="text-2xl text-gray-800">
+            Category Management
+        </h1>
+
+        <button onclick="openCreateModal()"
+            class="bg-green-700 hover:bg-green-800 text-white px-5 py-2 rounded-xl flex items-center gap-2">
+
+            <i class="fa fa-plus"></i>
+            Add Category
+
+        </button>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+
+        <table class="w-full text-sm text-left">
+
+            <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                <tr>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Created At</th>
+                    <th class="px-6 py-4 text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for cat in categories %}
+                <tr class="border-b hover:bg-gray-50">
+
+                    <td class="px-6 py-4 font-medium text-gray-800">
+                        {{ cat.name }}
+                    </td>
+                    <td class="px-6 py-4 font-medium text-gray-800">
+                        {{ cat.created_at }}
+                    </td>
+
+                    <td class="px-6 py-4 text-center space-x-2">
+
+                        <!-- EDIT -->
+                        <button
+                            onclick="openEditModal('{{ cat.id }}','{{ cat.name }}')"
+                            class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-xs">
+
+                            <i class="fa fa-pen"></i> Edit
+
+                        </button>
+
+                        <!-- DELETE -->
+                        <form method="POST" class="inline-block">
+                            {% csrf_token %}
+                            <input type="hidden" name="category_id" value="{{ cat.id }}">
+
+                            <button name="delete_category"
+                                onclick="return confirm('Delete this category?')"
+                                class="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs">
+
+                                <i class="fa fa-trash"></i> Delete
+
+                            </button>
+                        </form>
+
+                    </td>
+
+                </tr>
+            {% empty %}
+
+                <tr>
+                    <td colspan="2" class="text-center py-10 text-gray-400">
+                        No categories found
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+<!-- ================= CREATE MODAL (FIXED CENTER) ================= -->
+<div id="createModal"
+     class="fixed inset-0 hidden z-[99999] items-center justify-center">
+
+    <!-- BACKDROP ONLY (NO CONTENT OPACITY) -->
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <!-- MODAL -->
+    <div class="relative bg-white w-full max-w-lg rounded-2xl shadow-xl border z-10">
+
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h2 class="text-lg font-semibold">Add Category</h2>
+
+            <button onclick="closeCreateModal()">
+                <i class="fa fa-times text-gray-500"></i>
+            </button>
+        </div>
+
+        <form method="POST" class="p-6 space-y-4">
+            {% csrf_token %}
+
+            <label class="text-sm font-medium">Category Name</label>
+            {{ form.name }}
+
+            <button name="create_category"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl">
+
+                Save Category
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- ================= EDIT MODAL (FIXED CENTER) ================= -->
+<div id="editModal"
+     class="fixed inset-0 hidden z-[99999] items-center justify-center">
+
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <div class="relative bg-white w-full max-w-lg rounded-2xl shadow-xl border z-10">
+
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h2 class="text-lg font-semibold">Edit Category</h2>
+
+            <button onclick="closeEditModal()">
+                <i class="fa fa-times text-gray-500"></i>
+            </button>
+        </div>
+
+        <form method="POST" class="p-6 space-y-4">
+
+            {% csrf_token %}
+            <input type="hidden" name="category_id" id="edit_id">
+
+            <label class="text-sm font-medium">Category Name</label>
+
+            <input type="text"
+                   name="name"
+                   id="edit_name"
+                   class="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500">
+
+            <button name="update_category"
+                class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl">
+
+                Update Category
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+
+function openCreateModal() {
+    const modal = document.getElementById('createModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeCreateModal() {
+    const modal = document.getElementById('createModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function openEditModal(id, name) {
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_name').value = name;
+
+    const modal = document.getElementById('editModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+</script>
+
+{% endblock %}

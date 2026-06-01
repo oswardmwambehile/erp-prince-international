@@ -14,12 +14,10 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
 
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">
-                    Expense List
-                </h1>
-                <p class="text-gray-500 mt-1">
+                <h1 class="text-2xl text-gray-800">
                     Manage all company expenses
-                </p>
+                </h1>
+                
             </div>
 
             <a href="{% url 'account_create_expense' %}"
@@ -31,6 +29,66 @@
             </a>
 
         </div>
+
+        <!-- FILTER + DOWNLOAD PANEL -->
+<div class="bg-white border rounded-2xl shadow-sm p-5 mb-6">
+
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+        Filter Expense Report
+    </h3>
+
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
+        <!-- START DATE -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Start Date
+            </label>
+            <input type="date"
+                   name="start_date"
+                   value="{{ request.GET.start_date }}"
+                   class="w-full border rounded-xl p-2">
+        </div>
+
+        <!-- END DATE -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                End Date
+            </label>
+            <input type="date"
+                   name="end_date"
+                   value="{{ request.GET.end_date }}"
+                   class="w-full border rounded-xl p-2">
+        </div>
+
+        <!-- SINGLE DATE -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Single Date
+            </label>
+            <input type="date"
+                   name="date"
+                   value="{{ request.GET.date }}"
+                   class="w-full border rounded-xl p-2">
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="flex gap-2">
+
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl w-full">
+                Filter
+            </button>
+
+            <a href="{% url 'expense_report_pdf' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&date={{ request.GET.date }}"
+               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl w-full text-center">
+                Export Report
+            </a>
+
+        </div>
+
+    </form>
+</div>
 
         <!-- CARD -->
         <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
@@ -55,18 +113,7 @@
 
                     <!-- SEARCH -->
                     <div class="w-full lg:w-96">
-                        <div class="relative">
-
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-
-                            <input type="text"
-                                   id="expenseSearch"
-                                   placeholder="Search..."
-                                   class="w-full pl-12 pr-4 py-3 rounded-2xl border">
-
-                        </div>
+                        
                     </div>
 
                 </div>
@@ -87,7 +134,7 @@
                             <th class="px-6 py-4 text-left">Amount</th>
                             
                             <th class="px-6 py-4 text-left">Date</th>
-                            <th class="px-6 py-4 text-center">Status</th>
+                            
                             <th class="px-6 py-4 text-center">Actions</th>
                         </tr>
 
@@ -121,17 +168,17 @@
                             
 
                             <td class="px-6 py-5">
-                                {{ expense.expense_date|date:"d M Y" }}
+                                {{ expense.expense_date }}
                             </td>
 
-                            <td class="px-6 py-5 text-center">
-                                {{ expense.status }}
-                            </td>
+                            
 
                             <td class="px-6 py-5 text-center">
 
                                 <a href="{% url 'account_expense_detail' expense.id %}"
-                                   class="text-blue-600">View</a>
+   class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+   View
+</a>
 
                             </td>
 

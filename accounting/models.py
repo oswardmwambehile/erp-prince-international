@@ -1,7 +1,21 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from accounts.models import Company
 
 
+# =====================================================
+# UTILITY: DEFAULT COMPANY
+# =====================================================
+def get_default_company():
+    company, _ = Company.objects.get_or_create(
+        name="Prince International"
+    )
+    return company
+
+
+# =====================================================
+# ACCOUNT TYPE
+# =====================================================
 class AccountType(models.Model):
     name = models.CharField(max_length=255)
 
@@ -9,6 +23,9 @@ class AccountType(models.Model):
         return self.name
 
 
+# =====================================================
+# CHART OF ACCOUNTS
+# =====================================================
 class ChartOfAccount(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
@@ -17,18 +34,15 @@ class ChartOfAccount(models.Model):
         on_delete=models.PROTECT
     )
 
-    account_code = models.CharField(
-        max_length=50,
-        unique=True
-    )
-
+    account_code = models.CharField(max_length=50)
     account_name = models.CharField(max_length=255)
 
     parent_account = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        related_name="children"
     )
 
     opening_balance = models.DecimalField(
@@ -41,33 +55,37 @@ class ChartOfAccount(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('company', 'account_code')
+        ordering = ['account_code']
+
     def __str__(self):
-        return f"{self.account_code} - {self.account_name}"
+        return f"{self.account_code} - {self.account_name} - ({self.account_type})"
+
+    def save(self, *args, **kwargs):
+        if not self.company_id:
+            self.company = get_default_company()
+        super().save(*args, **kwargs)
 
 
+# =====================================================
+# JOURNAL ENTRY (HEADER)
+# =====================================================
 class JournalEntry(models.Model):
+
     STATUS_CHOICES = (
         ('draft', 'Draft'),
         ('posted', 'Posted'),
+        ('cancelled', 'Cancelled'),
     )
 
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
-    journal_number = models.CharField(
-        max_length=100,
-        unique=True
-    )
+    journal_number = models.CharField(max_length=100)
 
-    reference = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True
-    )
+    reference = models.CharField(max_length=255, blank=True, null=True)
 
-    description = models.TextField(
-        blank=True,
-        null=True
-    )
+    description = models.TextField(blank=True, null=True)
 
     posting_date = models.DateField()
 
@@ -79,11 +97,32 @@ class JournalEntry(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('company', 'journal_number')
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.journal_number
 
+    def save(self, *args, **kwargs):
+        if not self.company_id:
+            self.company = get_default_company()
+        super().save(*args, **kwargs)
 
+    # =================================================
+    # ERP RULE: CHECK BALANCE
+    # =================================================
+    def is_balanced(self):
+        debit = sum(line.debit for line in self.lines.all())
+        credit = sum(line.credit for line in self.lines.all())
+        return debit == credit
+
+
+# =====================================================
+# JOURNAL ENTRY LINES (DEBIT / CREDIT)
+# =====================================================
 class JournalEntryLine(models.Model):
+
     journal_entry = models.ForeignKey(
         JournalEntry,
         on_delete=models.CASCADE,
@@ -113,5 +152,25 @@ class JournalEntryLine(models.Model):
         default=0
     )
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
-        return str(self.journal_entry)
+        return f"{self.account.account_name}"
+
+    # =================================================
+    # ERP VALIDATION RULES
+    # =================================================
+    def clean(self):
+
+        # Cannot have both debit and credit
+        if self.debit > 0 and self.credit > 0:
+            raise ValidationError(
+                "A line cannot have both debit and credit"
+            )
+
+        # Must have at least one
+        if self.debit == 0 and self.credit == 0:
+            raise ValidationError(
+                "A line must have either debit or credit"
+            )

@@ -1,0 +1,138 @@
+{% extends 'accounting/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center mb-6">
+
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Journal Entries
+                </h1>
+
+                <p class="text-sm text-gray-500">
+                    All recorded journal transactions
+                </p>
+            </div>
+
+            <a href="{% url 'create_journal_entry' %}"
+               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl">
+                New Entry
+            </a>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+
+            <table class="w-full text-sm">
+
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="p-3 text-left">Journal No</th>
+                        <th class="p-3 text-left">Date</th>
+                        <th class="p-3 text-left">Reference</th>
+                        <th class="p-3 text-left">Description</th>
+                        <th class="p-3 text-left">Status</th>
+                        <th class="p-3 text-left">Debit</th>
+                        <th class="p-3 text-left">Credit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for journal in journals %}
+
+                    <tr class="border-t hover:bg-gray-50">
+
+                        <td class="p-3 font-medium">
+                            {{ journal.journal_number }}
+                        </td>
+
+                        <td class="p-3">
+                            {{ journal.posting_date }}
+                        </td>
+
+                        <td class="p-3">
+                            {{ journal.reference|default:"-" }}
+                        </td>
+
+                        <td class="p-3">
+                            {{ journal.description|default:"-" }}
+                        </td>
+
+                        <td class="p-3">
+
+                            {% if journal.status == 'posted' %}
+                                <span class="text-green-600 font-medium">
+                                    Posted
+                                </span>
+
+                            {% elif journal.status == 'draft' %}
+                                <span class="text-yellow-600 font-medium">
+                                    Draft
+                                </span>
+
+                            {% else %}
+                                <span class="text-red-600 font-medium">
+                                    Cancelled
+                                </span>
+                            {% endif %}
+
+                        </td>
+
+                        <td class="p-3">
+
+                            {% with total=0 %}
+                                {% for line in journal.lines.all %}
+                                    {% if line.debit %}
+                                        {{ line.debit }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+
+                        </td>
+
+                        <td class="p-3">
+
+                            {% with total=0 %}
+                                {% for line in journal.lines.all %}
+                                    {% if line.credit %}
+                                        {{ line.credit }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7" class="p-6 text-center text-gray-500">
+                            No journal entries found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

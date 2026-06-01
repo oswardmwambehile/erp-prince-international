@@ -1,0 +1,167 @@
+{% extends 'accounting/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-6xl mx-auto">
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-200 px-8 py-6">
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Create Journal Entry
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">
+                    Record financial journal transactions
+                </p>
+            </div>
+
+            <!-- FORM -->
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                <!-- ================= HEADER FORM ================= -->
+                <div class="space-y-6">
+
+                    
+
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Posting Date
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ entry_form.posting_date }}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Reference
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ entry_form.reference }}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Status
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ entry_form.status }}
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Description
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+                            {{ entry_form.description }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ================= JOURNAL LINES ================= -->
+                <div class="mt-10 border-t border-gray-200 pt-8">
+
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Journal Lines
+                        </h2>
+                    </div>
+
+                    {{ formset.management_form }}
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full border border-gray-200 rounded-xl">
+
+                            <thead class="bg-gray-100 text-sm text-gray-700">
+                                <tr>
+                                    <th class="p-3 text-left">Account</th>
+                                    <th class="p-3 text-left">Description</th>
+                                    <th class="p-3 text-left">Debit</th>
+                                    <th class="p-3 text-left">Credit</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="text-sm">
+
+                                {% for form in formset %}
+                                <tr class="border-t">
+
+                                    <td class="p-2">
+                                        {{ form.account }}
+                                    </td>
+
+                                    <td class="p-2">
+                                        {{ form.description }}
+                                    </td>
+
+                                    <td class="p-2">
+                                        {{ form.debit }}
+                                    </td>
+
+                                    <td class="p-2">
+                                        {{ form.credit }}
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+                <!-- ================= ACTION BUTTONS ================= -->
+                <div class="mt-10 pt-6 border-t border-gray-200 flex justify-end gap-4">
+
+                    <button type="reset"
+                        class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl transition">
+
+                        Reset
+
+                    </button>
+
+                    <button type="submit"
+                        class="px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white rounded-xl transition">
+
+                        Save Journal Entry
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
