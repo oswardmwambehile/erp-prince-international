@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from accounts.models import Company
+from accounts.models import Company, Branch
 
 User = get_user_model()
 
@@ -46,6 +46,11 @@ class Expense(models.Model):
 
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     category = models.ForeignKey(ExpenseCategory, on_delete=models.PROTECT)
+    branch = models.ForeignKey(
+        Branch,
+        on_delete=models.PROTECT,
+        related_name='expenses', blank=True, null=True
+    )
 
     expense_number = models.CharField(max_length=100, unique=True)
 

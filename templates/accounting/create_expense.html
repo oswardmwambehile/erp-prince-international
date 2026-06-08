@@ -90,6 +90,29 @@
 
                     </div>
 
+
+                       <!-- BRANCH -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Branch
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ expense_form.branch }}
+
+                            {% if expense_form.branch.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ expense_form.branch.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
                     <!-- DESCRIPTION -->
                     <div class="grid grid-cols-12 gap-6 items-start">
 
