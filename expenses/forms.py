@@ -105,6 +105,11 @@ class ExpenseForm(forms.ModelForm):
                 'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
                 'placeholder': 'Expense title'
             }),
+            'branch': forms.Select(attrs={
+                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
+                'placeholder': 'Select Branch'
+            }),
+
 
             'description': forms.Textarea(attrs={
                 'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
