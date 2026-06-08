@@ -1,0 +1,382 @@
+{% extends 'accounting/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-4 md:px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- PAGE HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Payroll List
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    Manage employee payroll records
+                </p>
+            </div>
+
+            <a href="{% url 'create_payroll' %}"
+               class="inline-flex items-center gap-2 px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl shadow-sm transition">
+
+                <i class="fa-solid fa-money-bill-wave"></i>
+
+                <span>Create Payroll</span>
+
+            </a>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+
+            <!-- TOP BAR -->
+            <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Payroll Records
+                        </h2>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Total Payrolls:
+                            <span class="font-semibold">
+                                {{ payrolls.paginator.count }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="w-full lg:w-96">
+
+                        <div class="relative">
+
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+
+                            <input
+                                type="text"
+                                id="payrollSearch"
+                                placeholder="Search payroll..."
+                                class="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+            <div class="overflow-x-auto w-full">
+
+                <table class="min-w-[1800px] table-fixed">
+
+                    <thead class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
+
+                        <tr>
+
+                            <th class="w-40 px-6 py-4 text-left">
+                                Payroll No
+                            </th>
+
+                            <th class="w-72 px-6 py-4 text-left">
+                                Employee
+                            </th>
+
+                            <th class="w-32 px-6 py-4 text-left">
+                                Month
+                            </th>
+
+                            <th class="w-32 px-6 py-4 text-left">
+                                Year
+                            </th>
+
+                            <th class="w-40 px-6 py-4 text-left">
+                                Basic Salary
+                            </th>
+
+                            <th class="w-40 px-6 py-4 text-left">
+                                Allowance
+                            </th>
+
+                            <th class="w-40 px-6 py-4 text-left">
+                                Deduction
+                            </th>
+
+                            <th class="w-40 px-6 py-4 text-left">
+                                Tax
+                            </th>
+
+                            <th class="w-40 px-6 py-4 text-left">
+                                Net Salary
+                            </th>
+
+                            <th class="w-32 px-6 py-4 text-center">
+                                Status
+                            </th>
+
+                            <th class="w-48 px-6 py-4 text-center">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="payrollTable" class="divide-y divide-gray-200 bg-white">
+
+                        {% for payroll in payrolls %}
+
+                        <tr class="hover:bg-gray-50 transition">
+
+                            <!-- PAYROLL NUMBER -->
+                            <td class="px-6 py-5 whitespace-nowrap font-medium">
+                                {{ payroll.payroll_number }}
+                            </td>
+
+                            <!-- EMPLOYEE -->
+                            <td class="px-6 py-5 whitespace-nowrap">
+
+                                <div class="flex items-center gap-4">
+
+                                    <div class="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center text-green-600">
+
+                                        <i class="fa-solid fa-user"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h3 class="font-semibold text-gray-800">
+
+                                            {{ payroll.employee.user.first_name }}
+                                            {{ payroll.employee.user.last_name }}
+
+                                        </h3>
+
+                                        <p class="text-xs text-gray-500">
+                                            {{ payroll.employee.employee_id }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td class="px-6 py-5 whitespace-nowrap">
+                                {{ payroll.payroll_month }}
+                            </td>
+
+                            <td class="px-6 py-5 whitespace-nowrap">
+                                {{ payroll.payroll_year }}
+                            </td>
+
+                            <td class="px-6 py-5 whitespace-nowrap text-green-600 font-semibold">
+                                TZS {{ payroll.basic_salary|intcomma }}
+                            </td>
+
+                            <td class="px-6 py-5 whitespace-nowrap">
+                                TZS {{ payroll.allowance|intcomma }}
+                            </td>
+
+                            <td class="px-6 py-5 whitespace-nowrap text-red-600">
+                                TZS {{ payroll.deduction|intcomma }}
+                            </td>
+
+                            <td class="px-6 py-5 whitespace-nowrap text-red-600">
+                                TZS {{ payroll.tax|intcomma }}
+                            </td>
+
+                            <td class="px-6 py-5 whitespace-nowrap">
+
+                                <span class="font-bold text-green-700">
+
+                                    TZS {{ payroll.net_salary|intcomma }}
+
+                                </span>
+
+                            </td>
+
+                            <!-- STATUS -->
+                            <td class="px-6 py-5 text-center">
+
+                                {% if payroll.status == 'paid' %}
+
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-700 text-white text-xs font-semibold">
+
+                                    Paid
+
+                                </span>
+
+                                {% elif payroll.status == 'processed' %}
+
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-800 text-white text-xs font-semibold">
+
+                                    Processed
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-800 text-white text-xs font-semibold">
+
+                                    Draft
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+<td class="px-6 py-5 whitespace-nowrap">
+
+    <div class="flex items-center justify-center gap-2 flex-nowrap">
+
+        <!-- VIEW -->
+        <a href="{% url 'payroll_detail' payroll.id %}"
+           class="w-10 h-10 rounded-xl border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 flex items-center justify-center"
+           title="View Payroll">
+
+            <i class="fa-solid fa-eye"></i>
+
+        </a>
+
+        <!-- EDIT -->
+        <a href="{% url 'edit_payroll' payroll.id %}"
+           class="w-10 h-10 rounded-xl border border-yellow-200 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 flex items-center justify-center"
+           title="Edit Payroll">
+
+            <i class="fa-solid fa-pen"></i>
+
+        </a>
+
+        <!-- PROCESS -->
+        {% if payroll.status == 'draft' %}
+        <a href="{% url 'process_payroll' payroll.id %}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-900 text-white transition whitespace-nowrap">
+
+            <i class="fa-solid fa-gear"></i>
+            <span>Process Payroll</span>
+
+        </a>
+        {% endif %}
+
+        <!-- PAY -->
+        {% if payroll.status == 'processed' %}
+        <a href="{% url 'pay_payroll' payroll.id %}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-green-700 hover:bg-green-800 text-white transition whitespace-nowrap">
+
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <span>Pay Payroll</span>
+
+        </a>
+        {% endif %}
+
+    </div>
+
+</td>
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="11" class="px-6 py-20 text-center">
+
+                                <div class="flex flex-col items-center">
+
+                                    <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-4xl mb-5">
+
+                                        <i class="fa-solid fa-money-bill-wave"></i>
+
+                                    </div>
+
+                                    <h3 class="text-xl font-semibold text-gray-700">
+
+                                        No Payroll Records Found
+
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mt-2">
+
+                                        Start by creating your first payroll
+
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="flex justify-between items-center px-6 py-5 border-t bg-gray-50">
+
+                <p class="text-sm text-gray-600">
+                    Page {{ payrolls.number }} of {{ payrolls.paginator.num_pages }}
+                </p>
+
+                <div class="flex gap-2">
+
+                    {% if payrolls.has_previous %}
+                    <a href="?page={{ payrolls.previous_page_number }}"
+                       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl">
+                        Previous
+                    </a>
+                    {% endif %}
+
+                    {% if payrolls.has_next %}
+                    <a href="?page={{ payrolls.next_page_number }}"
+                       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl">
+                        Next
+                    </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.getElementById('payrollSearch')?.addEventListener('keyup', function() {
+
+    let value = this.value.toLowerCase();
+
+    document.querySelectorAll('#payrollTable tr').forEach(row => {
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(value)
+            ? ''
+            : 'none';
+
+    });
+
+});
+</script>
+
+{% endblock %}

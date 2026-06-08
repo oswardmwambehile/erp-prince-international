@@ -1,0 +1,326 @@
+{% extends 'accounting/base.html' %}
+{% load humanize %}
+
+{% block content %}
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-4 md:px-6 pb-10">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- PAGE HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Employee List
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    Manage all company employees
+                </p>
+            </div>
+
+            <a href="{% url 'create_employee' %}"
+               class="inline-flex items-center gap-2 px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl shadow-sm transition">
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                <span>Create Employee</span>
+
+            </a>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+
+            <!-- TOP BAR -->
+            <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Employee Records
+                        </h2>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Total Employees:
+                            <span class="font-semibold">
+                                {{ employees.paginator.count }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- SEARCH -->
+                    <div class="w-full lg:w-96">
+
+                        <div class="relative">
+
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+
+                            <input
+                                type="text"
+                                id="employeeSearch"
+                                placeholder="Search employee..."
+                                class="w-full pl-12 pr-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+          <!-- TABLE -->
+<div class="overflow-x-auto w-full">
+
+    <table class="min-w-[1600px] table-fixed">
+
+        <thead class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
+
+            <tr>
+
+                <th class="w-72 px-6 py-4 text-left whitespace-nowrap">
+                    Employee
+                </th>
+
+                <th class="w-40 px-6 py-4 text-left whitespace-nowrap">
+                    Employee ID
+                </th>
+
+                <th class="w-48 px-6 py-4 text-left whitespace-nowrap">
+                    Department
+                </th>
+
+                <th class="w-72 px-6 py-4 text-left whitespace-nowrap">
+                    Email
+                </th>
+
+                <th class="w-48 px-6 py-4 text-left whitespace-nowrap">
+                    Phone
+                </th>
+
+                <th class="w-40 px-6 py-4 text-left whitespace-nowrap">
+                    Salary
+                </th>
+
+                <th class="w-40 px-6 py-4 text-center whitespace-nowrap">
+                    Status
+                </th>
+
+                <th class="w-48 px-6 py-4 text-center whitespace-nowrap">
+                    Actions
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="employeeTable" class="divide-y divide-gray-200 bg-white">
+
+            {% for employee in employees %}
+
+            <tr class="hover:bg-gray-50 transition">
+
+                <!-- EMPLOYEE -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <div class="flex items-center gap-4">
+
+                        <div class="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center text-green-600 shrink-0">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-semibold text-gray-800">
+
+                                {{ employee.user.first_name }}
+                                {{ employee.user.last_name }}
+
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+                <!-- ID -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    {{ employee.employee_id }}
+
+                </td>
+
+                <!-- DEPARTMENT -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    {{ employee.user.department }}
+
+                </td>
+
+                <!-- EMAIL -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    {{ employee.user.email }}
+
+                </td>
+
+                <!-- PHONE -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    {{ employee.user.contact }}
+
+                </td>
+
+                <!-- SALARY -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <span class="font-bold text-green-600">
+
+                        TZS {{ employee.salary|intcomma }}
+
+                    </span>
+
+                </td>
+
+                <!-- STATUS -->
+                <td class="px-6 py-5 text-center whitespace-nowrap">
+
+                    {% if employee.employment_status == 'active' %}
+
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+
+                        Active
+
+                    </span>
+
+                    {% elif employee.employment_status == 'terminated' %}
+
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+
+                        Terminated
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+
+                        {{ employee.get_employment_status_display }}
+
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <!-- ACTIONS -->
+                <td class="px-6 py-5 whitespace-nowrap">
+
+                    <div class="flex items-center justify-center gap-2">
+
+                        <a href="{% url 'employee_detail' employee.id %}"
+                           class="w-10 h-10 rounded-xl border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 flex items-center justify-center transition">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </a>
+
+                        <a href="{% url 'edit_employee' employee.id %}"
+                           class="w-10 h-10 rounded-xl border border-yellow-200 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 flex items-center justify-center transition">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </a>
+
+                        
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="8" class="px-6 py-20 text-center">
+
+                    <div class="flex flex-col items-center">
+
+                        <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-4xl mb-5">
+
+                            <i class="fa-solid fa-users"></i>
+
+                        </div>
+
+                        <h3 class="text-xl font-semibold text-gray-700">
+
+                            No Employees Found
+
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-2">
+
+                            Start by creating your first employee
+
+                        </p>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+            <!-- PAGINATION -->
+            <div class="flex justify-between items-center px-6 py-5 border-t bg-gray-50">
+
+                <p class="text-sm text-gray-600">
+                    Page {{ employees.number }} of {{ employees.paginator.num_pages }}
+                </p>
+
+                <div class="flex gap-2">
+
+                    {% if employees.has_previous %}
+                    <a href="?page={{ employees.previous_page_number }}"
+                       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl">
+                        Previous
+                    </a>
+                    {% endif %}
+
+                    {% if employees.has_next %}
+                    <a href="?page={{ employees.next_page_number }}"
+                       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl">
+                        Next
+                    </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

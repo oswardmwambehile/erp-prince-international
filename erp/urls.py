@@ -27,6 +27,7 @@ urlpatterns = [
     path('inventory/', include('inventory.urls')),
     path('expenses/', include('expenses.urls')),
     path('accounting/', include('accounting.urls')),
+    path('payroll/', include('payroll.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

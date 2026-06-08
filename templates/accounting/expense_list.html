@@ -129,6 +129,7 @@
 
                         <tr>
                             <th class="px-6 py-4 text-left">Expense No</th>
+                            <th class="px-6 py-4 text-left">Branch</th>
                             <th class="px-6 py-4 text-left">Title</th>
                             <th class="px-6 py-4 text-left">Category</th>
                             <th class="px-6 py-4 text-left">Amount</th>
@@ -152,6 +153,11 @@
                             <td class="px-6 py-5">
                                 {{ expense.expense_number }}
                             </td>
+                            
+                            <td class="px-6 py-5">
+                                {{ expense.branch.name }}
+                            </td>
+
 
                             <td class="px-6 py-5">
                                 {{ expense.title }}

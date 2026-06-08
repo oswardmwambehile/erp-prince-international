@@ -1,0 +1,277 @@
+{% extends 'accounting/base.html' %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+```
+<div class="w-full max-w-6xl mx-auto">
+
+    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+        <!-- HEADER -->
+        <div class="border-b border-gray-200 px-8 py-6">
+
+            <h1 class="text-2xl font-semibold text-gray-800">
+
+                {{ page_title|default:"Create Payroll" }}
+
+            </h1>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="p-8">
+
+            {% csrf_token %}
+
+            <div class="space-y-6">
+
+                <!-- EMPLOYEE -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Employee
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        {{ form.employee }}
+
+                        {% if form.employee.errors %}
+                            <p class="text-red-500 text-sm mt-2">
+                                {{ form.employee.errors.0 }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <!-- BASIC SALARY -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Basic Salary
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        <input
+                            type="text"
+                            id="basic_salary"
+                            readonly
+                            class="w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-3">
+
+                    </div>
+
+                </div>
+
+                <!-- ALLOWANCE -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Allowance
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        {{ form.allowance }}
+
+                    </div>
+
+                </div>
+
+                <!-- DEDUCTION -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Deduction
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        {{ form.deduction }}
+
+                    </div>
+
+                </div>
+
+                <!-- TAX -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Tax
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        {{ form.tax }}
+
+                    </div>
+
+                </div>
+
+                <!-- MONTH -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Payroll Month
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        {{ form.payroll_month }}
+
+                    </div>
+
+                </div>
+
+                <!-- YEAR -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Payroll Year
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        {{ form.payroll_year }}
+
+                    </div>
+
+                </div>
+
+                <!-- NET SALARY -->
+                <div class="grid grid-cols-12 gap-6 items-start">
+
+                    <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                        Net Salary
+                    </label>
+
+                    <div class="col-span-12 md:col-span-9">
+
+                        <input
+                            type="text"
+                            id="net_salary"
+                            readonly
+                            class="w-full rounded-xl border border-green-300 bg-green-50 px-4 py-3 font-bold text-green-700">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="mt-10 pt-6 border-t border-gray-200 flex items-center gap-4">
+
+                <button
+                    type="submit"
+                    class="px-6 py-3 bg-green-700 hover:bg-green-800 text-white rounded-xl transition">
+
+                    {{ button_text|default:"Save Payroll" }}
+
+                </button>
+
+                <a href="{% url 'payroll_list' %}"
+                   class="px-6 py-3 bg-red-800 hover:bg-red-900 text-white rounded-xl transition">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const employeeSelect = document.getElementById('id_employee');
+    const basicSalaryInput = document.getElementById('basic_salary');
+    const allowanceInput = document.getElementById('id_allowance');
+    const deductionInput = document.getElementById('id_deduction');
+    const taxInput = document.getElementById('id_tax');
+    const netSalaryInput = document.getElementById('net_salary');
+
+    function parseNumber(value) {
+        return parseFloat(String(value).replace(/,/g, '')) || 0;
+    }
+
+    function calculateNetSalary() {
+
+        const basic = parseNumber(basicSalaryInput.value);
+        const allowance = parseNumber(allowanceInput.value);
+        const deduction = parseNumber(deductionInput.value);
+        const tax = parseNumber(taxInput.value);
+
+        const net = basic + allowance - deduction - tax;
+
+        netSalaryInput.value = net.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function loadEmployeeSalary(employeeId) {
+
+        if (!employeeId) {
+            basicSalaryInput.value = '';
+            netSalaryInput.value = '';
+            return;
+        }
+
+        fetch(`/payroll/employee-salary/${employeeId}/`)
+            .then(response => response.json())
+            .then(data => {
+
+                basicSalaryInput.value = Number(
+                    data.salary || 0
+                ).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+                calculateNetSalary();
+            })
+            .catch(error => {
+                console.error('Salary loading error:', error);
+            });
+    }
+
+    if (employeeSelect) {
+
+        employeeSelect.addEventListener('change', function () {
+            loadEmployeeSalary(this.value);
+        });
+
+        if (employeeSelect.value) {
+            loadEmployeeSalary(employeeSelect.value);
+        }
+    }
+
+    if (allowanceInput) {
+        allowanceInput.addEventListener('input', calculateNetSalary);
+    }
+
+    if (deductionInput) {
+        deductionInput.addEventListener('input', calculateNetSalary);
+    }
+
+    if (taxInput) {
+        taxInput.addEventListener('input', calculateNetSalary);
+    }
+
+});
+</script>
+{% endblock %}
