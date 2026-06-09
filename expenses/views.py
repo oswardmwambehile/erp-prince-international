@@ -199,7 +199,7 @@ def account_create_expense(request):
                 )
 
                 return redirect(
-                    'account_create_expense'
+                    'account_expense_list'
                 )
 
             # KEEP CATEGORY FORM
@@ -218,6 +218,126 @@ def account_create_expense(request):
         'accounting/create_expense.html',
         context
     )
+
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+
+@login_required(login_url='login')
+def account_update_expense(request, pk):
+
+    # =====================================
+    # USER COMPANY
+    # =====================================
+    company = request.user.company
+
+    # =====================================
+    # GET EXPENSE
+    # =====================================
+    expense = get_object_or_404(
+        Expense,
+        pk=pk,
+        company=company
+    )
+
+    # =====================================
+    # DEFAULT FORMS
+    # =====================================
+    expense_form = ExpenseForm(
+        instance=expense,
+        company=company
+    )
+
+    category_form = ExpenseCategoryForm()
+
+    # =====================================
+    # HANDLE POST
+    # =====================================
+    if request.method == "POST":
+
+        # ================================
+        # SAVE CATEGORY
+        # ================================
+        if "save_category" in request.POST:
+
+            category_form = ExpenseCategoryForm(
+                request.POST
+            )
+
+            if category_form.is_valid():
+
+                category_form.save()
+
+                messages.success(
+                    request,
+                    "Expense category added successfully."
+                )
+
+                return redirect(
+                    "account_update_expense",
+                    pk=expense.pk
+                )
+
+            expense_form = ExpenseForm(
+                instance=expense,
+                company=company
+            )
+
+        # ================================
+        # UPDATE EXPENSE
+        # ================================
+        else:
+
+            expense_form = ExpenseForm(
+                request.POST,
+                request.FILES,
+                instance=expense,
+                company=company
+            )
+
+            if expense_form.is_valid():
+
+                updated_expense = expense_form.save(
+                    commit=False
+                )
+
+                # Keep company
+                updated_expense.company = company
+
+                # Keep submitted_by if desired
+                updated_expense.submitted_by = expense.submitted_by
+
+                # Keep existing expense number
+                updated_expense.expense_number = expense.expense_number
+
+                updated_expense.save()
+
+                messages.success(
+                    request,
+                    "Expense updated successfully."
+                )
+
+                return redirect(
+                    "account_expense_list"
+                )
+
+            category_form = ExpenseCategoryForm()
+
+    context = {
+        "expense_form": expense_form,
+        "category_form": category_form,
+        "expense": expense,
+        "is_update": True,
+    }
+
+    return render(
+        request,
+        "accounting/create_expense.html",
+        context
+    )
+
+
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required

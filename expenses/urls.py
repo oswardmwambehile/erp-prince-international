@@ -17,6 +17,11 @@ urlpatterns = [
         name='create_expense'
     ),
     path(
+    "expenses/<int:pk>/update/",
+    views.account_update_expense,
+    name="account_update_expense",
+),
+    path(
         'account_create/',
         views.account_create_expense,
         name='account_create_expense'

@@ -181,10 +181,15 @@
 
                             <td class="px-6 py-5 text-center">
 
-                                <a href="{% url 'account_expense_detail' expense.id %}"
+<a href="{% url 'account_expense_detail' expense.id %}"
    class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-   View
+   View Details
 </a>
+ <a href="{% url 'account_update_expense' expense.id %}"
+   class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+   Update
+</a>
+
 
                             </td>
 
