@@ -1,16 +1,15 @@
+
 {% load humanize %}
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-
 <title>EXPENSE REPORT</title>
 
 <style>
-
-@page {
-    size: A4 portrait;
-    margin: 20px;
+@page{
+    size:A4 portrait;
+    margin:20px;
 }
 
 body{
@@ -122,7 +121,6 @@ body{
 .generated{
     text-align:right;
 }
-
 </style>
 
 </head>
@@ -136,50 +134,48 @@ body{
 <div class="header">
 
 <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
-    <tr>
+<tr>
 
-        <!-- LEFT -->
-        <td style="width:33%; text-align:left; border:none;">
-        </td>
+    <!-- LEFT -->
+    <td style="width:33%; text-align:left; border:none;">
+    </td>
 
-        <!-- CENTER LOGO -->
-        <td style="width:34%; text-align:center; border:none;">
-            <img src="{{ logo_url }}"
-                 style="height:130px; width:auto;">
-        </td>
+    <!-- CENTER -->
+    <td style="width:34%; text-align:center; border:none;">
+        <img src="{{ logo_url }}" style="height:130px; width:auto;">
+    </td>
 
-        <!-- RIGHT -->
-        <td style="width:33%; text-align:right; border:none;">
-            {% if logo_urls %}
-            <img src="{{ logo_urls }}"
-                 style="height:130px; width:auto;">
-            {% endif %}
-        </td>
+    <!-- RIGHT -->
+    <td style="width:33%; text-align:right; border:none;">
+        {% if logo_urls %}
+        <img src="{{ logo_urls }}" style="height:130px; width:auto;">
+        {% endif %}
+    </td>
 
-    </tr>
+</tr>
 </table>
 
 <div class="report-title">
     COMPANY EXPENSES REPORT
 </div>
 
-<div class="report-period" style="font-size: 15px; font-weight: 800;">
+<div class="report-period" style="font-size:15px; font-weight:800;">
 
-    {% if single_date %}
-        REPORT DATE : {{ single_date }}
+{% if single_date %}
+    REPORT DATE : {{ single_date }}
 
-    {% elif start_date and end_date %}
-        REPORT PERIOD : {{ start_date }} TO {{ end_date }}
+{% elif start_date and end_date %}
+    REPORT PERIOD : {{ start_date }} TO {{ end_date }}
 
-    {% elif start_date %}
-        REPORT FROM : {{ start_date }}
+{% elif start_date %}
+    REPORT FROM : {{ start_date }}
 
-    {% elif end_date %}
-        REPORT UP TO : {{ end_date }}
+{% elif end_date %}
+    REPORT UP TO : {{ end_date }}
 
-    {% else %}
-        FULL EXPENSE REPORT
-    {% endif %}
+{% else %}
+    FULL EXPENSE REPORT
+{% endif %}
 
 </div>
 
@@ -190,21 +186,19 @@ body{
 ========================== -->
 
 <table class="info-table">
+<tr>
 
-    <tr>
+<td>
+<strong>TOTAL RECORDS :</strong>
+{{ expenses|length }}
+</td>
 
-        <td>
-            <strong>TOTAL RECORDS :</strong>
-            {{ expenses|length }}
-        </td>
+<td align="right">
+<strong>TOTAL EXPENSE :</strong>
+TZS {{ total|floatformat:2|intcomma }}
+</td>
 
-        <td align="right">
-            <strong>TOTAL EXPENSE :</strong>
-            TZS {{ total|floatformat:2|intcomma }}
-        </td>
-
-    </tr>
-
+</tr>
 </table>
 
 <!-- ==========================
@@ -213,68 +207,69 @@ body{
 
 <table class="expense-table">
 
-    <thead>
+<thead>
 
-        <tr>
-            <th width="10%">S/NO</th>
-            <th width="50%">TITLE</th>
-            <th width="25%">CATEGORY</th>
-            <th width="15%">AMOUNT (TZS)</th>
-        </tr>
+<tr>
+    <th width="8%">S/NO</th>
+    <th width="20%">BRANCH</th>
+    <th width="37%">DESCRIPTION</th>
+    <th width="20%">CATEGORY</th>
+    <th width="15%">AMOUNT (TZS)</th>
+</tr>
 
-    </thead>
+</thead>
 
-    <tbody>
+<tbody>
 
-        {% for exp in expenses %}
+{% for exp in expenses %}
 
-        <tr>
+<tr>
 
-            <td class="center">
-                {{ forloop.counter }}
-            </td>
+    <td class="center">
+        {{ forloop.counter }}
+    </td>
 
-            <td>
-                {{ exp.title|upper }}
-            </td>
+    <td>
+        {{ exp.branch|upper }}
+    </td>
 
-            <td>
-                {{ exp.category.name|upper }}
-            </td>
+    <td>
+        {{ exp.description|upper }}
+    </td>
 
-            <td class="right">
-                {{ exp.amount|floatformat:2|intcomma }}
-            </td>
+    <td>
+        {{ exp.category.name|upper }}
+    </td>
 
-        </tr>
+    <td class="right">
+        {{ exp.amount|floatformat:2|intcomma }}
+    </td>
 
-        {% empty %}
+</tr>
 
-        <tr>
+{% empty %}
 
-            <td colspan="4" class="center">
-                NO EXPENSE RECORDS FOUND
-            </td>
+<tr>
+    <td colspan="5" class="center">
+        NO EXPENSE RECORDS FOUND
+    </td>
+</tr>
 
-        </tr>
+{% endfor %}
 
-        {% endfor %}
+<tr class="total-row">
 
-        <!-- TOTAL ROW -->
+    <td colspan="4" class="right">
+        TOTAL EXPENSES
+    </td>
 
-        <tr class="total-row">
+    <td class="right" style="font-size:17px; font-weight:900;">
+        TZS {{ total|floatformat:2|intcomma }}
+    </td>
 
-            <td colspan="3" class="right">
-                TOTAL EXPENSES
-            </td>
+</tr>
 
-            <td class="right" style="font-size: 17px; font-weight: 900;">
-                TZS {{ total|floatformat:2|intcomma }}
-            </td>
-
-        </tr>
-
-    </tbody>
+</tbody>
 
 </table>
 
@@ -284,10 +279,10 @@ body{
 
 <div class="footer">
 
-    <div class="generated">
-        GENERATED ON :
-        {% now "d/m/Y H:i" %}
-    </div>
+<div class="generated">
+GENERATED ON :
+{% now "d/m/Y H:i" %}
+</div>
 
 </div>
 
