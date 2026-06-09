@@ -634,3 +634,85 @@ def expense_report_pdf(request):
     response["Content-Disposition"] = 'attachment; filename="expense_report.pdf"'
 
     return response
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+from .models import Expense
+
+
+# =========================================
+# COMMISSION EXPENSE LIST
+# =========================================
+@login_required
+def commission_expense_list(request):
+
+    company = request.user.company
+
+    expenses = (
+        Expense.objects.filter(
+            company=company,
+            category__name__iexact='Commision'  # Change to 'Commisions' if that's your category name
+        )
+        .select_related(
+            'category',
+            'submitted_by',
+            'branch'
+        )
+        .order_by(
+            '-created_at'
+        )
+    )
+
+    context = {
+        'expenses': expenses
+    }
+
+    return render(
+        request,
+        'accounting/expense_list.html',
+        context
+    )
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+from .models import Expense
+
+
+# =========================================
+# ADVANCE SALARY EXPENSE LIST
+# =========================================
+@login_required
+def advance_salary_expense_list(request):
+
+    company = request.user.company
+
+    expenses = (
+        Expense.objects.filter(
+            company=company,
+            category__name__iexact='Advance Salary'
+        )
+        .select_related(
+            'category',
+            'submitted_by',
+            'branch'
+        )
+        .order_by(
+            '-created_at'
+        )
+    )
+
+    context = {
+        'expenses': expenses
+    }
+
+    return render(
+        request,
+        'accounting/expense_list.html',
+        context
+    )
+

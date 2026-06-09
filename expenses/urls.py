@@ -41,6 +41,14 @@ urlpatterns = [
         name='account_expense_list'
     ),
 
+     path(
+        'commission-expenses/',
+        views.commission_expense_list,
+        name='commission_expense_list'
+    ),
+
+    path( 'advance-salary-expenses/', views.advance_salary_expense_list, name='advance_salary_expense_list' ),
+
     # =====================================
     # EXPENSE DETAIL
     # =====================================
