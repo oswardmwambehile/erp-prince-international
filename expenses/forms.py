@@ -1,7 +1,10 @@
 from django import forms
+from django.contrib.auth import get_user_model
 
-from accounts.models import Company
+from accounts.models import Company, Branch
 from .models import ExpenseCategory, Expense
+
+User = get_user_model()
 
 
 # =========================================
@@ -22,7 +25,6 @@ class ExpenseCategoryForm(forms.ModelForm):
 
         widgets = {
 
-            # COMPANY DROPDOWN
             'company': forms.Select(attrs={
                 'class': 'w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white'
             }),
@@ -50,22 +52,14 @@ class ExpenseCategoryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
 
-        # REMOVE COMPANY ARGUMENT
         company = kwargs.pop('company', None)
 
         super().__init__(*args, **kwargs)
 
-        # LOAD ALL COMPANIES
-        self.fields[
-            'company'
-        ].queryset = Company.objects.all()
+        self.fields['company'].queryset = Company.objects.all()
 
-        # OPTIONAL PRESELECT
         if company:
-
-            self.fields[
-                'company'
-            ].initial = company
+            self.fields['company'].initial = company
 
     def clean_code(self):
 
@@ -77,6 +71,16 @@ class ExpenseCategoryForm(forms.ModelForm):
         return code
 
 
+
+from django import forms
+from django.contrib.auth import get_user_model
+
+from accounts.models import Company, Branch
+from .models import ExpenseCategory, Expense
+
+User = get_user_model()
+
+
 # =========================================
 # EXPENSE FORM
 # =========================================
@@ -86,78 +90,181 @@ class ExpenseForm(forms.ModelForm):
         model = Expense
 
         fields = [
-            'category',
-            'title',
-            'branch',
-            'description',
-            'amount',
-            'expense_date',
-            'attachment',
+            "category",
+            "employee",
+            "branch",
+            "title",
+            "description",
+            "amount",
+            "paid_amount",
+            "remaining_balance",
+            "expense_date",
+            "attachment",
         ]
 
         widgets = {
 
-            'category': forms.Select(attrs={
-                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3'
+            "category": forms.Select(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3"
             }),
 
-            'title': forms.TextInput(attrs={
-                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
-                'placeholder': 'Expense title'
-            }),
-            'branch': forms.Select(attrs={
-                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
-                'placeholder': 'Select Branch'
+            "employee": forms.Select(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3"
             }),
 
-
-            'description': forms.Textarea(attrs={
-                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
-                'rows': 4,
-                'placeholder': 'Expense description'
+            "branch": forms.Select(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3"
             }),
 
-            'amount': forms.NumberInput(attrs={
-                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
-                'placeholder': '0.00',
-                'step': '0.01'
+            "title": forms.TextInput(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3",
+                "placeholder": "Expense title"
             }),
 
-            'expense_date': forms.DateInput(attrs={
-                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3',
-                'type': 'date'
+            "description": forms.Textarea(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3",
+                "rows": 4,
+                "placeholder": "Expense description"
             }),
 
-            'attachment': forms.ClearableFileInput(attrs={
-                'class': 'w-full rounded-xl border border-gray-300 px-4 py-3'
+            "amount": forms.NumberInput(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3",
+                "placeholder": "Amount",
+                "step": "0.01"
+            }),
+
+            "paid_amount": forms.NumberInput(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3",
+                "placeholder": "Today's Payment",
+                "step": "0.01"
+            }),
+
+            "remaining_balance": forms.NumberInput(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3",
+                "readonly": "readonly",
+                "placeholder": "Remaining Balance"
+            }),
+
+            "expense_date": forms.DateInput(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3",
+                "type": "date"
+            }),
+
+            "attachment": forms.ClearableFileInput(attrs={
+                "class": "w-full rounded-xl border border-gray-300 px-4 py-3"
             }),
         }
 
     def __init__(self, *args, **kwargs):
 
-        # REMOVE CUSTOM COMPANY ARGUMENT
-        company = kwargs.pop('company', None)
+        company = kwargs.pop("company", None)
 
         super().__init__(*args, **kwargs)
 
-        # FILTER CATEGORY BY COMPANY
         if company:
 
-            self.fields[
-                'category'
-            ].queryset = ExpenseCategory.objects.filter(
-                company=company,
+            self.fields["category"].queryset = (
+                ExpenseCategory.objects.filter(
+                    company=company,
+                    is_active=True
+                )
+            )
+
+            self.fields["branch"].queryset = (
+                Branch.objects.filter(
+                    company=company
+                )
+            )
+
+        self.fields["employee"].queryset = (
+            User.objects.filter(
                 is_active=True
             )
+        )
+
+        self.fields["employee"].label_from_instance = (
+            lambda obj:
+            f"{obj.first_name} {obj.last_name}".strip()
+            or obj.email
+        )
+
+        self.fields["employee"].required = False
+        self.fields["paid_amount"].required = False
+        self.fields["remaining_balance"].required = False
+
+        # IMPORTANT:
+        # When updating, the user enters ONLY
+        # today's payment, not the accumulated one.
+        if self.instance and self.instance.pk:
+            self.fields["paid_amount"].initial = 0
 
     def clean_amount(self):
 
-        amount = self.cleaned_data.get('amount')
+        amount = self.cleaned_data.get("amount")
 
         if amount is None or amount <= 0:
-
             raise forms.ValidationError(
-                'Amount must be greater than zero.'
+                "Amount must be greater than zero."
             )
 
         return amount
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        category = cleaned_data.get("category")
+        employee = cleaned_data.get("employee")
+
+        amount = cleaned_data.get("amount") or 0
+        payment = cleaned_data.get("paid_amount") or 0
+
+        if category:
+
+            category_name = (
+                category.name.strip().lower()
+            )
+
+            # =====================================
+            # ADVANCE SALARY
+            # =====================================
+            if category_name == "advance salary":
+
+                if not employee:
+                    self.add_error(
+                        "employee",
+                        "Please select an employee."
+                    )
+
+                if payment < 0:
+                    self.add_error(
+                        "paid_amount",
+                        "Payment cannot be negative."
+                    )
+
+                # The view calculates the final balance
+                cleaned_data["remaining_balance"] = amount
+
+            # =====================================
+            # COMMISSION
+            # =====================================
+            elif category_name == "commission":
+
+                if not employee:
+                    self.add_error(
+                        "employee",
+                        "Please select an employee."
+                    )
+
+                cleaned_data["remaining_balance"] = 0
+
+            # =====================================
+            # OTHER CATEGORIES
+            # =====================================
+            else:
+
+                cleaned_data["paid_amount"] = 0
+                cleaned_data["remaining_balance"] = 0
+
+        return cleaned_data
+

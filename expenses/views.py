@@ -153,6 +153,10 @@ def account_create_expense(request):
                     'Expense category added successfully.'
                 )
 
+                return redirect('account_create_expense')
+
+            else:
+                print(category_form.errors)
                 return redirect(
                     'account_create_expense'
                 )
@@ -224,6 +228,28 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
+
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from decimal import Decimal
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+
+
+from decimal import Decimal
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+
+from .forms import ExpenseForm, ExpenseCategoryForm
+from .models import Expense
+
+
 @login_required(login_url='login')
 def account_update_expense(request, pk):
 
@@ -249,25 +275,36 @@ def account_update_expense(request, pk):
         company=company
     )
 
-    category_form = ExpenseCategoryForm()
+    # User should enter ONLY today's payment
+    expense_form.fields["paid_amount"].initial = 0
+
+    category_form = ExpenseCategoryForm(
+        company=company
+    )
 
     # =====================================
     # HANDLE POST
     # =====================================
     if request.method == "POST":
 
-        # ================================
+        # =================================
         # SAVE CATEGORY
-        # ================================
+        # =================================
         if "save_category" in request.POST:
 
             category_form = ExpenseCategoryForm(
-                request.POST
+                request.POST,
+                company=company
             )
 
             if category_form.is_valid():
 
-                category_form.save()
+                category = category_form.save(
+                    commit=False
+                )
+
+                category.company = company
+                category.save()
 
                 messages.success(
                     request,
@@ -284,9 +321,11 @@ def account_update_expense(request, pk):
                 company=company
             )
 
-        # ================================
+            expense_form.fields["paid_amount"].initial = 0
+
+        # =================================
         # UPDATE EXPENSE
-        # ================================
+        # =================================
         else:
 
             expense_form = ExpenseForm(
@@ -302,14 +341,89 @@ def account_update_expense(request, pk):
                     commit=False
                 )
 
-                # Keep company
+                # Preserve values
                 updated_expense.company = company
+                updated_expense.submitted_by = (
+                    expense.submitted_by
+                )
+                updated_expense.expense_number = (
+                    expense.expense_number
+                )
 
-                # Keep submitted_by if desired
-                updated_expense.submitted_by = expense.submitted_by
+                category_name = ""
 
-                # Keep existing expense number
-                updated_expense.expense_number = expense.expense_number
+                if updated_expense.category:
+                    category_name = (
+                        updated_expense.category.name
+                        .strip()
+                        .lower()
+                    )
+
+                # =============================
+                # ADVANCE SALARY
+                # =============================
+                if category_name == "advance salary":
+
+                    today_payment = (
+                        expense_form.cleaned_data.get(
+                            "paid_amount"
+                        )
+                        or Decimal("0")
+                    )
+
+                    previous_paid = (
+                        expense.paid_amount
+                        or Decimal("0")
+                    )
+
+                    total_amount = (
+                        updated_expense.amount
+                        or Decimal("0")
+                    )
+
+                    total_paid = (
+                        previous_paid +
+                        today_payment
+                    )
+
+                    if total_paid > total_amount:
+                        total_paid = total_amount
+
+                    updated_expense.paid_amount = (
+                        total_paid
+                    )
+
+                    updated_expense.remaining_balance = (
+                        total_amount -
+                        total_paid
+                    )
+
+                # =============================
+                # COMMISSION
+                # =============================
+                elif category_name == "commission":
+
+                    updated_expense.paid_amount = (
+                        expense.paid_amount
+                        or Decimal("0")
+                    )
+
+                    updated_expense.remaining_balance = (
+                        Decimal("0")
+                    )
+
+                # =============================
+                # OTHER CATEGORIES
+                # =============================
+                else:
+
+                    updated_expense.paid_amount = (
+                        Decimal("0")
+                    )
+
+                    updated_expense.remaining_balance = (
+                        Decimal("0")
+                    )
 
                 updated_expense.save()
 
@@ -322,7 +436,9 @@ def account_update_expense(request, pk):
                     "account_expense_list"
                 )
 
-            category_form = ExpenseCategoryForm()
+            category_form = ExpenseCategoryForm(
+                company=company
+            )
 
     context = {
         "expense_form": expense_form,
@@ -336,6 +452,10 @@ def account_update_expense(request, pk):
         "accounting/create_expense.html",
         context
     )
+
+
+
+
 
 
 
@@ -712,7 +832,7 @@ def advance_salary_expense_list(request):
 
     return render(
         request,
-        'accounting/expense_list.html',
+        'accounting/advance_expenses_list.html',
         context
     )
 
