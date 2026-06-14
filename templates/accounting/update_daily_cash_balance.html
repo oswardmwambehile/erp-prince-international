@@ -1,0 +1,104 @@
+{% extends 'accounting/base.html' %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-4 md:px-6 pb-10">
+
+    <div class="max-w-3xl mx-auto">
+
+        <div class="bg-white border border-gray-200 rounded-3xl shadow-sm">
+
+            <div class="px-6 py-5 border-b bg-gray-50">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Update Opening Balance
+                </h2>
+            </div>
+
+            <form method="POST" class="p-6">
+
+                {% csrf_token %}
+
+                <!-- Hidden fields -->
+                <input
+                    type="hidden"
+                    name="company"
+                    value="{{ balance.company.id }}">
+
+                <input
+                    type="hidden"
+                    name="date"
+                    value="{{ balance.date|date:'Y-m-d' }}">
+
+                <div class="space-y-6">
+
+                    <!-- Company -->
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">
+                            Company
+                        </label>
+
+                        <input
+                            type="text"
+                            value="{{ balance.company }}"
+                            readonly
+                            class="w-full border rounded-xl p-3 bg-gray-100">
+                    </div>
+
+                    <!-- Date -->
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">
+                            Date
+                        </label>
+
+                        <input
+                            type="text"
+                            value="{{ balance.date }}"
+                            readonly
+                            class="w-full border rounded-xl p-3 bg-gray-100">
+                    </div>
+
+                    <!-- Opening Balance -->
+                    <div>
+                        <label class="block mb-2 font-medium text-gray-700">
+                            Opening Balance
+                        </label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="opening_balance"
+                            value="{{ balance.opening_balance }}"
+                            required
+                            class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    </div>
+
+                </div>
+
+                <div class="mt-8 flex gap-3">
+
+                    <button
+                        type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl">
+                        Update Opening Balance
+                    </button>
+
+                    <a
+                        href="{% url 'daily_cash_balance_list' %}"
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl">
+                        Back
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

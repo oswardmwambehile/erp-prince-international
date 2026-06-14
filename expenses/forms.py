@@ -268,3 +268,42 @@ class ExpenseForm(forms.ModelForm):
 
         return cleaned_data
 
+from django import forms
+from .models import DailyCashBalance
+
+
+class DailyCashBalanceForm(forms.ModelForm):
+    class Meta:
+        model = DailyCashBalance
+        fields = [
+            "company",
+            "date",
+            "opening_balance",
+        ]
+
+        widgets = {
+            "company": forms.Select(
+                attrs={
+                    "class": "w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                }
+            ),
+            "date": forms.DateInput(
+                attrs={
+                    "type": "date",
+                    "class": "w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                }
+            ),
+            "opening_balance": forms.NumberInput(
+                attrs={
+                    "step": "0.01",
+                    "placeholder": "Enter Opening Balance",
+                    "class": "w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                }
+            ),
+        }
+
+        labels = {
+            "company": "Company",
+            "date": "Date",
+            "opening_balance": "Opening Balance (TZS)",
+        }

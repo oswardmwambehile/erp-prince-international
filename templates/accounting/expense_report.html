@@ -189,9 +189,10 @@ body{
 <tr>
 
 <td>
-<strong>TOTAL RECORDS :</strong>
-{{ expenses|length }}
-</td>
+        <strong>OPENING BALANCE :</strong>
+        TZS {{ opening_balance|floatformat:2|intcomma }}
+    </td>
+
 
 <td align="right">
 <strong>TOTAL EXPENSE :</strong>
@@ -263,12 +264,29 @@ TZS {{ total|floatformat:2|intcomma }}
         TOTAL EXPENSES
     </td>
 
-    <td class="right" style="font-size:17px; font-weight:900;">
+    <td class="right" style="font-size:30px; font-weight:900;">
         TZS {{ total|floatformat:2|intcomma }}
     </td>
 
+     
+
+
 </tr>
 
+
+<tr class="total-row">
+
+    <td colspan="4" class="right">
+        <strong>CLOSING BALANCE :</strong>
+    </td>
+
+    <td class="right" style="font-size:30px; font-weight:900;">
+       TZS {{ closing_balance|floatformat:2|intcomma }}
+    </td>
+
+    
+
+</tr>
 </tbody>
 
 </table>

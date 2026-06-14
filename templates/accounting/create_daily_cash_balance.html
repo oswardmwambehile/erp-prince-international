@@ -1,0 +1,129 @@
+{% extends 'accounting/base.html' %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-5xl mx-auto">
+
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+            <!-- HEADER -->
+
+            <div class="border-b border-gray-200 px-8 py-6">
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Daily Opening Balance
+                </h1>
+
+            </div>
+
+            <!-- FORM -->
+
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                <div class="space-y-6">
+
+                    <!-- COMPANY -->
+
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Company
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.company }}
+
+                            {% if form.company.errors %}
+                            <p class="text-red-500 text-sm mt-2">
+                                {{ form.company.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- DATE -->
+
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Date
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.date }}
+
+                            {% if form.date.errors %}
+                            <p class="text-red-500 text-sm mt-2">
+                                {{ form.date.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- OPENING BALANCE -->
+
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Opening Balance
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.opening_balance }}
+
+                            {% if form.opening_balance.errors %}
+                            <p class="text-red-500 text-sm mt-2">
+                                {{ form.opening_balance.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+
+                <div class="mt-10 pt-6 border-t border-gray-200 flex gap-4">
+
+                    <button
+                        type="submit"
+                        class="px-6 py-3 bg-green-700 hover:bg-green-800 text-white rounded-xl transition">
+
+                        Save Opening Balance
+
+                    </button>
+
+                    <a href="{% url 'expense_list' %}"
+                       class="px-6 py-3 bg-red-700 hover:bg-red-800 text-white rounded-xl transition">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -704,54 +704,163 @@ from django.db.models import Sum
 from .models import Expense
 
 
-@login_required(login_url='login')
+from decimal import Decimal
+from datetime import datetime
+from io import BytesIO
+
+from django.contrib.auth.decorators import login_required
+from django.templatetags.static import static
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+
+from xhtml2pdf import pisa
+
+from .models import Expense, DailyCashBalance
+
+
+@login_required(login_url="login")
 def expense_report_pdf(request):
 
     company = request.user.company
 
-    # ================= FILTER =================
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
-    single_date = request.GET.get('date')
-    logo_url = request.build_absolute_uri(static("img/logo.png"))
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    single_date = request.GET.get("date")
 
-    expenses = Expense.objects.filter(company=company)
+    logo_url = request.build_absolute_uri(
+        static("img/logo.png")
+    )
+
+    expenses = Expense.objects.filter(
+        company=company
+    )
+
+    # ================= FILTER =================
 
     if single_date:
-        expenses = expenses.filter(expense_date=single_date)
+        report_date = datetime.strptime(
+            single_date,
+            "%Y-%m-%d"
+        ).date()
 
-    if start_date and end_date:
-        expenses = expenses.filter(expense_date__range=[start_date, end_date])
+        expenses = expenses.filter(
+            expense_date=report_date
+        )
 
-    total = expenses.aggregate(total=Sum('amount'))['total'] or 0
+    elif start_date and end_date:
+        start = datetime.strptime(
+            start_date,
+            "%Y-%m-%d"
+        ).date()
+
+        end = datetime.strptime(
+            end_date,
+            "%Y-%m-%d"
+        ).date()
+
+        expenses = expenses.filter(
+            expense_date__range=[start, end]
+        )
+
+    # ================= TOTAL EXPENSE =================
+
+    total = (
+        expenses.aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+    # ================= OPENING BALANCE =================
+
+    opening_balance = Decimal("0.00")
+
+    if single_date:
+
+        report_date = datetime.strptime(
+            single_date,
+            "%Y-%m-%d"
+        ).date()
+
+        daily_balance = DailyCashBalance.objects.filter(
+            company=company,
+            date=report_date
+        ).first()
+
+        if daily_balance:
+            opening_balance = daily_balance.opening_balance
+
+    elif start_date:
+
+        report_date = datetime.strptime(
+            start_date,
+            "%Y-%m-%d"
+        ).date()
+
+        daily_balance = DailyCashBalance.objects.filter(
+            company=company,
+            date=report_date
+        ).first()
+
+        if daily_balance:
+            opening_balance = daily_balance.opening_balance
+
+    # ================= CLOSING BALANCE =================
+
+    closing_balance = opening_balance - total
+
+    # ================= DEBUG =================
+    print("--------------------------------")
+    print("Company:", company)
+    print("Company ID:", company.id)
+    print("Single Date:", single_date)
+    print("Opening Balance:", opening_balance)
+    print("Total Expense:", total)
+    print("Closing Balance:", closing_balance)
+    print("--------------------------------")
 
     # ================= CONTEXT =================
+
     context = {
         "company": company,
         "expenses": expenses,
         "total": total,
+        "opening_balance": opening_balance,
+        "closing_balance": closing_balance,
         "start_date": start_date,
         "end_date": end_date,
         "single_date": single_date,
-        "logo_url": logo_url
+        "logo_url": logo_url,
     }
 
-    # ================= TEMPLATE =================
     html_string = render_to_string(
         "accounting/expense_report.html",
         context,
-        request=request
+        request=request,
     )
 
     result = BytesIO()
 
-    pdf = pisa.pisaDocument(BytesIO(html_string.encode("UTF-8")), result)
+    pdf = pisa.pisaDocument(
+        BytesIO(html_string.encode("UTF-8")),
+        result,
+    )
 
     if pdf.err:
-        return HttpResponse("Error generating PDF", status=500)
+        return HttpResponse(
+            "Error generating PDF",
+            status=500,
+        )
 
-    response = HttpResponse(result.getvalue(), content_type="application/pdf")
-    response["Content-Disposition"] = 'attachment; filename="expense_report.pdf"'
+    response = HttpResponse(
+        result.getvalue(),
+        content_type="application/pdf",
+    )
+
+    response["Content-Disposition"] = (
+        'attachment; filename="expense_report.pdf"'
+    )
 
     return response
 
@@ -836,3 +945,132 @@ def advance_salary_expense_list(request):
         context
     )
 
+
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from accounts.models import Company
+from .forms import DailyCashBalanceForm
+from .models import DailyCashBalance
+
+
+def create_daily_cash_balance(request):
+    prince = Company.objects.get(name="Prince International")
+
+    if request.method == "POST":
+        form = DailyCashBalanceForm(request.POST)
+
+        if form.is_valid():
+
+            company = form.cleaned_data["company"]
+            date = form.cleaned_data["date"]
+
+            # Check if opening balance already exists
+            if DailyCashBalance.objects.filter(
+                company=company,
+                date=date
+            ).exists():
+
+                messages.error(
+                    request,
+                    f"An opening balance for {date} already exists."
+                )
+
+            else:
+                cash = form.save(commit=False)
+
+                # If you always want Prince International,
+                # uncomment the next line
+                # cash.company = prince
+
+                cash.save()
+
+                messages.success(
+                    request,
+                    "Opening balance created successfully."
+                )
+
+                return redirect("create_daily_cash_balance")
+
+    else:
+        form = DailyCashBalanceForm(
+            initial={
+                "company": prince
+            }
+        )
+
+    return render(
+        request,
+        "accounting/create_daily_cash_balance.html",
+        {
+            "form": form
+        }
+    )
+
+
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.utils import timezone
+from .models import DailyCashBalance
+
+
+def daily_cash_balance_list(request):
+
+    balances = DailyCashBalance.objects.all().order_by("-date")
+
+    paginator = Paginator(balances, 10)  # 10 records per page
+
+    page_number = request.GET.get("page")
+
+    balances = paginator.get_page(page_number)
+
+    today = timezone.localdate()
+
+    today_balance = DailyCashBalance.objects.filter(
+        date=today
+    ).first()
+
+    context = {
+        "balances": balances,
+        "today_balance": today_balance,
+    }
+
+    return render(
+        request,
+        "accounting/daily_cash_balance_list.html",
+        context,
+    )
+
+
+from django.shortcuts import get_object_or_404, redirect, render
+from .forms import DailyCashBalanceForm
+from .models import DailyCashBalance
+
+
+def update_daily_cash_balance(request, pk):
+    balance = get_object_or_404(
+        DailyCashBalance,
+        pk=pk
+    )
+
+    if request.method == "POST":
+        form = DailyCashBalanceForm(
+            request.POST,
+            instance=balance
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect("daily_cash_balance_list")
+
+    else:
+        form = DailyCashBalanceForm(
+            instance=balance
+        )
+
+    return render(
+        request,
+        "accounting/create_daily_cash_balance.html",  # use the SAME template
+        {
+            "form": form,
+        },
+    )

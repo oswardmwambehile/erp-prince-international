@@ -62,6 +62,23 @@ urlpatterns = [
         views.account_expense_detail,
         name='account_expense_detail'
     ),
+
+    path(
+        "daily-cash-balance/create/",
+        views.create_daily_cash_balance,
+        name="create_daily_cash_balance",
+    ),
+
+    path(
+        "daily-cash-balances/",
+        views.daily_cash_balance_list,
+        name="daily_cash_balance_list",
+    ),
+    path(
+    "daily-opening-balance/<int:pk>/update/",
+    views.update_daily_cash_balance,
+    name="update_daily_cash_balance",
+),
    
     # =====================================
     # DELETE EXPENSE

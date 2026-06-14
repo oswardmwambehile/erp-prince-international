@@ -167,3 +167,33 @@ class Expense(models.Model):
 
     def __str__(self):
         return self.expense_number
+    
+
+
+from django.db import models
+from accounts.models import Company
+
+
+def get_default_company():
+    return Company.objects.get(name="Prince International").id
+
+
+class DailyCashBalance(models.Model):
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.CASCADE,
+        default=get_default_company
+    )
+
+    date = models.DateField()
+
+    opening_balance = models.DecimalField(
+        max_digits=18,
+        decimal_places=2
+    )
+
+    class Meta:
+        unique_together = ("company", "date")
+
+    def __str__(self):
+        return f"{self.company} - {self.date}"
