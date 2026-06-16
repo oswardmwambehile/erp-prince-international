@@ -84,6 +84,7 @@ User = get_user_model()
 
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
+from payroll.models import Payroll
 
 User = get_user_model()
 
@@ -114,9 +115,16 @@ def dashboard(request):
         total=Sum("amount")
     )["total"] or 0
 
+    total_payroll = Payroll.objects.aggregate(
+    total=Sum('net_salary')
+)['total'] or 0
+
     # INVENTORY (GLOBAL)
     total_products = Product.objects.count()
     total_stock = Stock.objects.count()
+    total_stock_quantity = Stock.objects.aggregate(
+    total=Sum('quantity')
+)['total'] or 0
 
     context = {
         "total_users": total_users,
@@ -130,6 +138,8 @@ def dashboard(request):
 
         "total_products": total_products,
         "total_stock": total_stock,
+        "total_stock_quantity": total_stock_quantity,
+        "total_payroll": total_payroll,
     }
 
     return render(request, "manager/homeadmin.html", context)

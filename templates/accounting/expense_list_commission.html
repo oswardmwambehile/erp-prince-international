@@ -1,0 +1,293 @@
+{% extends 'accounting/base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'accounting/nav.html' %}
+{% include 'accounting/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 px-4 md:px-6 pb-10 ">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- PAGE HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+
+            <div>
+                <h1 class="text-2xl text-gray-800">
+                    Manage all company expenses
+                </h1>
+                
+            </div>
+
+            <a href="{% url 'account_create_expense' %}"
+               class="inline-flex items-center gap-2 px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl shadow-sm">
+
+                <i class="fa-solid fa-plus"></i>
+                <span>Create Expense</span>
+
+            </a>
+
+        </div>
+
+        <!-- FILTER + DOWNLOAD PANEL -->
+<div class="bg-white border rounded-2xl shadow-sm p-5 mb-6">
+
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+        Filter Expense Report
+    </h3>
+
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
+        <!-- START DATE -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Start Date
+            </label>
+            <input type="date"
+                   name="start_date"
+                   value="{{ request.GET.start_date }}"
+                   class="w-full border rounded-xl p-2">
+        </div>
+
+        <!-- END DATE -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                End Date
+            </label>
+            <input type="date"
+                   name="end_date"
+                   value="{{ request.GET.end_date }}"
+                   class="w-full border rounded-xl p-2">
+        </div>
+
+        <!-- SINGLE DATE -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Single Date
+            </label>
+            <input type="date"
+                   name="date"
+                   value="{{ request.GET.date }}"
+                   class="w-full border rounded-xl p-2">
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="flex gap-2">
+
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl w-full">
+                Filter
+            </button>
+
+            <a href="{% url 'expense_report_pdf' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&date={{ request.GET.date }}"
+               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl w-full text-center">
+                Export Report
+            </a>
+
+        </div>
+
+    </form>
+</div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+
+            <!-- TOP BAR -->
+            <div class="px-6 py-5 border-b bg-gray-50">
+
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Expense Records
+                        </h2>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Total Expenses:
+                            <span class="font-semibold text-gray-700">
+                                {{ expenses.paginator.count }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- SEARCH -->
+                    <div class="w-full lg:w-96">
+                        
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+            <div class="overflow-x-auto w-full">
+
+                <table class="w-full min-w-[1500px] table-auto">
+
+                    <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
+
+                        <tr>
+                            <th class="px-6 py-4 text-left">Expense No</th>
+                             <th class="px-6 py-4 text-left">Employee</th>
+                            <th class="px-6 py-4 text-left">Branch</th>
+                            <th class="px-6 py-4 text-left">Title</th>
+                            <th class="px-6 py-4 text-left">Category</th>
+                            <th class="px-6 py-4 text-left">Amount</th>
+                            
+                            <th class="px-6 py-4 text-left">Date</th>
+                            
+                            <th class="px-6 py-4 text-center">Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for expense in expenses %}
+
+                        <tr class="expense-row"
+                            data-number="{{ expense.expense_number|lower }}"
+                            data-title="{{ expense.title|lower }}"
+                            data-category="{{ expense.category.name|lower }}">
+
+                            <td class="px-6 py-5">
+                                {{ expense.expense_number }}
+                            </td>
+
+                            <td class="px-6 py-5">
+                                {{ expense.employee.first_name }} {{ expense.employee.last_name }}
+                            </td>
+                            
+                            <td class="px-6 py-5">
+                                {{ expense.branch.name }}
+                            </td>
+
+
+                            <td class="px-6 py-5">
+                                {{ expense.title }}
+                            </td>
+
+                            <td class="px-6 py-5">
+                                {{ expense.category.name }}
+                            </td>
+
+                            <td class="px-6 py-5 font-bold text-green-600">
+                                TZS {{ expense.amount|floatformat:2|intcomma }}
+                            </td>
+
+                            
+
+                            <td class="px-6 py-5">
+                                {{ expense.expense_date }}
+                            </td>
+
+                            
+
+                            <td class="px-6 py-5 text-center">
+
+<a href="{% url 'account_expense_detail' expense.id %}"
+   class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+   View Details
+</a>
+ <a href="{% url 'account_update_expense' expense.id %}"
+   class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+   Update
+</a>
+
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-20">
+                                No expenses found
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- ================= PAGINATION ================= -->
+            <div class="flex items-center justify-between px-6 py-4 border-t bg-white">
+
+                <p class="text-sm text-gray-600">
+                    Page {{ expenses.number }} of {{ expenses.paginator.num_pages }}
+                </p>
+
+                <div class="flex gap-2">
+
+                    {% if expenses.has_previous %}
+                        <a href="?page={{ expenses.previous_page_number }}"
+                           class="px-4 py-2 bg-gray-100 rounded-xl hover:bg-gray-200">
+                            Prev
+                        </a>
+                    {% endif %}
+
+                    {% for num in expenses.paginator.page_range %}
+
+                        {% if num == expenses.number %}
+                            <span class="px-4 py-2 bg-green-600 text-white rounded-xl">
+                                {{ num }}
+                            </span>
+                        {% elif num > expenses.number|add:'-2' and num < expenses.number|add:'2' %}
+                            <a href="?page={{ num }}"
+                               class="px-4 py-2 bg-gray-100 rounded-xl">
+                                {{ num }}
+                            </a>
+                        {% endif %}
+
+                    {% endfor %}
+
+                    {% if expenses.has_next %}
+                        <a href="?page={{ expenses.next_page_number }}"
+                           class="px-4 py-2 bg-gray-100 rounded-xl hover:bg-gray-200">
+                            Next
+                        </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("expenseSearch");
+    const rows = document.querySelectorAll(".expense-row");
+
+    searchInput.addEventListener("input", function () {
+
+        const query = this.value.toLowerCase().trim();
+
+        rows.forEach(row => {
+
+            const number = row.dataset.number || "";
+            const title = row.dataset.title || "";
+            const category = row.dataset.category || "";
+
+            const match =
+                number.includes(query) ||
+                title.includes(query) ||
+                category.includes(query);
+
+            row.style.display = match ? "" : "none";
+        });
+
+    });
+
+});
+</script>
+
+{% endblock %}

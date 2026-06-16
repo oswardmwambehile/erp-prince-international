@@ -39,6 +39,37 @@ def employee_list(request):
         },
     )
 
+
+
+def admin_employee_list(request):
+    search = request.GET.get("search", "")
+
+    employees = Employee.objects.select_related(
+        "user"
+    ).order_by("-id")
+
+    if search:
+        employees = employees.filter(
+            Q(user__first_name__icontains=search) |
+            Q(user__last_name__icontains=search) |
+            Q(user__email__icontains=search) |
+            Q(employee_id__icontains=search)
+        )
+
+    paginator = Paginator(employees, 25)
+    page = request.GET.get("page")
+    employees = paginator.get_page(page)
+
+    return render(
+        request,
+        "employee/employee_list.html",
+        {
+            "employees": employees,
+            "search": search,
+        },
+    )
+
+
 def create_employee(request):
 
     if request.method == "POST":
@@ -61,6 +92,28 @@ def create_employee(request):
         },
     )
 
+def admin_create_employee(request):
+
+    if request.method == "POST":
+
+        form = EmployeeForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Employee created successfully.")
+            return redirect("admin_employee_list")
+
+    else:
+        form = EmployeeForm()
+
+    return render(
+        request,
+        "employee/employee_form.html",
+        {
+            "form": form,
+        },
+    )
+
 
 from django.shortcuts import get_object_or_404, render
 
@@ -74,6 +127,20 @@ def employee_detail(request, pk):
             "employee": employee
         }
     )
+
+
+
+def admin_employee_detail(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+
+    return render(
+        request,
+        "employee/employee_detail.html",
+        {
+            "employee": employee
+        }
+    )
+
 
 
 from django.shortcuts import get_object_or_404, redirect, render
@@ -117,6 +184,47 @@ def edit_employee(request, pk):
             "button_text": "Update Employee",
         },
     )
+
+
+def admin_edit_employee(request, pk):
+
+    employee = get_object_or_404(Employee, pk=pk)
+
+    if request.method == "POST":
+
+        form = EmployeeForm(
+            request.POST,
+            instance=employee
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Employee updated successfully."
+            )
+
+            return redirect("admin_employee_list")
+
+    else:
+
+        form = EmployeeForm(
+            instance=employee
+        )
+
+    return render(
+        request,
+        "employee/employee_form.html",
+        {
+            "form": form,
+            "employee": employee,
+            "page_title": "Edit Employee",
+            "button_text": "Update Employee",
+        },
+    )
+
 
 
 # views.py
@@ -193,6 +301,51 @@ def create_payroll(request):
                 "button_text": "Save Payroll",
             },
         )
+
+
+def admin_create_payroll(request):
+
+    
+        if request.method == "POST":
+
+            form = PayrollForm(request.POST)
+
+            if form.is_valid():
+
+                payroll = form.save(commit=False)
+
+                payroll.company = request.user.company
+
+                payroll.processed_by = request.user
+
+                payroll.payroll_number = generate_payroll_number()
+
+                payroll.basic_salary = payroll.employee.salary
+
+                payroll.save()
+
+                messages.success(
+                    request,
+                    "Payroll created successfully."
+                )
+
+                return redirect("admin_payroll_list")
+
+        else:
+
+            form = PayrollForm()
+
+        return render(
+            request,
+            "employee/payroll_form.html",
+            {
+                "form": form,
+                "page_title": "Create Payroll",
+                "button_text": "Save Payroll",
+            },
+        )
+
+
 def employee_salary(request, employee_id):
 
     try:
@@ -261,6 +414,54 @@ def edit_payroll(request, pk):
         )
 
 
+def admin_edit_payroll(request, pk):
+
+
+        payroll = get_object_or_404(
+            Payroll,
+            pk=pk
+        )
+
+        if request.method == "POST":
+
+            form = PayrollForm(
+                request.POST,
+                instance=payroll
+            )
+
+            if form.is_valid():
+
+                payroll = form.save(commit=False)
+
+                payroll.basic_salary = payroll.employee.salary
+
+                payroll.save()
+
+                messages.success(
+                    request,
+                    "Payroll updated successfully."
+                )
+
+                return redirect("admin_payroll_list")
+
+        else:
+
+            form = PayrollForm(
+                instance=payroll
+            )
+
+        return render(
+            request,
+            "employee/payroll_form.html",
+            {
+                "form": form,
+                "page_title": "Edit Payroll",
+                "button_text": "Update Payroll",
+                "payroll": payroll,
+            },
+        )
+
+
 
 
 from django.core.paginator import Paginator
@@ -290,6 +491,30 @@ def payroll_list(request):
     )
 
 
+
+
+def admin_payroll_list(request):
+
+    payrolls = Payroll.objects.select_related(
+        "employee",
+        "employee__user"
+    ).order_by("-id")
+
+    paginator = Paginator(payrolls, 20)
+
+    page_number = request.GET.get("page")
+
+    payrolls = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "employee/payroll_list.html",
+        {
+            "payrolls": payrolls
+        }
+    )
+
+
 from django.shortcuts import get_object_or_404, render
 
 def payroll_detail(request, pk):
@@ -306,6 +531,27 @@ def payroll_detail(request, pk):
     return render(
         request,
         "hr/payroll_detail.html",
+        {
+            "payroll": payroll
+        }
+    )
+
+
+
+def admin_payroll_detail(request, pk):
+
+    payroll = get_object_or_404(
+        Payroll.objects.select_related(
+            "employee",
+            "employee__user",
+            "processed_by"
+        ),
+        pk=pk
+    )
+
+    return render(
+        request,
+        "employee/payroll_detail.html",
         {
             "payroll": payroll
         }
@@ -348,6 +594,37 @@ def process_payroll(request, pk):
     return redirect("payroll_list")
 
 
+def admin_process_payroll(request, pk):
+
+    payroll = get_object_or_404(
+        Payroll,
+        pk=pk
+    )
+
+    if payroll.status == "draft":
+
+        payroll.status = "processed"
+        payroll.processed_by = request.user
+        payroll.processed_at = timezone.now()
+
+        payroll.save()
+
+        messages.success(
+            request,
+            f"{payroll.payroll_number} processed successfully."
+        )
+
+    else:
+
+        messages.warning(
+            request,
+            "Only draft payrolls can be processed."
+        )
+
+    return redirect("admin_payroll_list")
+
+
+
 def pay_payroll(request, pk):
 
     payroll = get_object_or_404(
@@ -374,6 +651,36 @@ def pay_payroll(request, pk):
         )
 
     return redirect("payroll_list")
+
+
+
+
+def admin_pay_payroll(request, pk):
+
+    payroll = get_object_or_404(
+        Payroll,
+        pk=pk
+    )
+
+    if payroll.status == "processed":
+
+        payroll.status = "paid"
+
+        payroll.save()
+
+        messages.success(
+            request,
+            f"{payroll.payroll_number} marked as paid."
+        )
+
+    else:
+
+        messages.warning(
+            request,
+            "Payroll must be processed before payment."
+        )
+
+    return redirect("admin_payroll_list")
 
 
 

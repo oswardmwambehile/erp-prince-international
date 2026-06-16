@@ -1,0 +1,168 @@
+
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+{% include 'manager/nav.html' %}
+{% include 'manager/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-6xl mx-auto">
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-200 px-8 py-6">
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    Create Employee
+                </h1>
+
+            </div>
+
+            <!-- FORM -->
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                <div class="space-y-6">
+
+                    <!-- USER -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Employee
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.user }}
+
+                            {% if form.user.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ form.user.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- EMPLOYEE ID -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Employee ID
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.employee_id }}
+
+                            {% if form.employee_id.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ form.employee_id.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- SALARY -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Salary
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.salary }}
+
+                            {% if form.salary.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ form.salary.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- HIRE DATE -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Hire Date
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.hire_date }}
+
+                            {% if form.hire_date.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ form.hire_date.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="grid grid-cols-12 gap-6 items-start">
+
+                        <label class="col-span-12 md:col-span-3 text-sm font-semibold text-gray-700 pt-3">
+                            Employment Status
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.employment_status }}
+
+                            {% if form.employment_status.errors %}
+                                <p class="text-red-500 text-sm mt-2">
+                                    {{ form.employment_status.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="mt-10 pt-6 border-t border-gray-200 flex items-center gap-4">
+
+                    <button
+                        type="submit"
+                        class="px-6 py-3 bg-green-700 hover:bg-green-800 text-white rounded-xl transition">
+
+                        Save Employee
+
+                    </button>
+
+                    <a href="{% url 'employee_list' %}"
+                       class="px-6 py-3 bg-red-800 border border-red-800 hover:bg-red-900 text-white rounded-xl transition">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

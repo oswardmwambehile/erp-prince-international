@@ -49,19 +49,7 @@
 
             </li>
            
-            <!-- USERS -->
-            <li>
-
-                <a href="{%url 'supplier_list' %}"
-                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
-
-                    <i class="fa-solid fa-users text-base"></i>
-
-                    <span>Supplier</span>
-
-                </a>
-
-            </li>
+            
 
             <!-- COMPANY DIRECTORY -->
             <li>
@@ -392,16 +380,30 @@
             <!-- SETTINGS -->
             <li>
 
-                <a href="#"
+                <a href="{%url 'admin_employee_list'%}"
                 class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
 
                     <i class="fa-solid fa-gear text-base"></i>
 
-                    <span>Settings</span>
+                    <span>Manage Employees</span>
 
                 </a>
 
             </li>
+
+            <!-- SETTINGS -->
+            <li>
+
+                <a href="{%url 'admin_payroll_list' %}"
+                class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-2xl hover:bg-gray-50 hover:text-blue-600 transition-all duration-200">
+
+                    <i class="fa-solid fa-gear text-base"></i>
+
+                    <span>Manage Payroll</span>
+
+                </a>
+
+            
 
         </ul>
 

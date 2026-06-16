@@ -43,7 +43,7 @@ urlpatterns = [
         name='customer_update'
     ),
     path(
-        '/<int:pk>/update/',
+        'sales-update-customer/<int:pk>/update/',
         views.sales_customer_update,
         name='sales_customer_update'
     ),

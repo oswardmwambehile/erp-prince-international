@@ -472,26 +472,52 @@ from .models import Expense
 @login_required
 def expense_list(request):
 
-    company = request.user.company
+    # Superuser and Manager see all expenses
+    if request.user.is_superuser or request.user.role == "Manager":
+        expenses_list = Expense.objects.select_related(
+            'category',
+            'submitted_by',
+            'company'
+        )
+    else:
+        expenses_list = Expense.objects.filter(
+            company=request.user.company
+        ).select_related(
+            'category',
+            'submitted_by',
+            'company'
+        )
 
-    expenses = Expense.objects.filter(
-        company=company
-    ).select_related(
-        'category',
-        'submitted_by'
-    ).order_by(
-        '-created_at'
-    )
+    logo_url = request.build_absolute_uri(static("img/logo.png"))
 
-    context = {
-        'expenses': expenses
-    }
+    # Filters
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    single_date = request.GET.get("date")
 
-    return render(
-        request,
-        'manager/expense_list.html',
-        context
-    )
+    if single_date:
+        expenses_list = expenses_list.filter(expense_date=single_date)
+
+    if start_date and end_date:
+        expenses_list = expenses_list.filter(
+            expense_date__range=[start_date, end_date]
+        )
+    elif start_date:
+        expenses_list = expenses_list.filter(expense_date__gte=start_date)
+    elif end_date:
+        expenses_list = expenses_list.filter(expense_date__lte=end_date)
+
+    expenses_list = expenses_list.order_by("-created_at")
+
+    paginator = Paginator(expenses_list, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "manager/expense_list.html", {
+        "expenses": page_obj,
+        "page_obj": page_obj,
+        "logo_url": logo_url,
+    })
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -883,7 +909,7 @@ def commission_expense_list(request):
     expenses = (
         Expense.objects.filter(
             company=company,
-            category__name__iexact='Commision'  # Change to 'Commisions' if that's your category name
+            category__name__iexact='Commission'  # Change to 'Commisions' if that's your category name
         )
         .select_related(
             'category',
@@ -901,7 +927,7 @@ def commission_expense_list(request):
 
     return render(
         request,
-        'accounting/expense_list.html',
+        'accounting/expense_list_commission.html',
         context
     )
 

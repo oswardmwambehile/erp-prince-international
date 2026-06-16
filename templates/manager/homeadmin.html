@@ -33,25 +33,23 @@
                 </div>
             </div>
 
-            <!-- REVENUE -->
-            <div class="bg-white border border-gray-200 rounded-lg p-5">
-                <div class="flex items-center justify-between">
+            
+           <div class="bg-white border border-gray-200 rounded-lg p-5">
+    <div class="flex items-center justify-between">
 
-                    <div>
-                        <p class="text-sm text-gray-500">Revenue</p>
-                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
-                            TZS {{ total_quotation_amount|floatformat:2|intcomma }}
-                        </h2>
-                    </div>
+        <div>
+            <p class="text-sm text-gray-500">Customer</p>
+            <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                {{ total_customers }}
+            </h2>
+        </div>
 
-                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-100">
-                        <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 10a8 8 0 1116 0A8 8 0 012 10zm9-4a1 1 0 10-2 0v5a1 1 0 00.293.707l3 3a1 1 0 101.414-1.414L11 10.586V6z"/>
-                        </svg>
-                    </div>
+        <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100">
+            <i class="fa-solid fa-users text-blue-600 text-xl"></i>
+        </div>
 
-                </div>
-            </div>
+    </div>
+</div>
 
             <!-- ORDERS -->
             <div class="bg-white border border-gray-200 rounded-lg p-5">
@@ -73,6 +71,90 @@
                 </div>
             </div>
 
+
+
+            <!-- ORDERS -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Total Stock Quantity</p>
+                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                            {{ total_stock_quantity }}
+                        </h2>
+                    </div>
+
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-100">
+                        <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 16a2 2 0 104 0H8zm6-2V7a6 6 0 10-12 0v7l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+ <!-- ORDERS -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Total Payroll Amount</p>
+                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                            {{ total_payroll|floatformat:2|intcomma  }}
+                        </h2>
+                    </div>
+
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-100">
+                        <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 16a2 2 0 104 0H8zm6-2V7a6 6 0 10-12 0v7l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+
+     <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Total Stock</p>
+                        <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                            {{ total_stock  }}
+                        </h2>
+                    </div>
+
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-100">
+                        <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 16a2 2 0 104 0H8zm6-2V7a6 6 0 10-12 0v7l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+            
+          <div class="bg-white border border-gray-200 rounded-lg p-5">
+    <div class="flex items-center justify-between">
+
+        <div>
+            <p class="text-sm text-gray-500">Products</p>
+            <h2 class="mt-2 text-3xl font-bold text-gray-800">
+                {{ total_products }}
+            </h2>
+        </div>
+
+        <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-100">
+            <i class="fa-solid fa-box-open text-yellow-600 text-xl"></i>
+        </div>
+
+    </div>
+</div>
             <!-- EXPENSES -->
             <div class="bg-white border border-gray-200 rounded-lg p-5">
                 <div class="flex items-center justify-between">
@@ -83,7 +165,7 @@
                             {{ total_expenses }}
                         </h2>
 
-                        <p class="text-xs text-red-500 mt-1">
+                        <p class="text-lg text-red-500 mt-1">
                             TZS {{ total_expense_amount|floatformat:2|intcomma }}
                         </p>
                     </div>
@@ -98,6 +180,8 @@
             </div>
 
         </div>
+
+        
 
         <!-- CHARTS -->
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
