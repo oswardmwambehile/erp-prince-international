@@ -469,12 +469,32 @@ from django.shortcuts import render
 from .models import Payroll
 
 
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import Payroll
+
+
 def payroll_list(request):
 
     payrolls = Payroll.objects.select_related(
         "employee",
-        "employee__user"
+        "employee__user",
     ).order_by("-id")
+
+    # Get filter values
+    month = request.GET.get("month")
+    year = request.GET.get("year")
+
+    # Apply filters
+    if month:
+        payrolls = payrolls.filter(
+            payroll_month=month
+        )
+
+    if year:
+        payrolls = payrolls.filter(
+            payroll_year=year
+        )
 
     paginator = Paginator(payrolls, 20)
 
@@ -486,10 +506,11 @@ def payroll_list(request):
         request,
         "hr/payroll_list.html",
         {
-            "payrolls": payrolls
-        }
+            "payrolls": payrolls,
+            "month": month,
+            "year": year,
+        },
     )
-
 
 
 
@@ -1080,5 +1101,113 @@ def export_payroll_slip(request, pk):
     elements.append(signature_table)
 
     doc.build(elements)
+
+    return response
+
+
+from io import BytesIO
+from decimal import Decimal
+from calendar import month_name
+
+from django.contrib.auth.decorators import login_required
+from django.templatetags.static import static
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+
+from xhtml2pdf import pisa
+
+from .models import Payroll
+
+
+
+@login_required(login_url="login")
+def payroll_report_pdf(request):
+
+    company = request.user.company
+
+    month = request.GET.get("month")
+    year = request.GET.get("year")
+
+    logo_url = request.build_absolute_uri(
+        static("img/logo.png")
+    )
+
+    payrolls = Payroll.objects.filter(
+        company=company
+    )
+
+    if month:
+        payrolls = payrolls.filter(
+            payroll_month=month
+        )
+
+    if year:
+        payrolls = payrolls.filter(
+            payroll_year=year
+        )
+
+    total_basic = payrolls.aggregate(
+        total=Sum("basic_salary")
+    )["total"] or Decimal("0.00")
+
+    total_allowance = payrolls.aggregate(
+        total=Sum("allowance")
+    )["total"] or Decimal("0.00")
+
+    total_deduction = payrolls.aggregate(
+        total=Sum("deduction")
+    )["total"] or Decimal("0.00")
+
+    total_tax = payrolls.aggregate(
+        total=Sum("tax")
+    )["total"] or Decimal("0.00")
+
+    total_net = payrolls.aggregate(
+        total=Sum("net_salary")
+    )["total"] or Decimal("0.00")
+
+    context = {
+        "company": company,
+        "payrolls": payrolls,
+        "month": month_name[int(month)] if month else "",
+        "year": year,
+        "logo_url": logo_url,
+        "total_basic": total_basic,
+        "total_allowance": total_allowance,
+        "total_deduction": total_deduction,
+        "total_tax": total_tax,
+        "total_net": total_net,
+    }
+
+    html = render_to_string(
+        "hr/payroll_report.html",
+        context,
+        request=request,
+    )
+
+    result = BytesIO()
+
+    pdf = pisa.pisaDocument(
+        BytesIO(html.encode("UTF-8")),
+        result,
+    )
+
+    if pdf.err:
+        return HttpResponse(
+            "Error generating PDF",
+            status=500
+        )
+
+    response = HttpResponse(
+        result.getvalue(),
+        content_type="application/pdf"
+    )
+
+    filename = f'Payroll_{month}_{year}.pdf'
+
+    response["Content-Disposition"] = (
+        f'attachment; filename="{filename}"'
+    )
 
     return response

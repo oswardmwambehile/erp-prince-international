@@ -19,6 +19,12 @@ path(
         views.create_employee,
         name="create_employee",
     ),
+
+    path(
+        "payroll/report/pdf/",
+        views.payroll_report_pdf,
+        name="payroll_report_pdf",
+    ),
     
 
 

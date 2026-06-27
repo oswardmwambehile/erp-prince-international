@@ -1,0 +1,212 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>Payroll Report</title>
+
+<style>
+
+@page{
+    size: A4 portrait;
+    margin: 20px;
+}
+
+body{
+    font-family: "Times New Roman", serif;
+    font-size: 11px;
+    color: #000;
+}
+
+/* HEADER */
+.header{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.report-title{
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.report-period{
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* HEADER TABLE */
+.header-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.header-table td{
+    border: none;
+    vertical-align: middle;
+}
+
+/* INFO */
+.info-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.info-table td{
+    border: none;
+    font-size: 13px;
+    padding: 3px;
+}
+
+/* PAYROLL TABLE */
+.payroll-table{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.payroll-table th{
+    border: 1px solid #000;
+    background: #E6E6E6;
+    padding: 6px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.payroll-table td{
+    border: 1px solid #000;
+    padding: 6px;
+    font-size: 12px;
+    word-wrap: break-word;
+}
+
+.center{
+    text-align: center;
+}
+
+.right{
+    text-align: right;
+}
+
+/* TOTAL ROW */
+.total-row td{
+    font-weight: bold;
+    background: #f5f5f5;
+}
+
+/* FOOTER */
+.footer{
+    margin-top: 15px;
+    font-size: 11px;
+}
+
+.generated{
+    text-align: right;
+}
+
+img{
+    object-fit: contain;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<table class="header-table">
+<tr>
+    <td align="left"></td>
+
+    <td align="center">
+        <img src="{{ logo_url }}" width="120" height="120">
+    </td>
+
+    <td align="right">
+        {% if logo_urls %}
+            <img src="{{ logo_urls }}" width="120" height="120">
+        {% endif %}
+    </td>
+</tr>
+</table>
+
+<div class="report-title">
+    COMPANY PAYROLL REPORT
+</div>
+
+<div class="report-period">
+    PAYROLL FOR {{ month|upper }} {{ year }}
+</div>
+
+</div>
+
+<table class="info-table">
+<tr>
+    <td><strong>MONTH:</strong> {{ month }}</td>
+    <td class="right"><strong>YEAR:</strong> {{ year }}</td>
+</tr>
+</table>
+
+<!-- PAYROLL TABLE -->
+<table class="payroll-table">
+
+<tr>
+    <th>PAYROLL NO</th>
+    <th>EMPLOYEE NAME</th>
+    <th>BASIC SALARY</th>
+    <th>DEDUCTION</th>
+    <th>NET SALARY</th>
+</tr>
+
+{% for payroll in payrolls %}
+<tr>
+    <td class="center">{{ payroll.payroll_number }}</td>
+    <td>{{ payroll.employee.user.get_full_name|upper }}</td>
+    <td class="right">TZS {{ payroll.basic_salary|floatformat:2|intcomma }}</td>
+    <td class="right">TZS {{ payroll.deduction|floatformat:2|intcomma }}</td>
+    <td class="right">TZS {{ payroll.net_salary|floatformat:2|intcomma }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" class="center">
+        NO PAYROLL RECORDS FOUND
+    </td>
+</tr>
+{% endfor %}
+
+<!-- TOTALS -->
+<tr class="total-row">
+    <td colspan="2" class="right">TOTAL BASIC SALARY</td>
+    <td class="right">TZS {{ total_basic|floatformat:2|intcomma }}</td>
+    <td colspan="2"></td>
+</tr>
+
+<tr class="total-row">
+    <td colspan="2" class="right">TOTAL DEDUCTIONS</td>
+    <td class="right">TZS {{ total_deduction|floatformat:2|intcomma }}</td>
+    <td colspan="2"></td>
+</tr>
+
+<tr class="total-row">
+    <td colspan="2" class="right">TOTAL NET SALARY</td>
+    <td class="right">TZS {{ total_net|floatformat:2|intcomma }}</td>
+    <td colspan="2"></td>
+</tr>
+
+</table>
+
+<div class="footer">
+    <div class="generated">
+        GENERATED ON: {% now "d/m/Y H:i" %}
+    </div>
+</div>
+
+</body>
+</html>

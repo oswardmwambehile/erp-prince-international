@@ -139,7 +139,7 @@ table.clean-table td {
 
 <!-- ================= INVOICE TITLE + META ================= -->
 <!-- ================= INVOICE HEADER ================= -->
-<div style="font-family:'Times New Roman', serif; margin:15px 0;">
+<div style="font-family:'Times New Roman', serif; margin:0 0 3px 0;">
 
     <!-- TITLE -->
     <div style="
@@ -203,8 +203,7 @@ table.clean-table td {
 
 </div>
 
-<!-- LINE SEPARATOR ONLY -->
-<div style="border-bottom:2px solid #000; margin:8px 0;"></div>
+
 
 
 <!-- ================= DETAILS SECTION ================= -->
@@ -213,7 +212,6 @@ table.clean-table td {
     border-collapse:collapse;
     font-family:'Times New Roman', serif;
     border:none;
-    line-height:1.25;
 ">
 
     <tr>
@@ -222,7 +220,7 @@ table.clean-table td {
         <td style="
             width:50%;
             vertical-align:top;
-            padding-right:15px;
+            padding:0;
             border:none;
         ">
 
@@ -230,22 +228,35 @@ table.clean-table td {
                 font-size:16px;
                 font-weight:900;
                 color:#c8932e;
-                margin-bottom:1px;
-                line-height:0.5;
+                margin:0 0 4px 0;
+                line-height:1.4;
             ">
-                ADDRESS DETAILS
+                CUSTOMER DETAILS
             </div>
 
-            <div style="font-size:15px; font-weight:700; line-height:1;">
-             {{ quotation.created_by.first_name }} {{ quotation.created_by.last_name }} 
+            <div style="
+                font-size:15px;
+                font-weight:700;
+                margin:0 0 2px 0;
+                line-height:1.4;
+            ">
+                FULL NAME: {{ quotation.customer.full_name|upper }}
             </div>
 
-            <div style="font-size:15px; line-height:0.5;">
-                P.O.BOX, DODOMA
+            <div style="
+                font-size:15px;
+                margin:0 0 2px 0;
+                line-height:1.4;
+            ">
+                PROJECT LOCATION: {{ quotation.project_location|upper }}
             </div>
 
-            <div style="font-size:15px; line-height:0.5;">
-                MOBILE: +255 .............
+            <div style="
+                font-size:15px;
+                margin:0;
+                line-height:1.4;
+            ">
+                PHONE NUMBER: {{ quotation.customer.phone|default:"N/A"|upper }}
             </div>
 
         </td>
@@ -255,7 +266,7 @@ table.clean-table td {
             width:50%;
             vertical-align:top;
             text-align:right;
-            padding-left:15px;
+            padding:0;
             border:none;
         ">
 
@@ -263,22 +274,35 @@ table.clean-table td {
                 font-size:16px;
                 font-weight:900;
                 color:#c8932e;
-                margin-bottom:4px;
-                line-height:0.5;
+                margin:0 0 4px 0;
+                line-height:1.2;
             ">
-                CUSTOMER DETAILS
+                &nbsp;
             </div>
 
-            <div style="font-size:15px; font-weight:700; line-height:1;">
-                NAME: {{ quotation.customer.full_name }}
+            <div style="
+                font-size:15px;
+                font-weight:700;
+                margin:0 0 2px 0;
+                line-height:1.2;
+            ">
+                &nbsp;
             </div>
 
-            <div style="font-size:17px; line-height:0.5">
-                PROJECT LOCATION: {{ quotation.project_location }}
+            <div style="
+                font-size:15px;
+                margin:0 0 2px 0;
+                line-height:1.2;
+            ">
+                &nbsp;
             </div>
 
-            <div style="font-size:15px; line-height:0.5;">
-                PHONE: {{ quotation.customer.phone|default:"N/A" }}
+            <div style="
+                font-size:15px;
+                margin:0;
+                line-height:1.2;
+            ">
+                &nbsp;
             </div>
 
         </td>
@@ -291,31 +315,37 @@ table.clean-table td {
 
 
 
-
-
-
-
-
 <!-- ================= PROFORMA ACCEPTANCE ================= -->
 <div style="
     font-family:'Times New Roman', serif;
-    font-size:19px;
+    font-size:18px;
     font-weight:700;
     text-transform: lowercase;
     max-width:900px;
-    line-height:1.8;
+    line-height:0.8;
+    margin:0;
+    padding:0;
 ">
     Please accept our invoice as follows
-   
-
 </div>
 
 <!-- ================= SECTION I: PURPOSE ================= -->
 <div style="
     font-family:'Times New Roman', serif;
     font-size:16px;
-    line-height:1.8;
-    margin:10px auto;
+    line-height:1.3;
+    margin:6px 0 4px 0;
+    max-width:900px;
+    font-weight:700;
+    text-align:center;
+">
+
+   <!-- ================= SECTION I: PURPOSE ================= -->
+<div style="
+    font-family:'Times New Roman', serif;
+    font-size:16px;
+    line-height:1.1;
+    margin:6px 0 4px 0;
     max-width:900px;
     font-weight:700;
     text-align:center;
@@ -329,35 +359,35 @@ table.clean-table td {
 
     PROFORMA INVOICE FOR
 
-    
-
-    <span style="
-        text-transform:uppercase;
-        font-weight:900;
-        font-size:20px;
-    ">
-        {{ products_list }}
-    </span>
+    <span style="font-weight:900; font-size:16px;">
+    {{ products_list|upper }}
+</span>
 
     
 
-    INCLUDING TRANSPORTATION, INSTALLATION,
-    COMMISSIONING AND RELATED SERVICES FOR USE ONLY.
+    INCLUDING TRANSPORTATION, INSTALLATION, COMMISSIONING AND RELATED SERVICES FOR USE ONLY.
 
 </div>
 
-<div class="line"></div>
+<div style="margin:2px 0;">
+    <div style="border-top:1px solid #000;"></div>
+</div>
+
+</div>
+
+<div style="margin:2px 0;">
+    <div style="border-top:1px solid #000;"></div>
+</div>
 
 <!-- ================= ITEMS ================= -->
 <!-- ================= ITEMS + BOQ SUMMARY IN ONE TABLE ================= -->
-
 
 
 <table style="
     width:100%;
     border-collapse:collapse;
     font-family:Arial,sans-serif;
-    font-size:8px;
+    font-size:13px;
     table-layout:fixed;
 ">
 
@@ -365,80 +395,222 @@ table.clean-table td {
 
     <thead>
 
-        <!-- TOP HEADER -->
-        <tr style="background:#e5e5e5;">
+    <!-- MAIN HEADER -->
+<tr style="background:#e5e5e5;">
 
-            <th rowspan="2"
-                style="border:1px solid #000; padding:4px; width:8%;">
-                Code
-            </th>
+<thead>
 
-            <th rowspan="2"
-                style="border:1px solid #000; padding:4px; width:18%;">
-                Methodology
-            </th>
+<tr style="background:#e5e5e5;">
+<!-- CODE -->
+<th rowspan="2" style="
+    border:1px solid #000;
+    width:5%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    S/NO
+</th>
 
-            <!-- TYPE -->
-            <th colspan="2"
-                style="border:1px solid #000; padding:4px; text-align:center; width:20%;">
-                TYPE
-            </th>
+<th rowspan="2" style="
+    border:1px solid #000;
+    width:22%;
+    padding:1px 2px;
+    text-align:left;
+    vertical-align:top;
+    font-family:'Times New Roman', serif;
+    font-size:6px;
+    line-height:1;
+">
 
-            <!-- SIZE -->
-            <th colspan="2"
-                style="border:1px solid #000; padding:4px; text-align:center; width:10%;">
-                SIZE (MM)
-            </th>
+    <!-- TITLE -->
+    <div style="
+        text-align:center;
+        font-weight:bold;
+        font-size:11px;
+        margin:0;
+        padding-top:2px;
+        padding-bottom:0;
+        line-height:1.0;
+    ">
+        PI METHODOLOGY OF WORK
+    </div>
 
-            <th rowspan="2"
-                style="border:1px solid #000; padding:4px; width:6%; text-align:center;">
-                Qty
-            </th>
+    <!-- ACTIVITIES -->
+    <div style="
+        margin:0;
+        padding:0;
+        line-height:1.0;
+        font-size:8px;
+    ">
+        Activity 1.0: Designs &amp; Materials Selections, Pricing &amp; Signing<br/>
+        Activity 2.0: Procurement &amp; Fabrication<br/>
+        Activity 3.0: Triple Quality Inspection<br/>
+        Activity 4.0: Packaging &amp; Transportation<br/>
+        Activity 5.0: Installation &amp; Delivering<br/>
+        Activity 6.0: Commissioning Product/S<br/>
+        Activity 7.0: Signing Off Delivery Note &amp; Handing Over The Site
+    </div>
 
-            <th rowspan="2"
-                style="border:1px solid #000; padding:4px; width:8%; text-align:center;">
-                SQM
-            </th>
+</th>
 
-            <th rowspan="2"
-                style="border:1px solid #000; padding:4px; width:10%; text-align:center;">
-                Total SQM
-            </th>
+<!-- TYPE -->
+<th colspan="2" style="
+    border:1px solid #000;
+    width:15%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    TYPE
+</th>
 
-            <th rowspan="2"
-                style="border:1px solid #000; padding:4px; width:10%; text-align:right;">
-                Unit Price
-            </th>
+<!-- SIZE -->
+<th colspan="2" style="
+    border:1px solid #000;
+    width:12%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    SIZE (MM)
+</th>
 
-            <th rowspan="2"
-                style="border:1px solid #000; padding:4px; width:10%; text-align:right;">
-                Total Price
-            </th>
+<!-- QTY -->
+<th rowspan="2" style="
+    border:1px solid #000;
+    width:5%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    QTY
+</th>
 
-        </tr>
+<!-- SQM -->
+<th rowspan="2" style="
+    border:1px solid #000;
+    width:6%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    m²
+</th>
 
-        <!-- SUB HEADER -->
-        <tr style="background:#f2f2f2;">
+<!-- TOTAL SQM -->
+<th rowspan="2" style="
+    border:1px solid #000;
+    width:8%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    Total m²
+</th>
 
-            <th style="border:1px solid #000; padding:4px;">
-                Aluminium
-            </th>
+<!-- UNIT PRICE -->
+<th rowspan="2" style="
+    border:1px solid #000;
+    width:10%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    Unit Price<br>(TZS)
+</th>
 
-            <th style="border:1px solid #000; padding:4px;">
-                Glass
-            </th>
+<!-- TOTAL PRICE -->
+<th rowspan="2" style="
+    border:1px solid #000;
+    width:12%;
+    padding:2px;
+    text-align:center;
+    vertical-align:middle;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    Total Price<br>(TZS)
+</th>
 
-            <th style="border:1px solid #000; padding:4px; text-align:center;">
-                W
-            </th>
+</tr>
 
-            <th style="border:1px solid #000; padding:4px; text-align:center;">
-                H
-            </th>
+<tr style="background:#f2f2f2;">
 
-        </tr>
 
-    </thead>
+<th style="
+    border:1px solid #000;
+    padding:2px;
+    text-align:center;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    Profile
+</th>
+
+<th style="
+    border:1px solid #000;
+    padding:2px;
+    text-align:center;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    Glass
+</th>
+
+<th style="
+    border:1px solid #000;
+    padding:2px;
+    text-align:center;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    Width
+</th>
+
+<th style="
+    border:1px solid #000;
+    padding:2px;
+    text-align:center;
+    font-family:'Times New Roman',serif;
+    font-size:12px;
+    font-weight: bold;
+">
+    Height
+</th>
+
+
+</tr>
+
+</thead>
+
+
+</thead>
 
     <tbody>
 
@@ -450,7 +622,7 @@ table.clean-table td {
 
         <tr>
 
-            <td style="border:1px solid #000; padding:4px; word-wrap:break-word;">
+            <td style="border:1px solid #000; padding:4px; word-wrap:break-word; text-align: center;">
                 {{ item.item_code }}
             </td>
 
@@ -489,9 +661,9 @@ table.clean-table td {
             <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
                 {{ item.unit_price|floatformat:0|intcomma }}
@@ -500,9 +672,9 @@ table.clean-table td {
              <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ item.total_price|floatformat:0|intcomma }}
@@ -517,7 +689,7 @@ table.clean-table td {
 
             <td colspan="6"
                 style="border:1px solid #000; padding:5px; text-align:right;">
-                SUBTOTAL
+                SUBTOTAL COST FOR {{ group.product_name|upper }}
             </td>
 
             <td style="border:1px solid #000; padding:5px; text-align:center;">
@@ -535,9 +707,9 @@ table.clean-table td {
             <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
                 {{ group.subtotal_unit_price|floatformat:0|intcomma }}
@@ -546,14 +718,14 @@ table.clean-table td {
             <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
                 {{ group.subtotal_total_price|floatformat:0|intcomma }}
             </td>
-
+ 
         </tr>
 
     {% endfor %}
@@ -593,9 +765,9 @@ table.clean-table td {
         <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ row.unit_price|floatformat:0|intcomma }}
@@ -604,9 +776,9 @@ table.clean-table td {
         <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ row.value|floatformat:0|intcomma }}
@@ -640,9 +812,9 @@ table.clean-table td {
         <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ total_unit_price|floatformat:0|intcomma }}
@@ -651,9 +823,9 @@ table.clean-table td {
         <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ total_subtotal|floatformat:0|intcomma }}
@@ -673,9 +845,9 @@ table.clean-table td {
        <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ quotation.discount_amount|floatformat:0|intcomma }}
@@ -688,16 +860,16 @@ table.clean-table td {
     <tr>
 
         <td colspan="10"
-            style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">
+            style="border:1px solid #000; padding:6px; text-align:center; font-weight:bold;">
             VAT ({{ quotation.vat_percentage }}%)
         </td>
 
         <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ vat_amount|floatformat:0|intcomma }}
@@ -717,9 +889,9 @@ table.clean-table td {
         <td style="
     border:1px solid #000;
     padding:4px;
-    text-align:right;
+    text-align:center;
     white-space:nowrap;
-    font-size:8px;
+    font-size:13px;
     overflow:hidden;
 ">
             {{ grand_total|floatformat:0|intcomma }} TZS
@@ -730,6 +902,61 @@ table.clean-table td {
     </tbody>
 
 </table>
+
+
+<div style="
+    background:#111111;
+    color:#ffffff;
+    padding:20px 25px;
+    margin-top:12px;
+    font-family:'Times New Roman', Times, serif;
+    font-size:13px;
+    line-height:1.9;
+">
+
+<span style="
+    color:#c8932e;
+    font-size:18px;
+    font-weight:bold;
+    letter-spacing:1px;
+    text-transform:uppercase;
+">
+    TERMS & CONDITIONS
+</span>
+
+<br><br>
+
+1. Advance Payment 50% on confirmation.<br>
+
+2. Interim Payment 40% before material delivery.<br>
+
+3. Final Payment 10% after delivery.<br>
+
+4. Or Pay 80% for Fast Track Implementation and Delivery.<br>
+
+5. Execution Duration: 14 Working Days.<br>
+
+6. China Special Order Payment Mode: 80% Advance, Final 20%.<br>
+
+7. China Special Order Delivery within 3 to 4 months after advance payment.<br>
+
+8. All prices are VAT Exclusive.<br>
+
+9. By signing and/or expressly confirming your acceptance of this quotation via email, purchase order, or commencement of payment, you irrevocably and unconditionally accept, agree and acknowledge that you have read and understood our Standard Terms & Conditions attached to this quotation and/or email correspondence. These terms shall apply in full. You may also access them through our website: <strong>www.princeinternational.co.tz</strong>.
+
+<br><br>
+
+<strong style="color:#c8932e;">
+    PAY VIA:
+</strong>
+
+TSHS Prince International: <strong>0150028745</strong> (Exim Bank) &nbsp;&nbsp;|&nbsp;&nbsp;
+USD Prince International: <strong>0150028744</strong> (Exim Bank)
+
+
+</div>
+
+
 
 
 
