@@ -908,7 +908,7 @@ def quotation_pdf(request, pk):
         vat_amount = (total_subtotal * quotation.vat_percentage) / Decimal("100")
 
     grand_total = total_subtotal + vat_amount - quotation.discount_amount
-    logo_url = request.build_absolute_uri(static("img/logo.png"))
+    logo_url = request.build_absolute_uri(static("img/prince.jpeg"))
     logo_urls = request.build_absolute_uri(static("img/logo1.PNG"))
     products_list = ", ".join(
         sorted(set(
