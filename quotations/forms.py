@@ -58,9 +58,9 @@ class QuotationForm(forms.ModelForm):
 
         fields = [
             'customer',
-            'project_name',
+            
             'project_location',
-            'contact_person',
+            
             'quotation_date',
             'vat_included',
             'vat_percentage',
@@ -163,21 +163,17 @@ class QuotationItemForm(forms.ModelForm):
             ),
 
             
+            'aluminium_profile': forms.Select(
+                    attrs={
+                        'class': TAILWIND_INPUT,
+                    }
+                ),
 
-            'aluminium_profile': forms.TextInput(
-                attrs={
-                    'class': TAILWIND_INPUT,
-                    'placeholder': 'Al pro 80mm'
-                }
-            ),
-
-            'glass': forms.TextInput(
-                attrs={
-                    'class': TAILWIND_INPUT,
-                    'placeholder': 'Glass O/way Grey infill 5mm'
-                }
-            ),
-
+                'glass': forms.Select(
+                    attrs={
+                        'class': TAILWIND_INPUT,
+                    }
+                ),
             'width': forms.NumberInput(
                 attrs={
                     'class': TAILWIND_INPUT,

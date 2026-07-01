@@ -910,6 +910,7 @@ def quotation_pdf(request, pk):
     grand_total = total_subtotal + vat_amount - quotation.discount_amount
     logo_url = request.build_absolute_uri(static("img/prince.jpeg"))
     logo_urls = request.build_absolute_uri(static("img/logo1.PNG"))
+    logo_qr = request.build_absolute_uri(static("img/qr-code.png"))
     products_list = ", ".join(
         sorted(set(
             str(item.product)
@@ -930,6 +931,7 @@ def quotation_pdf(request, pk):
         "grand_total": grand_total,
         "logo_url":logo_url,
         "logo_urls":logo_urls,
+        "logo_qr":logo_qr,
         "products_list":products_list
     }
 

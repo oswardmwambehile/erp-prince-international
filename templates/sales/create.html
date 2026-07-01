@@ -359,10 +359,38 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const container = document.getElementById("items-container");
-
     const totalFormsInput = document.getElementById("id_items-TOTAL_FORMS");
 
     let formIndex = parseInt(totalFormsInput.value);
+
+    // =====================================
+    // AUTO ITEM CODE (A01, A02, A03...)
+    // =====================================
+    function updateItemCodes() {
+
+        let visibleIndex = 1;
+
+        document.querySelectorAll(".item-form").forEach(function(row){
+
+            // Skip deleted rows
+            if(row.style.display === "none"){
+                return;
+            }
+
+            const itemCodeInput = row.querySelector("input[name$='-item_code']");
+
+            if(itemCodeInput){
+
+                itemCodeInput.value =
+                    "A" + String(visibleIndex).padStart(2, "0");
+
+            }
+
+            visibleIndex++;
+
+        });
+
+    }
 
     // =====================================
     // ROUND TOTAL SQM ONLY
@@ -375,13 +403,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let decimalPart = value - integerPart;
 
-        // 3.5 => 4
-        // 3.6 => 4
         if (decimalPart >= 0.5) {
             return integerPart + 1;
         }
 
-        // 3.2 => 3.2
         return parseFloat(value.toFixed(1));
     }
 
@@ -390,7 +415,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // =====================================
     function calculateRow(row) {
 
-        // INPUTS
         const widthInput = row.querySelector("input[name$='-width']");
         const heightInput = row.querySelector("input[name$='-height']");
         const qtyInput = row.querySelector("input[name$='-quantity']");
@@ -399,53 +423,32 @@ document.addEventListener("DOMContentLoaded", function () {
         const unitPriceInput = row.querySelector("input[name$='-unit_price']");
         const totalPriceInput = row.querySelector("input[name$='-total_price']");
 
-        // VALUES
         let width = parseFloat(widthInput?.value) || 0;
         let height = parseFloat(heightInput?.value) || 0;
-
-        // DEFAULT QTY = 1
         let qty = parseFloat(qtyInput?.value) || 1;
-
         let unitPrice = parseFloat(unitPriceInput?.value) || 0;
 
-        // =====================================
-        // SQM = WIDTH × HEIGHT / 1000000
-        // =====================================
+        // SQM
         let sqm = (width * height) / 1000000;
-
         sqm = parseFloat(sqm.toFixed(1));
 
-        // AUTO FILL SQM
         if (sqmInput) {
-
             sqmInput.value = sqm;
-
         }
 
-        // =====================================
-        // TOTAL SQM = SQM × QTY
-        // =====================================
+        // TOTAL SQM
         let totalSQM = sqm * qty;
-
         totalSQM = roundTotalSQM(totalSQM);
 
-        // AUTO FILL TOTAL SQM
         if (totalSQMInput) {
-
             totalSQMInput.value = totalSQM;
-
         }
 
-        // =====================================
-        // TOTAL PRICE = TOTAL SQM × UNIT PRICE
-        // =====================================
+        // TOTAL PRICE
         let totalPrice = totalSQM * unitPrice;
 
-        // AUTO FILL TOTAL PRICE
         if (totalPriceInput) {
-
             totalPriceInput.value = totalPrice.toFixed(2);
-
         }
 
     }
@@ -460,51 +463,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const qtyInput = row.querySelector("input[name$='-quantity']");
         const unitPriceInput = row.querySelector("input[name$='-unit_price']");
 
-        // WIDTH
-        if (widthInput) {
+        [widthInput, heightInput, qtyInput, unitPriceInput].forEach(function(input){
 
-            widthInput.addEventListener("input", function () {
+            if(input){
 
-                calculateRow(row);
+                input.addEventListener("input", function(){
 
-            });
+                    calculateRow(row);
 
-        }
+                });
 
-        // HEIGHT
-        if (heightInput) {
+            }
 
-            heightInput.addEventListener("input", function () {
+        });
 
-                calculateRow(row);
-
-            });
-
-        }
-
-        // QUANTITY
-        if (qtyInput) {
-
-            qtyInput.addEventListener("input", function () {
-
-                calculateRow(row);
-
-            });
-
-        }
-
-        // UNIT PRICE
-        if (unitPriceInput) {
-
-            unitPriceInput.addEventListener("input", function () {
-
-                calculateRow(row);
-
-            });
-
-        }
-
-        // INITIAL CALCULATION
         calculateRow(row);
 
     }
@@ -517,6 +489,8 @@ document.addEventListener("DOMContentLoaded", function () {
         bindEvents(row);
 
     });
+
+    updateItemCodes();
 
     // =====================================
     // ADD ITEM
@@ -536,6 +510,9 @@ document.addEventListener("DOMContentLoaded", function () {
         formIndex++;
 
         totalFormsInput.value = formIndex;
+
+        // Generate A01, A02, A03...
+        updateItemCodes();
 
     };
 
@@ -561,6 +538,9 @@ document.addEventListener("DOMContentLoaded", function () {
             row.remove();
 
         }
+
+        // Renumber remaining rows
+        updateItemCodes();
 
     };
 

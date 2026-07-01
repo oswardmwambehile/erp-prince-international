@@ -19,10 +19,13 @@ class Quotation(models.Model):
         ('Rejected', 'Rejected'),
     )
 
-    PAYMENT_MODE = (
-        ('Normal', 'Normal'),
-        ('Fast Track', 'Fast Track'),
-        ('China Order', 'China Order'),
+    GRASS = (
+        ('6mm', '6mm'),
+        ('5mm', '5mm'),
+        ('8mm', '8mm'),
+        ('10mm', '10mm'),
+        ('12mm', '12mm'),
+
     )
 
     quotation_no = models.CharField(
@@ -37,7 +40,7 @@ class Quotation(models.Model):
         related_name='quotations'
     )
 
-    project_name = models.CharField(
+    profile_type = models.CharField(
         max_length=255,
         blank=True
     )
@@ -47,7 +50,7 @@ class Quotation(models.Model):
         blank=True
     )
 
-    contact_person = models.CharField(
+    glass_type = models.CharField(
         max_length=255,
         blank=True
     )
@@ -203,6 +206,23 @@ class Quotation(models.Model):
 # QUOTATION ITEM MODEL
 # =====================================================
 class QuotationItem(models.Model):
+    GRASS = (
+        ('6mm', '6mm'),
+        ('5mm', '5mm'),
+        ('8mm', '8mm'),
+        ('10mm', '10mm'),
+        ('12mm', '12mm'),
+
+    )
+
+    ALUMINIUM = (
+        ('Al Pro 100mm', 'Al Pro 100mm'),
+        ('Al Pro 80mm', 'Al Pro 80mm'),
+        ('IPPP 95mm', 'IPPP 95mm'),
+        ('IPPP 3Truck', 'IPPP 3Truck'),
+        ('IPPP 4Truck', 'IPPP 4Truck'),
+
+    )
 
     quotation = models.ForeignKey(
         Quotation,
@@ -229,13 +249,18 @@ class QuotationItem(models.Model):
 
     aluminium_profile = models.CharField(
         max_length=255,
-        blank=True
+        blank=True,
+        choices=ALUMINIUM,
+        default='Al Pro 100mm'
     )
 
     glass = models.CharField(
         max_length=255,
-        blank=True
+        blank=True,
+        choices=GRASS,
+        default='6mm'
     )
+    
 
     # =========================
     # DISPLAY ONLY
