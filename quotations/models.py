@@ -216,6 +216,7 @@ class QuotationItem(models.Model):
     )
 
     ALUMINIUM = (
+          ('', '---------'),
         ('Al Pro 100mm', 'Al Pro 100mm'),
         ('Al Pro 80mm', 'Al Pro 80mm'),
         ('IPPP 95mm', 'IPPP 95mm'),
