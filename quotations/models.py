@@ -37,7 +37,9 @@ class Quotation(models.Model):
     customer = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE,
-        related_name='quotations'
+        related_name='quotations',
+         blank=True,
+         null=True
     )
 
     profile_type = models.CharField(
@@ -202,6 +204,9 @@ class Quotation(models.Model):
         return self.quotation_no
 
 
+
+
+
 # =====================================================
 # QUOTATION ITEM MODEL
 # =====================================================
@@ -355,7 +360,7 @@ class QuotationItem(models.Model):
 
         height = Decimal(self.height or 0)
 
-        qty = Decimal(self.quantity or 0)
+        qty = Decimal(self.quantity or 1)
 
         unit_price = Decimal(self.unit_price or 0)
 
@@ -363,12 +368,24 @@ class QuotationItem(models.Model):
         # SQM
         # width * height / 1000000
         # =========================================
-        self.sqm = (
-            (width * height) / Decimal('1000000')
-        ).quantize(
-            Decimal('0.1'),
-            rounding=ROUND_HALF_UP
-        )
+        # =========================================
+# SQM
+# =========================================
+
+        if width > 0 and height > 0:
+            # Calculate SQM from dimensions
+            self.sqm = (
+                (width * height) / Decimal('1000000')
+            ).quantize(
+                Decimal('0.1'),
+                rounding=ROUND_HALF_UP
+            )
+        else:
+            # Use the SQM entered by the user
+            self.sqm = Decimal(self.sqm or 0).quantize(
+                Decimal('0.1'),
+                rounding=ROUND_HALF_UP
+            )
 
         # =========================================
         # TOTAL SQM

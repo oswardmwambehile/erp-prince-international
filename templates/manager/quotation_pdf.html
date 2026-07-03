@@ -11,7 +11,7 @@
             font-family: Arial, sans-serif;
             font-size: 12px;
             color: #222;
-            margin: 25px;
+            margin: 15px;
             line-height: 1.4;
         }
 
@@ -47,9 +47,7 @@ table.clean-table td {
 </head>
 
 <body>
-    <div style=" font-size:14px; font-weight:700; margin-top:4px; color:#4c10d8;">
-        Efficiency & Timely Delivery
-    </div>
+
 
     <!-- ================= LOGOS (OUTSIDE BOX) ================= -->
 <div style="
@@ -61,32 +59,131 @@ table.clean-table td {
 ">
 
     <!-- ================= LOGOS (TABLE VERSION - PDF SAFE) ================= -->
-<table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+<!-- ================= HEADER ================= -->
+<table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-family:Arial;">
+
     <tr>
 
-        <!-- LEFT -->
-        <td style="width:33%; text-align:left; border:none;">
-            <img src="{{ logo_qr}}"
-                 style="height:130px; width:auto; object-fit:contain;">
+        <!-- ================= CUSTOMER ================= -->
+        <td style="width:33%; vertical-align:top; padding:0;">
+
+          <div style="
+    font-size:11px;
+    font-weight:bold;
+    color:green;
+    margin:0;
+    padding:0;
+    line-height:1.2;
+">
+    CUSTOMER DETAILS
+</div>
+
+<div style="
+    font-size:11px;
+    line-height:1.3;
+    margin:2px 0 0 0;
+    padding:0;
+">
+    <strong>NAME:</strong> {{ quotation.customer.full_name|upper }}<br>
+    <strong>PROJECT:</strong> {{ quotation.project_location|upper }}<br>
+    <strong>PHONE:</strong> {{ quotation.customer.phone|default:"N/A"|upper }} <br>
+
+     <strong>QT NO:</strong> {{ quotation.quotation_no }}<br>
+     <strong>DATE:</strong> {{ quotation.quotation_date }}<br>
+              <strong> TIME: </strong>  {{ quotation.created_at|date:"H:i" }} EST
+
+</div>
+
         </td>
 
-        <!-- CENTER LOGO (BIG) -->
-        <td style="width:34%; text-align:center; border:none;">
-            <img src="{{ logo_url }}"
-                 style="height:130px; width:auto; object-fit:contain;">
+        <!-- ================= LOGO ================= -->
+        <td style="width:34%; text-align:center; vertical-align:middle; padding:0;">
+
+            <img src="{{ logo_url }}" style="height:90px; width:auto;">
+
         </td>
 
-        <!-- RIGHT LOGO -->
-        <td style="width:33%; text-align:right; border:none;">
-            <img src="{{ logo_urls }}"
-                 style="height:130px; width:auto; object-fit:contain;">
-            
-        </td>
+        <!-- ================= COMPANY ================= -->
+       <td style="width:33%; text-align:right; vertical-align:top; padding:0;">
+
+    <div style="
+        font-size:11px;
+        font-weight:bold;
+        color:green;
+        margin:0;
+        padding:0;
+        line-height:1.2;
+    ">
+        PRINCE INTERNATIONAL LTD
+    </div>
+
+    <div style="
+        font-size:11px;
+        line-height:1.3;
+        margin:2px 0 0 0;
+        padding:0;
+    ">
+    <strong>P.O.Box</strong> 14491 Dar Es Salaam, <br>
+        Coca-Cola Road, Mikocheni Industrial Area
+        Kinondoni, Dar es Salaam<br>
+
+        <strong>Mobile:</strong> +255 703 210 000<br>
+        <strong>Email:</strong> info@princeinternational.co.tz<br>
+        <strong>Web:</strong> www.princeinternational.co.tz<br>
+        
+        <strong>TIN:</strong> 119-708-125
+    </div>
+
+</td>
 
     </tr>
+
+</table>
+</div>
+
+<hr style="
+    border: none;
+    border-top: 1px dotted #008000;
+    margin: 4px 0;
+">
+
+
+<div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+    width:100%;
+">
+
+    <!-- ================= LOGOS (TABLE VERSION - PDF SAFE) ================= -->
+<!-- ================= LOGO HEADER (CLEAN & SMALL) ================= -->
+<table style="width:100%; border-collapse:collapse; margin-bottom:8px;">
+
+    <tr>
+
+        <!-- LEFT EMPTY -->
+        <td style="width:33%; border:none; padding:0;">
+            <img src="{{ logo_urls }}" style="height:100px; width:auto;">
+        </td>
+
+        <!-- CENTER LOGO (REDUCED SIZE) -->
+        <td style="width:34%; text-align:center; border:none; padding:0;">
+
+            <img src="{{ logo_qr }}"
+                 style="height:85px; width:auto; object-fit:contain;">
+
+        </td>
+
+        <!-- RIGHT EMPTY -->
+        <td style="width:33%; border:none; padding:0;"></td>
+
+    </tr>
+
 </table>
 
 </div>
+
 <div style="
     font-family:'Times New Roman', serif;
     color:#111;
@@ -95,42 +192,37 @@ table.clean-table td {
     font-style:italic;
 ">
 
-    <!-- TITLE -->
-    <div style="
-        text-align:center;
-        font-size:22px;
-        font-weight:900;
-        color:#000;
-        letter-spacing:1px;
-        text-transform:uppercase;
-        margin-bottom:2px;
-        line-height:1.1;
-    ">
-        CIVIL & BUILDING CONTRACTOR <br>
-        EXPERTS FENESTRATION ENGINEERING TECHNOLOGY
-    </div>
+   <!-- TITLE -->
 
-    <!-- DESCRIPTION -->
-    <div style="
-        font-size:14px;
-        line-height:1.2;
-        text-align:justify;
-        text-align-last:center;
-        max-width:900px;
-        margin:0 auto 6px auto;
-        padding:0 8px;
-    ">
-        Pi dealers: supply & fix: aluminium, upvc & frameless glass works, balustrades, sensor windows & doors,
-        kitchen & wardrobe cabinets, skylight structure, steel structure, pergola structure, prefabricated containers,
-        welding, swimming pool, skimming/paint, electric fences, CCTV camera, elevator works, carpentry & roofing works.<b>We are Conviniently Located @:</b>
-        HQ: Mwenge Cocacola Road | Branch Office Mbezi Beach Jogoo Opp Interchick | Tegeta Azania | Zanzibar |
-        <br>
-        P.O.Box 14491 Dar Es Salaam, Tanzania |
-        <span style="color:#bd8f00;;">
-            Email: info@princeinternational.co.tz | Web: www.princeinternational.co.tz |
-        </span>
-        Tel: +255 712 328 862
-    </div>
+<div style="
+    text-align:center;
+    font-size:22px;
+    font-weight:900;
+    color:#000;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin:0;
+    padding:0;
+    line-height:1;
+">
+    CIVIL & BUILDING CONTRACTOR
+</div>
+
+<!-- DESCRIPTION -->
+<div style="
+    font-size:14px;
+    line-height:1.2;
+    text-align:justify;
+    text-align-last:center;
+    max-width:900px;
+    margin:0;
+    padding:0 8px;
+">
+    Supply & installation of the following products:
+    Aluminium, uPVC & Glass Works . Skimming & Paintings. Prefabs & Carpentry.
+    Elavator & Escalators. Welding. Solar Energy & Electrical Works. Plumbing.
+    Roofing & Ceilings .Drywalls & Tiles.
+</div>
 
     
 
@@ -139,188 +231,15 @@ table.clean-table td {
 
 
 
-<!-- ================= INVOICE TITLE + META ================= -->
-<!-- ================= INVOICE HEADER ================= -->
-<div style="font-family:'Times New Roman', serif; margin:0 0 3px 0;">
-
-    <!-- TITLE -->
-    <div style="
-        text-align:center;
-        font-size:30px;
-        font-weight:900;
-        color:#bd8f00;;
-        letter-spacing:3px;
-        margin-bottom:6px;
-        line-height:1.1;
-    ">
-        INVOICE
-    </div>
-
-    <!-- TOP 3 COLUMNS -->
-    <table style="width:100%; border-collapse:collapse; border:none;">
-
-        <tr>
-
-            <td style="
-                width:33%;
-                text-align:left;
-                vertical-align:top;
-                font-size:16px;
-                font-weight:900;
-                border:none;
-                line-height:1.2;
-                color: #bd8f00;;
-            ">
-                {{ quotation.quotation_no }}
-            </td>
-
-            <td style="
-                width:34%;
-                text-align:center;
-                vertical-align:top;
-                font-size:16px;
-                font-weight:900;
-                border:none;
-                line-height:1.2;
-                color: #bd8f00;;
-            ">
-                TIN NO: 119-708-125
-            </td>
-
-            <td style="
-                width:33%;
-                text-align:right;
-                vertical-align:top;
-                font-size:16px;
-                font-weight:900;
-                border:none;
-                line-height:1.2;
-            ">
-                {{ quotation.quotation_date }}<br>
-                TIME: {{ quotation.created_at|date:"H:i" }} EST
-            </td>
-
-        </tr>
-    </table>
-
-</div>
 
 
-
-
-<!-- ================= DETAILS SECTION ================= -->
-<table style="
-    width:100%;
-    border-collapse:collapse;
-    font-family:'Times New Roman', serif;
-    border:none;
-">
-
-    <tr>
-
-        <!-- LEFT -->
-        <td style="
-            width:50%;
-            vertical-align:top;
-            padding:0;
-            border:none;
-        ">
-
-            <div style="
-                font-size:16px;
-                font-weight:900;
-                color:#bd8f00;;
-                margin:0 0 4px 0;
-                line-height:1.4;
-            ">
-                CUSTOMER DETAILS
-            </div>
-
-            <div style="
-                font-size:15px;
-                font-weight:700;
-                margin:0 0 2px 0;
-                line-height:1.4;
-            ">
-                FULL NAME: {{ quotation.customer.full_name|upper }}
-            </div>
-
-            <div style="
-                font-size:15px;
-                margin:0 0 2px 0;
-                line-height:1.4;
-            ">
-                PROJECT LOCATION: {{ quotation.project_location|upper }}
-            </div>
-
-            <div style="
-                font-size:15px;
-                margin:0;
-                line-height:1.4;
-            ">
-                PHONE NUMBER: {{ quotation.customer.phone|default:"N/A"|upper }}
-            </div>
-
-        </td>
-
-        <!-- RIGHT -->
-        <td style="
-            width:50%;
-            vertical-align:top;
-            text-align:right;
-            padding:0;
-            border:none;
-        ">
-
-            <div style="
-                font-size:16px;
-                font-weight:900;
-                color:#bd8f00;;
-                margin:0 0 4px 0;
-                line-height:1.2;
-            ">
-                &nbsp;
-            </div>
-
-            <div style="
-                font-size:15px;
-                font-weight:700;
-                margin:0 0 2px 0;
-                line-height:1.2;
-            ">
-                &nbsp;
-            </div>
-
-            <div style="
-                font-size:15px;
-                margin:0 0 2px 0;
-                line-height:1.2;
-            ">
-                &nbsp;
-            </div>
-
-            <div style="
-                font-size:15px;
-                margin:0;
-                line-height:1.2;
-            ">
-                &nbsp;
-            </div>
-
-        </td>
-
-    </tr>
-
-</table>
-
-<hr>
 
 
 
 <!-- ================= PROFORMA ACCEPTANCE ================= -->
 <div style="
     font-family:'Times New Roman', serif;
-    font-size:18px;
+    font-size:15px;
     font-weight:700;
     text-transform: lowercase;
     max-width:900px;
@@ -331,21 +250,12 @@ table.clean-table td {
     Please accept our invoice as follows
 </div>
 
-<!-- ================= SECTION I: PURPOSE ================= -->
-<div style="
-    font-family:'Times New Roman', serif;
-    font-size:16px;
-    line-height:1.3;
-    margin:6px 0 4px 0;
-    max-width:900px;
-    font-weight:700;
-    text-align:center;
-">
+
 
    <!-- ================= SECTION I: PURPOSE ================= -->
 <div style="
     font-family:'Times New Roman', serif;
-    font-size:16px;
+    font-size:12px;
     line-height:1.1;
     margin:6px 0 4px 0;
     max-width:900px;
@@ -361,7 +271,7 @@ table.clean-table td {
 
     PROFORMA INVOICE FOR
 
-    <span style="font-weight:900; font-size:16px;">
+    <span style="font-weight:900; font-size:12px;">
     {{ products_list|upper }}
 </span>
 
@@ -432,7 +342,7 @@ table.clean-table td {
     <div style="
         text-align:center;
         font-weight:bold;
-        font-size:11px;
+        font-size:9px;
         margin:0;
         padding-top:2px;
         padding-bottom:0;
@@ -446,7 +356,7 @@ table.clean-table td {
         margin:0;
         padding:0;
         line-height:1.0;
-        font-size:8px;
+        font-size:6px;
     ">
         Activity 1.0: Designs &amp; Materials Selections, Pricing &amp; Signing<br/>
         Activity 2.0: Procurement &amp; Fabrication<br/>

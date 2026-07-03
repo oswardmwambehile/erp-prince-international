@@ -4,6 +4,7 @@ from .models import (
     Quotation,
     QuotationItem
 )
+from decimal import Decimal
 
 
 # =====================================================
@@ -201,9 +202,9 @@ class QuotationItemForm(forms.ModelForm):
             # SQM
             'sqm': forms.NumberInput(
                 attrs={
-                    'class': TAILWIND_INPUT + ' bg-gray-100',
+                    'class': TAILWIND_INPUT,
                     'step': '0.1',
-                    'readonly': 'readonly',
+                    
                     'placeholder': 'SQM'
                 }
             ),
@@ -260,27 +261,26 @@ class QuotationItemForm(forms.ModelForm):
     # =====================================================
     # VALIDATIONS
     # =====================================================
-    def clean_width(self):
+    def clean(self):
+            cleaned_data = super().clean()
 
-        width = self.cleaned_data.get('width')
+            width = cleaned_data.get("width") or Decimal("0")
+            height = cleaned_data.get("height") or Decimal("0")
+            sqm = cleaned_data.get("sqm") or Decimal("0")
 
-        if width <= 0:
-            raise forms.ValidationError(
-                "Width must be greater than zero."
-            )
+            # Either width & height OR sqm must be provided
+            if width <= 0 and height <= 0 and sqm <= 0:
+                raise forms.ValidationError(
+                    "Enter either Width and Height or Square Meter (SQM)."
+                )
 
-        return width
+            # If one dimension is entered, both are required
+            if (width > 0 and height <= 0) or (height > 0 and width <= 0):
+                raise forms.ValidationError(
+                    "Please enter both Width and Height."
+                )
 
-    def clean_height(self):
-
-        height = self.cleaned_data.get('height')
-
-        if height <= 0:
-            raise forms.ValidationError(
-                "Height must be greater than zero."
-            )
-
-        return height
+            return cleaned_data
 
     def clean_quantity(self):
 
