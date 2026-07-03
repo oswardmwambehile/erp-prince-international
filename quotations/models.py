@@ -223,10 +223,18 @@ class QuotationItem(models.Model):
     ALUMINIUM = (
           ('', '---------'),
         ('Al Pro 100mm', 'Al Pro 100mm'),
+        ('U Channel', 'U Channel'),
         ('Al Pro 80mm', 'Al Pro 80mm'),
-        ('IPPP 95mm', 'IPPP 95mm'),
-        ('IPPP 3Truck', 'IPPP 3Truck'),
-        ('IPPP 4Truck', 'IPPP 4Truck'),
+        ('EPPP 95mm', 'EPPP 95mm'),
+        ('EPPP 95mm White', 'EPPP 95mm White'),
+        ('EPPP 95mm Black', 'EPPP 95mm Black'),
+        ('EPPP 95mm Grey', 'EPPP 95mm Grey'),
+        ('EPPP 3Truck White', 'EPPP 3Truck 150mm White'),
+        ('EPPP 3Truck Black', 'EPPP 3Truck 150mm Black'),
+        ('EPPP 3Truck Grey', 'EPPP 3Truck 150mm Grey'),
+        ('EPPP 4Truck White', 'EPPP 4Truck White'),
+        ('EPPP 4Truck Black', 'EPPP 4Truck Black'),
+        ('EPPP 4Truck Grey', 'EPPP 4Truck Grey'),
 
     )
 
