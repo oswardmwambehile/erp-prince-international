@@ -27,12 +27,22 @@ class Quotation(models.Model):
         ('12mm', '12mm'),
 
     )
+    CURRENCY_CHOICES = (
+    ('TZS', 'Tanzanian Shilling (TZS)'),
+    ('USD', 'US Dollar (USD)'),
+)
 
     quotation_no = models.CharField(
         max_length=100,
         unique=True,
         blank=True
     )
+
+    currency = models.CharField(
+            max_length=5,
+            choices=CURRENCY_CHOICES,
+            default='TZS'
+        )
 
     customer = models.ForeignKey(
         Customer,
@@ -292,9 +302,11 @@ class QuotationItem(models.Model):
         default=Decimal('0.00')
     )
 
-    quantity = models.PositiveIntegerField(
-        default=1
-    )
+    quantity = models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            default=Decimal("1.00")
+        )
 
     # =========================
     # USER ENTERS SQM
@@ -365,62 +377,51 @@ class QuotationItem(models.Model):
     def save(self, *args, **kwargs):
 
         width = Decimal(self.width or 0)
-
         height = Decimal(self.height or 0)
-
         qty = Decimal(self.quantity or 1)
-
         unit_price = Decimal(self.unit_price or 0)
 
-        # =========================================
-        # SQM
-        # width * height / 1000000
-        # =========================================
-        # =========================================
-# SQM
-# =========================================
+        product_name = ""
+        if self.product and self.product.name:
+            product_name = self.product.name.strip().lower()
 
-        if width > 0 and height > 0:
-            # Calculate SQM from dimensions
-            self.sqm = (
-                (width * height) / Decimal('1000000')
-            ).quantize(
-                Decimal('0.1'),
-                rounding=ROUND_HALF_UP
-            )
-        else:
-            # Use the SQM entered by the user
+        # =========================================
+        # SPECIAL RULE: ALUMINIUM TOILET DOOR
+        # =========================================
+        if product_name == "aluminium toilet door":
+
+            # IGNORE SQM COMPLETELY
             self.sqm = Decimal(self.sqm or 0).quantize(
                 Decimal('0.1'),
                 rounding=ROUND_HALF_UP
             )
 
-        # =========================================
-        # TOTAL SQM
-        # sqm * quantity
-        # ONLY THIS GETS SPECIAL ROUNDING
-        # =========================================
-        raw_total_sqm = self.sqm * qty
+            self.total_sqm = self.sqm  # NO multiplication
+            self.total_price = unit_price  # FIXED PRICE ONLY
 
-        self.total_sqm = self.round_total_sqm(
-            raw_total_sqm
-        )
+        else:
+            # =========================================
+            # NORMAL PRODUCTS
+            # =========================================
+            if width > 0 and height > 0:
+                self.sqm = (
+                    (width * height) / Decimal('1000000')
+                ).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
+            else:
+                self.sqm = Decimal(self.sqm or 0).quantize(
+                    Decimal('0.1'),
+                    rounding=ROUND_HALF_UP
+                )
 
-        # =========================================
-        # TOTAL PRICE
-        # NO ROUNDING LOGIC HERE
-        # =========================================
-        self.total_price = (
-            self.total_sqm * unit_price
-        ).quantize(
-            Decimal('0.01'),
-            rounding=ROUND_HALF_UP
-        )
+            raw_total_sqm = self.sqm * qty
+
+            self.total_sqm = self.round_total_sqm(raw_total_sqm)
+
+            self.total_price = (
+                self.total_sqm * unit_price
+            ).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
         super().save(*args, **kwargs)
 
-        # =========================================
-        # UPDATE QUOTATION TOTALS
-        # =========================================
         if self.quotation_id:
             self.quotation.calculate_totals()

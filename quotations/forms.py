@@ -61,6 +61,7 @@ class QuotationForm(forms.ModelForm):
             'customer',
             
             'project_location',
+            'currency',
             
             'quotation_date',
             'vat_included',
@@ -81,6 +82,12 @@ class QuotationForm(forms.ModelForm):
                 attrs={
                     'class': TAILWIND_INPUT,
                     'placeholder': 'Project Name'
+                }
+            ),
+            
+             'currency': forms.Select(
+                attrs={
+                    'class': TAILWIND_SELECT
                 }
             ),
 
