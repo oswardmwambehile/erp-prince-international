@@ -136,72 +136,29 @@ class WarehouseForm(forms.ModelForm):
 # PRODUCT FORM
 # =========================================================
 
+from django import forms
+from .models import Product
+
 class ProductForm(forms.ModelForm):
 
     class Meta:
-
         model = Product
-
         fields = [
-            'category',
-            'unit',
-            'product_code',
             'name',
-            'description',
-            'buying_price',
             'selling_price',
-            'minimum_stock',
-            'barcode',
         ]
 
         widgets = {
-
-            'category': forms.Select(attrs={
-                'class': INPUT_CLASS,
-            }),
-
-            'unit': forms.Select(attrs={
-                'class': INPUT_CLASS,
-            }),
-
-            'product_code': forms.TextInput(attrs={
-                'class': INPUT_CLASS,
-                'placeholder': 'Product code',
-            }),
-
             'name': forms.TextInput(attrs={
                 'class': INPUT_CLASS,
                 'placeholder': 'Product name',
-            }),
-
-            'description': forms.Textarea(attrs={
-                'class': TEXTAREA_CLASS,
-                'rows': 4,
-                'placeholder': 'Product description',
-            }),
-
-            'buying_price': forms.NumberInput(attrs={
-                'class': INPUT_CLASS,
-                'placeholder': 'Buying price',
             }),
 
             'selling_price': forms.NumberInput(attrs={
                 'class': INPUT_CLASS,
                 'placeholder': 'Selling price',
             }),
-
-            'minimum_stock': forms.NumberInput(attrs={
-                'class': INPUT_CLASS,
-                'placeholder': 'Minimum stock',
-            }),
-
-            'barcode': forms.TextInput(attrs={
-                'class': INPUT_CLASS,
-                'placeholder': 'Barcode',
-            }),
-
         }
-
 
 # =========================================================
 # STOCK IN FORM
