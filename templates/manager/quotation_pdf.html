@@ -49,139 +49,139 @@ table.clean-table td {
 <body>
 
 
-    <!-- ================= LOGOS (OUTSIDE BOX) ================= -->
-<div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:10px;
-    width:100%;
-">
-
-    <!-- ================= LOGOS (TABLE VERSION - PDF SAFE) ================= -->
-<!-- ================= HEADER ================= -->
-<table style="width:100%; border-collapse:collapse; margin-bottom:8px; font-family:Arial;">
+<!-- ===================== HEADER ===================== -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="border-collapse:collapse; font-family:Arial; margin-bottom:8px;">
 
     <tr>
 
         <!-- ================= CUSTOMER ================= -->
-        <td style="width:33%; vertical-align:top; padding:0;">
+        <td width="25%" valign="top">
 
-          <div style="
-    font-size:11px;
-    font-weight:bold;
-    color:green;
-    margin:0;
-    padding:0;
-    line-height:1.2;
-">
-    CUSTOMER DETAILS
-</div>
+            <div style="
+                font-size:14px;
+                font-weight:bold;
+                color:#008000
+               
+            ">
+                CUSTOMER DETAILS
+            </div>
 
-<div style="
-    font-size:11px;
-    line-height:1.3;
-    margin:2px 0 0 0;
-    padding:0;
-">
-    <strong>NAME:</strong> {{ quotation.customer.full_name|upper }}<br>
-    <strong>PROJECT:</strong> {{ quotation.project_location|upper }}<br>
-    <strong>PHONE:</strong> {{ quotation.customer.phone|default:"N/A"|upper }} <br>
+            <div style="
+                font-size:10px;
+                line-height:1.45;
+            ">
 
-     <strong>QT NO:</strong> {{ quotation.quotation_no }}<br>
-     <strong>DATE:</strong> {{ quotation.quotation_date }}<br>
-              <strong> TIME: </strong>  {{ quotation.created_at|date:"H:i" }} EST
+                <strong>CUSTOMER NAME:</strong>
+                {{ quotation.customer.full_name|upper }}<br>
 
-</div>
+                <strong>PROJECT LOCATION:</strong>
+                {{ quotation.project_location|upper }}<br>
+
+                <strong>PHONE:</strong>
+                {{ quotation.customer.phone|default:"N/A"|upper }}<br>
+
+                <strong>QUOTATION NO:</strong>
+                {{ quotation.quotation_no }}
+
+                <strong>DATE:</strong>
+                {{ quotation.quotation_date }}<br>
+
+                <strong>TIME:</strong>
+                {{ quotation.created_at|date:"H:i" }} EAT
+
+            </div>
 
         </td>
 
-        <!-- ================= LOGO ================= -->
-        <td style="width:34%; text-align:center; vertical-align:middle; padding:0;">
+       <td width="35%" valign="top">
 
-            <img src="{{ logo_url }}" style="height:180px; width:auto;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+           style="border-collapse:collapse;">
 
-        </td>
+        <!-- LOGO -->
+        <tr>
+            <td align="center"
+                style="padding:0; margin:0; line-height:0;">
+                <img src="{{ logo_url }}"
+                     style="width:180px; height:auto;">
+            </td>
+        </tr>
 
-        <!-- ================= COMPANY ================= -->
-       <td style="width:33%; text-align:right; vertical-align:top; padding:0;">
+        <!-- QR -->
+        <tr>
+            <td align="right"
+                style="padding:0; margin:0; line-height:0;">
+                <img src="{{ logo_qr }}"
+                     style="width:75px; height:75px;">
+            </td>
+        </tr>
 
-    <div style="
-        font-size:11px;
-        font-weight:bold;
-        color:green;
-        margin:0;
-        padding:0;
-        line-height:1.2;
-    ">
-        PRINCE INTERNATIONAL 
-    </div>
-
-    <div style="
-        font-size:11px;
-        line-height:1.3;
-        margin:2px 0 0 0;
-        padding:0;
-    ">
-    <strong>P.O.Box</strong> 14491 Dar Es Salaam, <br>
-        Coca-Cola Road, Mikocheni Industrial Area
-        Kinondoni, Dar es Salaam<br>
-
-        <strong>Mobile:</strong> +255 703 210 000<br>
-        <strong>Email:</strong> info@princeinternational.co.tz<br>
-        <strong>Web:</strong> www.princeinternational.co.tz<br>
-        
-        <strong>TIN:</strong> 119-708-125
-    </div>
+    </table>
 
 </td>
+        <!-- ================= COMPANY ================= -->
+        <td width="40%" valign="top" align="left">
 
-    </tr>
+            <div style="
+                font-size:14px;
+                font-weight:bold;
+                color: #008000;
+            ">
+                PRINCE INTERNATIONAL
+            </div>
 
-</table>
-</div>
+            <div style="
+                font-size:12px;
+                line-height:1.45;
+                margin-top:1px;
+            ">
 
-<table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-        <td style="border-top:2px solid #008000;"></td>
-    </tr>
-</table>
+                <strong>P.O.Box 14491</strong>
 
-<div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:10px;
-    width:100%;
-">
+                Coca-Cola Road,
 
-    <!-- ================= LOGOS (TABLE VERSION - PDF SAFE) ================= -->
-<!-- ================= LOGO HEADER (CLEAN & SMALL) ================= -->
-<table style="width:100%; border-collapse:collapse; margin-bottom:8px;">
+                Mikocheni Industrial Area,
 
-    <tr>
+                Opp Tumaini University,<br>
 
-        <!-- LEFT EMPTY -->
-        <td style="width:33%; border:none; padding:0;">
-            <img src="{{ logo_urls }}" style="height:100px; width:auto;">
+                Kinondoni, Dar es Salaam<br>
+
+                <strong>Mobile:</strong>
+                +255 703 210 000<br>
+
+                Foshan Guangdong China Branch
+                +86 198 2030 3848<br>
+
+                <strong>Email:</strong>
+                info@princeinternational.co.tz<br>
+
+                <strong>Web:</strong>
+                www.princeinternational.co.tz<br>
+
+                <strong>TIN:</strong>
+                119-708-125<br>
+
+                
+
+            </div>
+
         </td>
 
-        <!-- CENTER LOGO (REDUCED SIZE) -->
-        <td style="width:34%; text-align:center; border:none; padding:0;">
-
-            <img src="{{ logo_qr }}"
-                 style="height:85px; width:auto; object-fit:contain;">
-
-        </td>
-
-        <!-- RIGHT EMPTY -->
-        <td style="width:33%; border:none; padding:0;"></td>
-
     </tr>
 
 </table>
 
-</div>
+<!-- GREEN LINE -->
+<table width="100%" cellpadding="0" cellspacing="0"
+       style="border-collapse:collapse; margin-top:4px;">
+    <tr>
+        <td style="height:4px; background:#18a558;"></td>
+    </tr>
+</table>
+
+
+
 
 <div style="
     font-family:'Times New Roman', serif;
@@ -226,9 +226,11 @@ table.clean-table td {
     
 
 </div>
-<table width="100%" cellspacing="0" cellpadding="0">
+<!-- GREEN LINE -->
+<table width="100%" cellpadding="0" cellspacing="0"
+       style="border-collapse:collapse; margin-top:4px;">
     <tr>
-        <td style="border-top:2px solid #008000;"></td>
+        <td style="height:4px; background:#18a558;"></td>
     </tr>
 </table>
 
@@ -876,6 +878,63 @@ USD Prince International: <strong>0150028744</strong> (Exim Bank)
 
 
 </div>
+
+
+<!-- GREEN LINE -->
+<table width="100%" cellpadding="0" cellspacing="0"
+       style="border-collapse:collapse; margin-top:4px;">
+    <tr>
+        <td style="height:4px; background:#18a558;"></td>
+    </tr>
+</table>
+
+<!-- ===================== TOP HEADER ===================== -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="border-collapse:collapse; margin-bottom:8px;">
+
+    <tr>
+
+        <!-- LEFT -->
+        <td width="40%" valign="middle">
+
+            <div style="
+                font-family:Georgia, serif;
+                font-size:16px;
+                font-style:italic;
+                font-weight:bold;
+                color:#0B5ED7;
+                letter-spacing:0.5px;
+            ">
+                Efficiency &amp; Timely Delivery
+            </div>
+
+            <div style="
+                font-size:9px;
+                color:#666666;
+                margin-top:3px;
+            ">
+                Premium Aluminium • Glass • Interior Solutions
+            </div>
+
+        </td>
+
+        <!-- CENTER -->
+        <td width="20%">
+            &nbsp;
+        </td>
+
+        <!-- RIGHT -->
+        <td width="40%" align="right" valign="middle">
+
+            <img src="{{ logo_urls }}"
+                 style="width:190px; height:auto;">
+
+        </td>
+
+    </tr>
+
+</table>
+
 
 
 
