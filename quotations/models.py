@@ -388,16 +388,21 @@ class QuotationItem(models.Model):
         # =========================================
         # SPECIAL RULE: ALUMINIUM TOILET DOOR
         # =========================================
-        if product_name == "aluminium toilet door":
+       # =========================================
+# SPECIAL RULE: ALUMINIUM TOILET DOOR & STEEL GATE
+# =========================================
+            if product_name in ["aluminium toilet door", "steel gates", "normal aluminium door"]:
 
-            # IGNORE SQM COMPLETELY
-            self.sqm = Decimal(self.sqm or 0).quantize(
-                Decimal('0.1'),
-                rounding=ROUND_HALF_UP
-            )
+                # IGNORE SQM COMPLETELY
+                self.sqm = Decimal(self.sqm or 0).quantize(
+                    Decimal("0.1"),
+                    rounding=ROUND_HALF_UP
+                )
 
-            self.total_sqm = self.sqm  # NO multiplication
-            self.total_price = unit_price  # FIXED PRICE ONLY
+                self.total_sqm = self.sqm
+                self.total_price = unit_price
+
+                        
 
         else:
             # =========================================

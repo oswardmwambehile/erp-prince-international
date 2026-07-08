@@ -33,7 +33,6 @@ class Warehouse(models.Model):
         return self.name
 
 from django.db import models
-
 class Product(models.Model):
     name = models.CharField(max_length=255)
 
