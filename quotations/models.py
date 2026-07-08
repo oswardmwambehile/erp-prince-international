@@ -404,29 +404,29 @@ class QuotationItem(models.Model):
 
                         
 
-        else:
-            # =========================================
-            # NORMAL PRODUCTS
-            # =========================================
-            if width > 0 and height > 0:
-                self.sqm = (
-                    (width * height) / Decimal('1000000')
-                ).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
             else:
-                self.sqm = Decimal(self.sqm or 0).quantize(
-                    Decimal('0.1'),
-                    rounding=ROUND_HALF_UP
-                )
+                # =========================================
+                # NORMAL PRODUCTS
+                # =========================================
+                if width > 0 and height > 0:
+                    self.sqm = (
+                        (width * height) / Decimal('1000000')
+                    ).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
+                else:
+                    self.sqm = Decimal(self.sqm or 0).quantize(
+                        Decimal('0.1'),
+                        rounding=ROUND_HALF_UP
+                    )
 
-            raw_total_sqm = self.sqm * qty
+                raw_total_sqm = self.sqm * qty
 
-            self.total_sqm = self.round_total_sqm(raw_total_sqm)
+                self.total_sqm = self.round_total_sqm(raw_total_sqm)
 
-            self.total_price = (
-                self.total_sqm * unit_price
-            ).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                self.total_price = (
+                    self.total_sqm * unit_price
+                ).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)
 
-        if self.quotation_id:
-            self.quotation.calculate_totals()
+            if self.quotation_id:
+                self.quotation.calculate_totals()
