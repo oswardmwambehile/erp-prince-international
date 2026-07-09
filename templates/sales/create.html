@@ -363,6 +363,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let formIndex = parseInt(totalFormsInput.value);
 
+
     // =====================================
     // AUTO ITEM CODE (A01, A02, A03...)
     // =====================================
@@ -372,12 +373,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.querySelectorAll(".item-form").forEach(function(row){
 
-            // Skip deleted rows
+            // ignore deleted/hidden rows
             if(row.style.display === "none"){
                 return;
             }
 
-            const itemCodeInput = row.querySelector("input[name$='-item_code']");
+
+            const itemCodeInput = row.querySelector(
+                "input[name$='-item_code']"
+            );
+
 
             if(itemCodeInput){
 
@@ -386,14 +391,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+
             visibleIndex++;
 
         });
 
     }
 
+
+
     // =====================================
-    // ROUND TOTAL SQM ONLY
+    // ROUND TOTAL SQM
     // =====================================
     function roundTotalSQM(value) {
 
@@ -403,146 +411,264 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let decimalPart = value - integerPart;
 
-        if (decimalPart >= 0.5) {
+
+        if(decimalPart >= 0.5){
+
             return integerPart + 1;
+
         }
 
+
         return parseFloat(value.toFixed(1));
+
     }
+
+
 
     // =====================================
     // CALCULATE ROW
     // =====================================
-    function calculateRow(row) {
+    function calculateRow(row){
 
-        const widthInput = row.querySelector("input[name$='-width']");
-        const heightInput = row.querySelector("input[name$='-height']");
-        const qtyInput = row.querySelector("input[name$='-quantity']");
-        const sqmInput = row.querySelector("input[name$='-sqm']");
-        const totalSQMInput = row.querySelector("input[name$='-total_sqm']");
-        const unitPriceInput = row.querySelector("input[name$='-unit_price']");
-        const totalPriceInput = row.querySelector("input[name$='-total_price']");
+
+        const widthInput = row.querySelector(
+            "input[name$='-width']"
+        );
+
+        const heightInput = row.querySelector(
+            "input[name$='-height']"
+        );
+
+        const qtyInput = row.querySelector(
+            "input[name$='-quantity']"
+        );
+
+        const sqmInput = row.querySelector(
+            "input[name$='-sqm']"
+        );
+
+        const totalSQMInput = row.querySelector(
+            "input[name$='-total_sqm']"
+        );
+
+        const unitPriceInput = row.querySelector(
+            "input[name$='-unit_price']"
+        );
+
+        const totalPriceInput = row.querySelector(
+            "input[name$='-total_price']"
+        );
+
 
         let width = parseFloat(widthInput?.value) || 0;
+
         let height = parseFloat(heightInput?.value) || 0;
+
         let qty = parseFloat(qtyInput?.value) || 1;
+
         let unitPrice = parseFloat(unitPriceInput?.value) || 0;
+
+
 
         // SQM
         let sqm = (width * height) / 1000000;
+
         sqm = parseFloat(sqm.toFixed(1));
 
-        if (sqmInput) {
+
+        if(sqmInput){
+
             sqmInput.value = sqm;
+
         }
+
+
 
         // TOTAL SQM
         let totalSQM = sqm * qty;
+
         totalSQM = roundTotalSQM(totalSQM);
 
-        if (totalSQMInput) {
+
+        if(totalSQMInput){
+
             totalSQMInput.value = totalSQM;
+
         }
+
+
 
         // TOTAL PRICE
         let totalPrice = totalSQM * unitPrice;
 
-        if (totalPriceInput) {
-            totalPriceInput.value = totalPrice.toFixed(2);
+
+        if(totalPriceInput){
+
+            totalPriceInput.value =
+                totalPrice.toFixed(2);
+
         }
+
 
     }
 
+
+
     // =====================================
-    // BIND EVENTS
+    // BIND INPUT EVENTS
     // =====================================
-    function bindEvents(row) {
+    function bindEvents(row){
 
-        const widthInput = row.querySelector("input[name$='-width']");
-        const heightInput = row.querySelector("input[name$='-height']");
-        const qtyInput = row.querySelector("input[name$='-quantity']");
-        const unitPriceInput = row.querySelector("input[name$='-unit_price']");
 
-        [widthInput, heightInput, qtyInput, unitPriceInput].forEach(function(input){
+        const inputs = row.querySelectorAll(
+            "input[name$='-width'], " +
+            "input[name$='-height'], " +
+            "input[name$='-quantity'], " +
+            "input[name$='-unit_price']"
+        );
 
-            if(input){
 
-                input.addEventListener("input", function(){
+        inputs.forEach(function(input){
+
+
+            input.addEventListener(
+                "input",
+                function(){
 
                     calculateRow(row);
 
-                });
+                }
+            );
 
-            }
 
         });
+
 
         calculateRow(row);
 
     }
 
+
+
+
     // =====================================
-    // EXISTING ROWS
+    // EXISTING ITEMS
     // =====================================
-    document.querySelectorAll(".item-form").forEach(function (row) {
+    document.querySelectorAll(".item-form")
+    .forEach(function(row){
 
         bindEvents(row);
 
     });
 
+
     updateItemCodes();
+
+
+
 
     // =====================================
     // ADD ITEM
     // =====================================
-    window.addItem = function () {
+    window.addItem = function(){
 
-        let template = document.getElementById("empty-form").innerHTML;
 
-        template = template.replace(/__prefix__/g, formIndex);
+        let template =
+            document.getElementById("empty-form").innerHTML;
 
-        container.insertAdjacentHTML("beforeend", template);
 
-        const newRow = container.lastElementChild;
+
+        template = template.replace(
+            /__prefix__/g,
+            formIndex
+        );
+
+
+
+        container.insertAdjacentHTML(
+            "beforeend",
+            template
+        );
+
+
+
+        const newRow =
+            container.lastElementChild;
+
+
 
         bindEvents(newRow);
 
+
+
         formIndex++;
+
 
         totalFormsInput.value = formIndex;
 
-        // Generate A01, A02, A03...
+
+
         updateItemCodes();
 
+
     };
+
+
+
+
 
     // =====================================
     // REMOVE ITEM
     // =====================================
-    window.removeItem = function (button) {
+    window.removeItem = function(button){
 
-        const row = button.closest(".item-form");
 
-        const deleteInput = row.querySelector(
-            "input[type='checkbox'][name$='-DELETE']"
-        );
+        const row =
+            button.closest(".item-form");
 
-        if (deleteInput) {
 
+
+        const deleteInput =
+            row.querySelector(
+                "input[type='checkbox'][name$='-DELETE']"
+            );
+
+
+
+        if(deleteInput){
+
+
+            // EXISTING DATABASE ITEM
+            // mark for deletion
             deleteInput.checked = true;
+
 
             row.style.display = "none";
 
-        } else {
 
+        }else{
+
+
+            // NEW UNSAVED ITEM
             row.remove();
+
+
+            formIndex--;
+
+
+            totalFormsInput.value =
+                formIndex;
+
 
         }
 
-        // Renumber remaining rows
+
+
         updateItemCodes();
 
+
     };
+
 
 });
 </script>

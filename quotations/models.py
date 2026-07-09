@@ -222,8 +222,9 @@ class Quotation(models.Model):
 # =====================================================
 class QuotationItem(models.Model):
     GRASS = (
-        ('6mm', '6mm'),
-        ('5mm', '5mm'),
+        ('6mm Tinted grey', '6mm Tinted grey'),
+          ('Frosted 6mm', 'Frosted 6mm'),
+        ('5mm clear,5m one way grey', '5mm clear,5m one way grey'),
         ('8mm', '8mm'),
         ('10mm', '10mm'),
         ('12mm', '12mm'),
@@ -234,7 +235,7 @@ class QuotationItem(models.Model):
           ('', '---------'),
         ('Al Pro 100mm', 'Al Pro 100mm'),
         ('U Channel', 'U Channel'),
-        ('Al Pro 80mm', 'Al Pro 80mm'),
+        ('Al Pro 80mm Black', 'Al Pro 80mm Black'),
         ('EPPP 95mm', 'EPPP 95mm'),
         ('EPPP 95mm White', 'EPPP 95mm White'),
         ('EPPP 95mm Black', 'EPPP 95mm Black'),

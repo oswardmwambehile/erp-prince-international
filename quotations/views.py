@@ -788,33 +788,51 @@ def sales_update_quotation(request, pk):
 
             items = item_formset.save(commit=False)
 
-            # -----------------------------
-            # HANDLE UPDATED ITEMS
-            # -----------------------------
+
+            # ===============================
+            # DELETE REMOVED ITEMS
+            # ===============================
+            for deleted_item in item_formset.deleted_objects:
+                deleted_item.delete()
+
+
+
+            # ===============================
+            # UPDATE EXISTING ITEMS
+            # ===============================
             for item in items:
 
                 item.cts = item.cts or 0
                 item.sqm = item.sqm or 0
 
+
                 product_name = ""
+
                 if item.product and getattr(item.product, "name", None):
                     product_name = item.product.name.strip().lower()
 
-                # -----------------------------------
-                # SPECIAL RULE: ALUMINIUM TOILET DOOR
-                # -----------------------------------
-                if product_name == "Aluminium Toilet Door":
+
+
+                if product_name == "aluminium toilet door":
                     item.total_sqm = item.sqm
                     item.total_price = item.unit_price
+
                 else:
                     item.total_sqm = item.sqm * item.cts
                     item.total_price = item.total_sqm * item.unit_price
 
+
+
                 item.quotation = quotation
                 item.save()
 
-            # handle deletions
+
+
+            # ===============================
+            # SAVE MANY TO MANY
+            # ===============================
             item_formset.save_m2m()
+
 
             quotation.calculate_totals()
 
