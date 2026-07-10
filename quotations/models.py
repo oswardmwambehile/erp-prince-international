@@ -223,6 +223,7 @@ class Quotation(models.Model):
 class QuotationItem(models.Model):
     GRASS = (
         ('6mm Tinted grey', '6mm Tinted grey'),
+        ('6mm Light Grey', '6mm Light Grey'),
           ('Frosted 6mm', 'Frosted 6mm'),
         ('5mm clear,5m one way grey', '5mm clear,5m one way grey'),
         ('8mm', '8mm'),
@@ -234,6 +235,7 @@ class QuotationItem(models.Model):
     ALUMINIUM = (
           ('', '---------'),
         ('Al Pro 100mm', 'Al Pro 100mm'),
+        ('Metal Al Pro 100mm Grey', 'Metal Al Pro 100mm Grey'),
         ('U Channel', 'U Channel'),
         ('Al Pro 80mm Black', 'Al Pro 80mm Black'),
         ('EPPP 95mm', 'EPPP 95mm'),
@@ -276,14 +278,14 @@ class QuotationItem(models.Model):
         max_length=255,
         blank=True,
         choices=ALUMINIUM,
-        default='Al Pro 100mm'
+        default='Metal Al Pro 100mm Grey'
     )
 
     glass = models.CharField(
         max_length=255,
         blank=True,
         choices=GRASS,
-        default='6mm'
+        default='6mm Light Grey'
     )
     
 
