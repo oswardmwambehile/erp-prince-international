@@ -693,12 +693,12 @@ def update_quotation(request, pk):
     quotation = get_object_or_404(Quotation, pk=pk)
 
     ItemFormSet = inlineformset_factory(
-        Quotation,
-        QuotationItem,
-        form=QuotationItemForm,
-        extra=0,
-        can_delete=True
-    )
+    Quotation,
+    QuotationItem,
+    form=QuotationItemForm,
+    extra=1,
+    can_delete=True
+)
 
     if request.method == "POST":
 
