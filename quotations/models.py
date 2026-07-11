@@ -224,6 +224,9 @@ class QuotationItem(models.Model):
     GRASS = (
         ('6mm Tinted grey', '6mm Tinted grey'),
         ('6mm Light Grey', '6mm Light Grey'),
+        ('5mm Light Grey', '5mm Light Yellow'),
+         ('5mm Light Grey', '5mm Light Grey'),
+        ('6mm Light Yellow', '6mm Light Yellow'),
           ('Frosted 6mm', 'Frosted 6mm'),
         ('5mm clear,5m one way grey', '5mm clear,5m one way grey'),
         ('8mm', '8mm'),
