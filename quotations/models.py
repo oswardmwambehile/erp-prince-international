@@ -238,6 +238,7 @@ class QuotationItem(models.Model):
         ('Metal Al Pro 100mm Grey', 'Metal Al Pro 100mm Grey'),
         ('U Channel', 'U Channel'),
         ('Al Pro 80mm Black', 'Al Pro 80mm Black'),
+        ('Al Pro 80mm', 'Al Pro 80mm'),
         ('EPPP 95mm', 'EPPP 95mm'),
         ('EPPP 95mm White', 'EPPP 95mm White'),
         ('EPPP 95mm Black', 'EPPP 95mm Black'),
