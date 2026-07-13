@@ -880,6 +880,56 @@ def delete_quotation(request, pk):
     return redirect("quotations:quotation_list")
 
 
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from pypdf import PdfReader
+from django.conf import settings
+import os
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from pypdf import PdfWriter, PdfReader
+from io import BytesIO
+
+
+def create_watermark():
+    packet = BytesIO()
+
+    width, height = A4
+
+    c = canvas.Canvas(packet, pagesize=A4)
+
+    logo = os.path.join(settings.BASE_DIR, "static", "img", "prince.jpeg")
+
+    c.saveState()
+
+    # Transparency (0.0 = invisible, 1.0 = solid)
+    c.setFillAlpha(0.10)
+
+    # Move to the center of the page
+    c.translate(width / 2, height / 2)
+
+    # Rotate the watermark
+    c.rotate(45)
+
+    # Draw a very large logo
+    c.drawImage(
+        logo,
+        -300,      # x
+        -300,      # y
+        width=600,
+        height=600,
+        preserveAspectRatio=True,
+        mask='auto'
+    )
+
+    c.restoreState()
+
+    c.save()
+
+    packet.seek(0)
+    return PdfReader(packet)
+
 
 from django.template.loader import render_to_string
 from django.http import HttpResponse
@@ -1000,12 +1050,206 @@ def quotation_pdf(request, pk):
 
     result = BytesIO()
 
-    pdf = pisa.pisaDocument(BytesIO(html_string.encode("UTF-8")), result)
+    pdf = pisa.pisaDocument(
+        BytesIO(html_string.encode("UTF-8")),
+        result
+    )
 
     if pdf.err:
         return HttpResponse("Error generating PDF", status=500)
 
-    response = HttpResponse(result.getvalue(), content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="quotation_{quotation.quotation_no}.pdf"'
+    result.seek(0)
+
+    reader = PdfReader(result)
+    writer = PdfWriter()
+
+    watermark = create_watermark()
+
+    for page in reader.pages:
+        page.merge_page(watermark.pages[0])
+        writer.add_page(page)
+
+    output = BytesIO()
+    writer.write(output)
+
+    response = HttpResponse(
+        output.getvalue(),
+        content_type="application/pdf"
+    )
+
+    response["Content-Disposition"] = (
+        f'attachment; filename="quotation_{quotation.quotation_no}.pdf"'
+    )
 
     return response
+
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+
+from .models import AluminiumProfile, Glass
+from .forms import AluminiumProfileForm, GlassForm
+
+
+
+def aluminium_glass_list(request):
+
+    aluminium_profiles = AluminiumProfile.objects.all().order_by('name')
+    glasses = Glass.objects.all().order_by('name')
+
+
+    aluminium_form = AluminiumProfileForm()
+    glass_form = GlassForm()
+
+
+
+    # CREATE ALUMINIUM
+    if request.method == "POST":
+
+
+        if "create_aluminium" in request.POST:
+
+            aluminium_form = AluminiumProfileForm(request.POST)
+
+            if aluminium_form.is_valid():
+
+                aluminium_form.save()
+
+                return redirect(
+                    'quotations:aluminium_glass_list'
+                )
+
+
+
+        # UPDATE ALUMINIUM
+
+        elif "update_aluminium" in request.POST:
+
+            pk = request.POST.get('id')
+
+            aluminium = get_object_or_404(
+                AluminiumProfile,
+                id=pk
+            )
+
+            form = AluminiumProfileForm(
+                request.POST,
+                instance=aluminium
+            )
+
+            if form.is_valid():
+
+                form.save()
+
+                return redirect(
+                    'quotations:aluminium_glass_list'
+                )
+
+
+
+
+        # DELETE ALUMINIUM
+
+        elif "delete_aluminium" in request.POST:
+
+            pk=request.POST.get('id')
+
+            AluminiumProfile.objects.filter(
+                id=pk
+            ).delete()
+
+
+            return redirect(
+                'quotations:aluminium_glass_list'
+            )
+
+
+
+
+        # CREATE GLASS
+
+        elif "create_glass" in request.POST:
+
+            glass_form = GlassForm(request.POST)
+
+
+            if glass_form.is_valid():
+
+                glass_form.save()
+
+                return redirect(
+                    'quotations:aluminium_glass_list'
+                )
+
+
+
+
+        # UPDATE GLASS
+
+        elif "update_glass" in request.POST:
+
+
+            pk=request.POST.get('id')
+
+
+            glass=get_object_or_404(
+                Glass,
+                id=pk
+            )
+
+
+            form=GlassForm(
+                request.POST,
+                instance=glass
+            )
+
+
+            if form.is_valid():
+
+                form.save()
+
+                return redirect(
+                    'quotations:aluminium_glass_list'
+                )
+
+
+
+
+        # DELETE GLASS
+
+        elif "delete_glass" in request.POST:
+
+            pk=request.POST.get('id')
+
+
+            Glass.objects.filter(
+                id=pk
+            ).delete()
+
+
+            return redirect(
+                'quotations:aluminium_glass_list'
+            )
+
+
+
+
+    context={
+
+        "aluminium_profiles": aluminium_profiles,
+
+        "glasses": glasses,
+
+        "aluminium_form": aluminium_form,
+
+        "glass_form": glass_form,
+
+    }
+
+
+    return render(
+        request,
+        "sales/aluminium_glass_list.html",
+        context
+    )
+

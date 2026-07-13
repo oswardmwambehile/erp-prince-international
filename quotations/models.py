@@ -215,47 +215,42 @@ class Quotation(models.Model):
 
 
 
+# =====================================================
+# ALUMINIUM PROFILE TABLE
+# =====================================================
 
+class AluminiumProfile(models.Model):
 
+    name = models.CharField(
+        max_length=255,
+        unique=True
+    )
+
+    def __str__(self):
+        return self.name
+    
+
+    # =====================================================
+# GLASS TABLE
+# =====================================================
+
+class Glass(models.Model):
+
+    name = models.CharField(
+        max_length=255,
+        unique=True
+    )
+
+    def __str__(self):
+        return self.name
+    
+
+    
 # =====================================================
 # QUOTATION ITEM MODEL
 # =====================================================
 class QuotationItem(models.Model):
-    GRASS = (
-        ('6mm Tinted grey', '6mm Tinted grey'),
-        ('6mm Light Grey', '6mm Light Grey'),
-        ('5mm Light Grey', '5mm Light Yellow'),
-         ('5mm Light Grey', '5mm Light Grey'),
-        ('6mm Light Yellow', '6mm Light Yellow'),
-          ('Frosted 6mm', 'Frosted 6mm'),
-        ('5mm clear,5m one way grey', '5mm clear,5m one way grey'),
-        ('8mm', '8mm'),
-        ('10mm', '10mm'),
-        ('12mm', '12mm'),
-
-    )
-
-    ALUMINIUM = (
-          ('', '---------'),
-        ('Al Pro 100mm', 'Al Pro 100mm'),
-        ('Metal Al Pro 100mm Grey', 'Metal Al Pro 100mm Grey'),
-        ('Metal Al Pro 100mm Yellow', 'Metal Al Pro 100mm Yellow'),
-        ('U Channel', 'U Channel'),
-        ('Al Pro 80mm Black', 'Al Pro 80mm Black'),
-        ('Al Pro 80mm', 'Al Pro 80mm'),
-        ('EPPP 95mm', 'EPPP 95mm'),
-        ('EPPP 95mm White', 'EPPP 95mm White'),
-        ('EPPP 95mm Black', 'EPPP 95mm Black'),
-        ('EPPP 95mm Grey', 'EPPP 95mm Grey'),
-        ('EPPP 3Truck White', 'EPPP 3Truck 150mm White'),
-        ('EPPP 3Truck Black', 'EPPP 3Truck 150mm Black'),
-        ('EPPP 3Truck Grey', 'EPPP 3Truck 150mm Grey'),
-        ('EPPP 4Truck White', 'EPPP 4Truck White'),
-        ('EPPP 4Truck Black', 'EPPP 4Truck Black'),
-        ('EPPP 4Truck Grey', 'EPPP 4Truck Grey'),
-
-    )
-
+    
     quotation = models.ForeignKey(
         Quotation,
         on_delete=models.CASCADE,
@@ -266,7 +261,8 @@ class QuotationItem(models.Model):
         Product,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        max_length=500
     )
 
     # =========================
@@ -279,18 +275,21 @@ class QuotationItem(models.Model):
 
    
 
-    aluminium_profile = models.CharField(
-        max_length=255,
-        blank=True,
-        choices=ALUMINIUM,
-        default='Metal Al Pro 100mm Grey'
+    aluminium_profile = models.ForeignKey(
+    AluminiumProfile,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name='quotation_items'
     )
 
-    glass = models.CharField(
-        max_length=255,
+
+    glass = models.ForeignKey(
+        Glass,
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
-        choices=GRASS,
-        default='6mm Light Grey'
+        related_name='quotation_items'
     )
     
 

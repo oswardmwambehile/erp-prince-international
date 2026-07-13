@@ -1,0 +1,321 @@
+{% extends 'sales/base.html' %}
+
+
+{% block content %}
+
+
+{% include 'sales/nav.html' %}
+{% include 'sales/sidebar.html' %}
+
+
+<div class="sm:ml-64 mt-16 px-4 py-6">
+
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+
+<!-- ================= ALUMINIUM ================= -->
+
+<div class="bg-white rounded-2xl shadow border">
+
+
+<div class="px-6 py-5 border-b">
+
+<h2 class="text-xl font-semibold text-gray-800">
+Aluminium Profiles
+</h2>
+
+</div>
+
+
+
+<div class="p-6">
+
+
+<form method="POST" class="flex gap-3">
+
+{% csrf_token %}
+
+
+{{ aluminium_form.name }}
+
+
+<button
+name="create_aluminium"
+class="bg-green-700 hover:bg-green-800 text-white px-5 rounded-xl">
+
+<i class="fa fa-plus"></i>
+
+
+
+</button>
+
+
+</form>
+
+
+
+<table class="w-full mt-6 text-sm">
+
+
+<thead class="bg-gray-50">
+
+<tr>
+
+<th class="px-4 py-3 text-left">
+Name
+</th>
+
+
+<th class="px-4 py-3 text-center">
+Action
+</th>
+
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+{% for item in aluminium_profiles %}
+
+<tr class="border-b">
+
+
+<td class="px-4 py-3">
+{{item.name}}
+</td>
+
+
+
+<td class="px-4 py-3 text-center">
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+<input
+type="hidden"
+name="id"
+value="{{item.id}}">
+
+
+<button
+name="delete_aluminium"
+class="bg-red-100 text-red-700 px-3 py-1 rounded-lg">
+
+Delete
+
+</button>
+
+
+</form>
+
+
+</td>
+
+
+</tr>
+
+
+{% empty %}
+
+<tr>
+
+<td colspan="2"
+class="text-center py-10 text-gray-400">
+
+No aluminium profiles
+
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- ================= GLASS ================= -->
+
+
+<div class="bg-white rounded-2xl shadow border">
+
+
+<div class="px-6 py-5 border-b">
+
+
+<h2 class="text-xl font-semibold text-gray-800">
+
+Glass Types
+
+</h2>
+
+
+</div>
+
+
+
+<div class="p-6">
+
+
+<form method="POST"
+class="flex gap-3">
+
+
+{% csrf_token %}
+
+
+{{ glass_form.name }}
+
+
+
+<button
+name="create_glass"
+class="bg-blue-600 hover:bg-blue-700 text-white px-5 rounded-xl">
+
+
+<i class="fa fa-plus"></i>
+
+
+
+
+</button>
+
+
+</form>
+
+
+
+
+
+<table class="w-full mt-6 text-sm">
+
+
+<thead class="bg-gray-50">
+
+<tr>
+
+<th class="px-4 py-3 text-left">
+Name
+</th>
+
+
+<th class="px-4 py-3 text-center">
+Action
+</th>
+
+</tr>
+
+
+</thead>
+
+
+<tbody>
+
+
+
+{% for item in glasses %}
+
+
+<tr class="border-b">
+
+
+<td class="px-4 py-3">
+
+{{item.name}}
+
+</td>
+
+
+
+<td class="px-4 py-3 text-center">
+
+
+<form method="POST">
+
+
+{% csrf_token %}
+
+
+<input
+type="hidden"
+name="id"
+value="{{item.id}}">
+
+
+
+<button
+name="delete_glass"
+class="bg-red-100 text-red-700 px-3 py-1 rounded-lg">
+
+
+Delete
+
+
+</button>
+
+
+</form>
+
+
+</td>
+
+
+</tr>
+
+
+{% empty %}
+
+<tr>
+
+<td colspan="2"
+class="text-center py-10 text-gray-400">
+
+No glass types
+
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}

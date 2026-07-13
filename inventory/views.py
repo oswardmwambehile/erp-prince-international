@@ -1438,3 +1438,153 @@ def inventory_dashboard(request):
         context
     )
 
+
+
+
+
+def sales_product_list(request):
+
+    products = Product.objects.all().order_by("-id")
+
+    return render(
+        request,
+        "sales/product_list.html",
+        {
+            "products": products
+        }
+    )
+
+
+# =========================
+# CREATE PRODUCT
+# =========================
+def sales_product_create(request):
+
+    product_form = ProductForm()
+    category_form = CategoryForm()
+    unit_form = UnitForm()
+
+    if request.method == "POST":
+
+        # ADD CATEGORY
+        if "save_category" in request.POST:
+
+            category_form = CategoryForm(request.POST)
+
+            if category_form.is_valid():
+
+                category_form.save()
+
+                return redirect("product_create")
+
+        # ADD UNIT
+        elif "save_unit" in request.POST:
+
+            unit_form = UnitForm(request.POST)
+
+            if unit_form.is_valid():
+
+                unit_form.save()
+
+                return redirect("product_create")
+
+        # ADD PRODUCT
+        else:
+
+            product_form = ProductForm(request.POST)
+
+            if product_form.is_valid():
+
+                product_form.save()
+
+                return redirect("sales_product_list")
+
+    context = {
+
+        "product_form": product_form,
+        "category_form": category_form,
+        "unit_form": unit_form,
+    }
+
+    return render(
+        request,
+        "sales/product_create.html",
+        context
+    )
+
+
+# =========================
+# PRODUCT DETAIL
+# =========================
+def sales_product_detail(request, pk):
+
+    product = get_object_or_404(
+        Product,
+        pk=pk
+    )
+
+    return render(
+        request,
+        "sales/product_detail.html",
+        {
+            "product": product
+        }
+    )
+
+
+# =========================
+# UPDATE PRODUCT
+# =========================
+def sales_product_update(request, pk):
+
+    product = get_object_or_404(
+        Product,
+        pk=pk
+    )
+
+    product_form = ProductForm(
+        request.POST or None,
+        instance=product
+    )
+
+    category_form = CategoryForm()
+    unit_form = UnitForm()
+
+
+    if product_form.is_valid():
+
+        product_form.save()
+
+        return redirect(
+            "product_list"
+        )
+
+
+    return render(
+        request,
+        "sales/product_create.html",
+        {
+            "product_form": product_form,
+            "category_form": category_form,
+            "unit_form": unit_form,
+            "product": product,
+        }
+    )
+
+## =========================
+# DELETE PRODUCT
+# =========================
+def sales_product_delete(request, pk):
+
+    product = get_object_or_404(
+        Product,
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        product.delete()
+
+    return redirect(
+        "sales_product_list"
+    )

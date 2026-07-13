@@ -35,7 +35,7 @@ class Warehouse(models.Model):
 from django.db import models
 class Product(models.Model):
     
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=1000)
 
     selling_price = models.DecimalField(
         max_digits=12,

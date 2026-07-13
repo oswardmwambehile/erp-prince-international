@@ -36,5 +36,11 @@ path(
     views.delete_quotation,
     name="delete_quotation"
 ),
+
+ path(
+        'aluminium-glass/',
+        views.aluminium_glass_list,
+        name='aluminium_glass_list'
+    ),
 path('quotation/<int:pk>/pdf/', views.quotation_pdf, name='quotation_pdf'),
 ]

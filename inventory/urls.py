@@ -85,4 +85,39 @@ path('inventory_dashboard/', views.inventory_dashboard, name='inventory_dashboar
     path('stock-movements/', views.stock_movements, name='stock_movements'),
     path('inventory_stock-movements/', views.inventory_stock_movements, name='inventory_stock_movements'),
     path('inventory/low-stock/', views.low_stock_list, name='low_stock_list'),
+
+
+    # =========================
+# SALES PRODUCTS
+# =========================
+
+path(
+    "sales_products/",
+    views.sales_product_list,
+    name="sales_product_list"
+),
+
+path(
+    "sales_products/create/",
+    views.sales_product_create,
+    name="sales_product_create"
+),
+
+path(
+    "sales_products/<int:pk>/",
+    views.sales_product_detail,
+    name="sales_product_detail"
+),
+
+path(
+    "sales_products/<int:pk>/update/",
+    views.sales_product_update,
+    name="sales_product_update"
+),
+
+path(
+    "sales_products/<int:pk>/delete/",
+    views.sales_product_delete,
+    name="sales_product_delete"
+),
 ]

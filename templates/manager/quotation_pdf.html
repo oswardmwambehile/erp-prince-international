@@ -15,11 +15,10 @@
             line-height: 1.4;
         }
 
-       
-        
+    
 
         /* ================= TABLE ================= */
-        table.clean-table th,
+table.clean-table th,
 table.clean-table td {
     border: none;
 }
@@ -72,23 +71,23 @@ table.clean-table td {
                 line-height:1.45;
             ">
 
-                <strong>CUSTOMER NAME:</strong>
+                <strong>CUSTOMER NAME:</strong><br>
                 {{ quotation.customer.full_name|upper }}<br>
 
-                <strong>PROJECT LOCATION:</strong>
+                <strong>PROJECT LOCATION:</strong><br>
                 {{ quotation.project_location|upper }}<br>
 
                 <strong>PHONE:</strong>
                 {{ quotation.customer.phone|default:"N/A"|upper }}<br>
 
                 <strong>QUOTATION NO:</strong>
-                {{ quotation.quotation_no }}
+                {{ quotation.quotation_no }}<br>
 
                 <strong>DATE:</strong>
                 {{ quotation.quotation_date }}<br>
 
                 <strong>TIME:</strong>
-                {{ quotation.created_at|date:"H:i" }} EAT
+                {{ quotation.created_at|date:"H:i" }} EAT<br>
 
             </div>
 
@@ -137,11 +136,11 @@ table.clean-table td {
                 margin-top:1px;
             ">
 
-                <strong>P.O.Box 14491</strong>
+                <strong>P.O.Box 14491</strong><br>
 
                 Coca-Cola Road,
 
-                Mikocheni Industrial Area,
+                Mikocheni Light Industrial Area,
 
                 Opp Tumaini University,<br>
 
@@ -150,7 +149,8 @@ table.clean-table td {
                 <strong>Mobile:</strong>
                 +255 703 210 000<br>
 
-                Foshan Guangdong China Branch
+                Foshan Guangdong <br>
+                China Branch 
                 +86 198 2030 3848<br>
 
                 <strong>Email:</strong>
@@ -217,10 +217,10 @@ table.clean-table td {
     margin:0;
     padding:0 8px;
 ">
-    Supply & installation of the following products:
+    Supply & installation of
     Aluminium, uPVC & Glass Works . Skimming & Paintings. Prefabs & Carpentry.
     Elavator & Escalators. Welding. Solar Energy & Electrical Works. Plumbing.
-    Roofing & Ceilings .
+    Roofing & Ceilings,Dry wall & Tiles .
 </div>
 
     
@@ -277,12 +277,12 @@ table.clean-table td {
     PROFORMA INVOICE FOR
 
     <span style="font-weight:900; font-size:12px;">
-    {{ products_list|upper }}
+   {{ products_list|upper }}
 </span>
 
     
 
-    INCLUDING TRANSPORTATION, INSTALLATION, COMMISSIONING AND RELATED SERVICES FOR USE ONLY.
+    INCLUDING TRANSPORTATION, INSTALLATION, COMMISSIONING AND PRODUCTS SERVICES FOR USE ONLY.
 
 </div>
 
@@ -857,11 +857,11 @@ table.clean-table td {
 
 4. Or Pay 80% for Fast Track Implementation and Delivery.<br>
 
-5. Execution Duration: 14 Working Days.<br>
+5. Execution Duration: 3months<br>
 
 6. China Special Order Payment Mode: 80% Advance, Final 20%.<br>
 
-7. China Special Order Delivery within 3 to 4 months after advance payment.<br>
+7. China Special Order Delivery within 3months after advance payment.<br>
 
 8. All prices are VAT Exclusive.<br>
 

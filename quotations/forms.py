@@ -310,3 +310,49 @@ class QuotationItemForm(forms.ModelForm):
             )
 
         return unit_price
+    
+
+
+from django import forms
+from .models import AluminiumProfile, Glass
+
+
+TAILWIND_INPUT = (
+    "w-full rounded-xl border border-gray-300 "
+    "px-4 py-2.5 text-sm text-gray-700 "
+    "focus:ring-2 focus:ring-green-500 "
+    "focus:outline-none"
+)
+
+
+class AluminiumProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = AluminiumProfile
+        fields = ['name']
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'class': TAILWIND_INPUT,
+                    'placeholder': 'Enter aluminium profile name'
+                }
+            )
+        }
+
+
+
+class GlassForm(forms.ModelForm):
+
+    class Meta:
+        model = Glass
+        fields = ['name']
+
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'class': TAILWIND_INPUT,
+                    'placeholder': 'Enter glass type'
+                }
+            )
+        }
