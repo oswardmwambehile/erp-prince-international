@@ -409,6 +409,17 @@ def sales_quotation_detail(request, pk):
     )
 
     # =========================================
+    # PRODUCTS LIST (ALL PRODUCTS)
+    # =========================================
+    products_list = ", ".join(
+        sorted(set(
+            str(item.product)
+            for item in quotation.items.all()
+            if item.product
+        ))
+    )
+
+    # =========================================
     # GROUP ITEMS BY PRODUCT ID
     # =========================================
     grouped_items = defaultdict(list)
@@ -423,9 +434,11 @@ def sales_quotation_detail(request, pk):
 
         grouped_items[product_key].append(item)
 
+
     grouped_data = []
 
     summary_rows = []
+
 
     # =========================================
     # GRAND TOTAL VARIABLES
@@ -440,6 +453,7 @@ def sales_quotation_detail(request, pk):
 
     total_subtotal = Decimal("0.00")
 
+
     # =========================================
     # LOOP GROUPED PRODUCTS
     # =========================================
@@ -451,6 +465,7 @@ def sales_quotation_detail(request, pk):
         else:
             product_name = "Unknown Product"
 
+
         # =========================================
         # SUBTOTALS
         # =========================================
@@ -459,32 +474,30 @@ def sales_quotation_detail(request, pk):
             for item in items
         )
 
+
         subtotal_sqm = sum(
             item.sqm or Decimal("0.00")
             for item in items
         )
+
 
         subtotal_total_sqm = sum(
             item.total_sqm or Decimal("0.00")
             for item in items
         )
 
+
         subtotal_unit_price = sum(
             item.unit_price or Decimal("0.00")
             for item in items
         )
 
+
         subtotal_total_price = sum(
             item.total_price or Decimal("0.00")
             for item in items
         )
-        products_list = ", ".join(
-        sorted(set(
-            str(item.product)
-            for item in quotation.items.all()
-            if item.product
-        ))
-    )
+
 
         # =========================================
         # PRODUCT TABLE DATA
@@ -504,7 +517,9 @@ def sales_quotation_detail(request, pk):
             "subtotal_unit_price": subtotal_unit_price,
 
             "subtotal_total_price": subtotal_total_price,
+
         })
+
 
         # =========================================
         # SUMMARY TABLE ROWS
@@ -522,7 +537,9 @@ def sales_quotation_detail(request, pk):
             "unit_price": subtotal_unit_price,
 
             "value": subtotal_total_price,
+
         })
+
 
         # =========================================
         # FINAL TOTALS
@@ -537,6 +554,8 @@ def sales_quotation_detail(request, pk):
 
         total_subtotal += subtotal_total_price
 
+
+
     # =========================================
     # VAT
     # =========================================
@@ -548,7 +567,10 @@ def sales_quotation_detail(request, pk):
         ) / Decimal("100")
 
     else:
+
         vat_amount = Decimal("0.00")
+
+
 
     # =========================================
     # GRAND TOTAL
@@ -558,6 +580,8 @@ def sales_quotation_detail(request, pk):
         + vat_amount
         - quotation.discount_amount
     )
+
+
 
     # =========================================
     # CONTEXT
@@ -569,6 +593,7 @@ def sales_quotation_detail(request, pk):
         "grouped_data": grouped_data,
 
         "summary_rows": summary_rows,
+
 
         # TOTALS
         "total_qty": total_qty,
@@ -584,16 +609,19 @@ def sales_quotation_detail(request, pk):
         "vat_amount": vat_amount,
 
         "grand_total": grand_total,
-        "products_list":products_list
+
+
+        # PRODUCTS
+        "products_list": products_list,
+
     }
+
 
     return render(
         request,
         "sales/quotation_detail.html",
         context
     )
-
-
 
 
 from django.contrib.auth.decorators import login_required
