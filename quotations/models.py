@@ -398,7 +398,7 @@ class QuotationItem(models.Model):
        # =========================================
 # SPECIAL RULE: ALUMINIUM TOILET DOOR & STEEL GATE
 # =========================================
-            if product_name in ["aluminium toilet door", "steel gates", "normal aluminium door"]:
+            if product_name in ["aluminium toilet door", "steel gates", "normal aluminium door", "toilet door first floor", "toilet door second floor", "toilet door ground floor","roller shatter"]:
 
                 # IGNORE SQM COMPLETELY
                 self.sqm = Decimal(self.sqm or 0).quantize(
