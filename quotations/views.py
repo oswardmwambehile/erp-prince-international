@@ -959,6 +959,53 @@ def create_watermark():
     return PdfReader(packet)
 
 
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from pypdf import PdfReader
+from io import BytesIO
+import os
+from django.conf import settings
+
+
+def create_terms_wave():
+
+    packet = BytesIO()
+
+    width, height = A4
+
+    c = canvas.Canvas(packet, pagesize=A4)
+
+    wave = os.path.join(
+        settings.BASE_DIR,
+        "static",
+        "img",
+        "wave_bg.jpeg"
+    )
+
+    # Set image transparency
+    c.saveState()
+    c.setFillAlpha(0.43)   # adjust opacity here
+
+    # Draw wave full page
+    c.drawImage(
+        wave,
+        0,
+        0,
+        width=width,
+        height=height,
+        preserveAspectRatio=False,
+        mask="auto"
+    )
+
+    c.restoreState()
+
+    c.save()
+
+    packet.seek(0)
+
+    return PdfReader(packet)
+
+
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -1005,7 +1052,7 @@ def quotation_pdf(request, pk):
         subtotal_qty = sum(i.quantity or 0 for i in items)
         subtotal_sqm = sum(i.sqm or 0 for i in items)
         subtotal_total_sqm = sum(i.total_sqm or 0 for i in items)
-        subtotal_unit_price = sum(i.unit_price or 0 for i in items)
+        subtotal_unit_price = items[0].unit_price or Decimal("0.00")
         subtotal_total_price = sum(i.total_price or 0 for i in items)
 
         grouped_data.append({
@@ -1041,8 +1088,9 @@ def quotation_pdf(request, pk):
 
     grand_total = total_subtotal + vat_amount - quotation.discount_amount
     logo_url = request.build_absolute_uri(static("img/prince.jpeg"))
-    logo_urls = request.build_absolute_uri(static("img/logo1.PNG"))
+    logo_urls = request.build_absolute_uri(static("img/logo1-removebg-preview.PNG"))
     logo_qr = request.build_absolute_uri(static("img/qr-codes.png"))
+    wave_bg = request.build_absolute_uri(static("img/wave_bg.jpeg"))
     products_list = ", ".join(
         sorted(set(
             str(item.product)
@@ -1064,6 +1112,7 @@ def quotation_pdf(request, pk):
         "logo_url":logo_url,
         "logo_urls":logo_urls,
         "logo_qr":logo_qr,
+        "wave_bg":wave_bg,
         "products_list":products_list
     }
 
@@ -1092,9 +1141,25 @@ def quotation_pdf(request, pk):
     writer = PdfWriter()
 
     watermark = create_watermark()
+    terms_wave = create_terms_wave()
 
-    for page in reader.pages:
-        page.merge_page(watermark.pages[0])
+    for index, page in enumerate(reader.pages):
+
+        # Last page: add wave background
+        if index == len(reader.pages) - 1:
+
+            background = terms_wave.pages[0]
+
+            # Put existing HTML content above wave
+            background.merge_page(page)
+
+            page = background
+
+        else:
+
+            # Normal watermark
+            page.merge_page(watermark.pages[0])
+
         writer.add_page(page)
 
     output = BytesIO()
