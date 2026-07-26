@@ -755,7 +755,7 @@ def expense_report_pdf(request):
     single_date = request.GET.get("date")
 
     logo_url = request.build_absolute_uri(
-        static("img/logo.png")
+        static("img/prince.jpeg")
     )
 
     expenses = Expense.objects.filter(
