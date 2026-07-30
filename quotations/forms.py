@@ -59,6 +59,8 @@ class QuotationForm(forms.ModelForm):
 
         fields = [
             'customer',
+            'profile_type',
+            'glass_type',
             
             'project_location',
             'currency',
@@ -98,10 +100,16 @@ class QuotationForm(forms.ModelForm):
                 }
             ),
 
-            'contact_person': forms.TextInput(
+            'profile_type': forms.TextInput(
                 attrs={
                     'class': TAILWIND_INPUT,
-                    'placeholder': 'Contact Person'
+                    'placeholder': 'Profile Type'
+                }
+            ),
+            'glass_type': forms.TextInput(
+                attrs={
+                    'class': TAILWIND_INPUT,
+                    'placeholder': 'Glass Type'
                 }
             ),
 
