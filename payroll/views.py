@@ -1130,7 +1130,7 @@ def payroll_report_pdf(request):
     year = request.GET.get("year")
 
     logo_url = request.build_absolute_uri(
-        static("img/logo.png")
+        static("img/prince.jpeg")
     )
 
     payrolls = Payroll.objects.filter(
