@@ -848,18 +848,27 @@ def expense_report_pdf(request):
 
     # ================= CONTEXT =================
 
-    context = {
-        "company": company,
-        "expenses": expenses,
-        "total": total,
-        "opening_balance": opening_balance,
-        "closing_balance": closing_balance,
-        "start_date": start_date,
-        "end_date": end_date,
-        "single_date": single_date,
-        "logo_url": logo_url,
-    }
+    show_balance = False
 
+    # Show balances ONLY for single date report
+    if single_date:
+       show_balance = True
+
+    context = {
+            "company": company,
+            "expenses": expenses,
+            "total": total,
+
+            "opening_balance": opening_balance,
+            "closing_balance": closing_balance,
+
+            "show_balance": show_balance,
+
+            "start_date": start_date,
+            "end_date": end_date,
+            "single_date": single_date,
+            "logo_url": logo_url,
+        }
     html_string = render_to_string(
         "accounting/expense_report.html",
         context,

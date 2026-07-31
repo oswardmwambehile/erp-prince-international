@@ -189,8 +189,11 @@ body{
 <tr>
 
 <td>
-        <strong>OPENING BALANCE :</strong>
-        TZS {{ opening_balance|floatformat:2|intcomma }}
+    {% if show_balance %}
+    <strong>OPENING BALANCE :</strong> TZS {{ opening_balance|floatformat:2|intcomma }}
+{% endif %}
+        
+       
     </td>
 
 
@@ -279,10 +282,11 @@ TZS {{ total|floatformat:2|intcomma }}
     <td colspan="4" class="right">
         <strong>CLOSING BALANCE :</strong>
     </td>
-
+    {% if show_balance %}
     <td class="right" style="font-size:30px; font-weight:900;">
        TZS {{ closing_balance|floatformat:2|intcomma }}
     </td>
+    {% endif %}
 
     
 
