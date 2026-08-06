@@ -1,0 +1,541 @@
+{% extends 'sales/base.html' %}
+
+{% block content %}
+
+{% include 'sales/nav.html' %}
+{% include 'sales/sidebar.html' %}
+
+<div class="sm:ml-64 min-h-screen pt-20 pb-10 px-6">
+
+    <div class="w-full max-w-7xl mx-auto">
+
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+            <!-- HEADER -->
+            <div class="border-b border-gray-200 px-8 py-6">
+
+                <h1 class="text-2xl font-semibold text-gray-800">
+                    {{ page_title|default:"Create Quotation" }}
+                </h1>
+
+            </div>
+
+            <form method="POST" class="p-8">
+
+                {% csrf_token %}
+
+                {{ formset.management_form }}
+
+                <!-- ========================= -->
+                <!-- QUOTATION INFORMATION -->
+                <!-- ========================= -->
+
+                <div class="space-y-6">
+
+                    <div class="grid grid-cols-12 gap-6">
+
+                        <label class="col-span-12 md:col-span-3 font-semibold text-gray-700 pt-3">
+                            Quotation No
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.quotation_no }}
+
+                            {% if form.quotation_no.errors %}
+                            <p class="text-red-500 text-sm mt-2">
+                                {{ form.quotation_no.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-6">
+
+                        <label class="col-span-12 md:col-span-3 font-semibold text-gray-700 pt-3">
+                            Customer
+                        </label>
+
+                        <div class="col-span-12 md:col-span-9">
+
+                            {{ form.customer }}
+
+                            {% if form.customer.errors %}
+                            <p class="text-red-500 text-sm mt-2">
+                                {{ form.customer.errors.0 }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ========================= -->
+                <!-- ITEMS -->
+                <!-- ========================= -->
+
+                <div class="mt-10">
+
+                    <div class="flex justify-between items-center mb-4">
+
+                        <h2 class="text-lg font-semibold">
+                            Quotation Items
+                        </h2>
+
+                        <button
+                            type="button"
+                            id="add-row"
+                            class="bg-green-700 hover:bg-green-800 text-white px-5 py-2 rounded-lg">
+
+                            + Add Item
+
+                        </button>
+
+                    </div>
+
+                    <div class="overflow-x-auto">
+
+                        <table class="w-full border border-gray-200 rounded-lg">
+
+                            <thead class="bg-gray-100">
+
+                                <tr>
+
+                                    <th class="p-3 text-left">
+                                        Product
+                                    </th>
+
+                                    <th class="p-3 text-center w-32">
+                                        Qty
+                                    </th>
+
+                                    <th class="p-3 text-center w-44">
+                                        Unit Price
+                                    </th>
+
+                                    <th class="p-3 text-center w-44">
+                                        Total
+                                    </th>
+
+                                    <th class="p-3 text-center w-24">
+
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="quotation-items">
+
+                                {% for item in formset %}
+
+                                <tr class="item-row border-t">
+
+                                    <td class="p-2">
+
+                                        {{ item.id }}
+
+                                        {{ item.product }}
+
+                                    </td>
+
+                                    <td class="p-2">
+
+                                        {{ item.quantity }}
+
+                                    </td>
+
+                                    <td class="p-2">
+
+                                        {{ item.unit_price }}
+
+                                    </td>
+
+                                    <td class="p-2">
+
+                                        <input
+                                            type="text"
+                                            class="line-total w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-3"
+                                            readonly>
+
+                                    </td>
+
+                                    <td class="text-center">
+
+                                        <button
+                                            type="button"
+                                            class="remove-row text-red-600">
+
+                                            ✕
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                            <template id="empty-form">
+
+<tr class="item-row border-t">
+
+    <td class="p-2">
+
+        {{ formset.empty_form.product }}
+
+    </td>
+
+
+    <td class="p-2">
+
+        {{ formset.empty_form.quantity }}
+
+    </td>
+
+
+    <td class="p-2">
+
+        {{ formset.empty_form.unit_price }}
+
+    </td>
+
+
+    <td class="p-2">
+
+        <input
+            type="text"
+            class="line-total w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-3"
+            readonly>
+
+    </td>
+
+
+    <td class="text-center">
+
+        <button
+            type="button"
+            class="remove-row text-red-600">
+
+            ✕
+
+        </button>
+
+    </td>
+
+</tr>
+
+</template>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <!-- GRAND TOTAL -->
+
+                <div class="mt-8 flex justify-end">
+
+                    <div class="w-80">
+
+                        <label class="font-semibold text-gray-700">
+                            Grand Total
+                        </label>
+
+                        <input
+                            id="grand-total"
+                            readonly
+                            class="mt-2 w-full rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-xl font-bold text-green-700">
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+
+                <div class="mt-10 border-t pt-6 flex gap-4">
+
+                    <button
+                        class="px-6 py-3 bg-green-700 hover:bg-green-800 rounded-xl text-white">
+
+                        Save Quotation
+
+                    </button>
+
+                    <a
+                        href=""
+                        class="px-6 py-3 bg-red-700 hover:bg-red-800 rounded-xl text-white">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const addButton = document.getElementById("add-row");
+
+    const tableBody = document.getElementById("quotation-items");
+
+    const totalForms = document.querySelector(
+        "input[name$='TOTAL_FORMS']"
+    );
+
+
+    const emptyFormElement = document.getElementById(
+        "empty-form"
+    );
+
+
+    if (!addButton) {
+        console.error("Add button not found");
+        return;
+    }
+
+
+    if (!totalForms) {
+        console.error("Django TOTAL_FORMS not found");
+        return;
+    }
+
+
+    if (!emptyFormElement) {
+        console.error("Empty form template not found");
+        return;
+    }
+
+
+    const emptyForm = emptyFormElement.innerHTML;
+
+
+
+    // ==========================
+    // ADD NEW ITEM
+    // ==========================
+
+    addButton.addEventListener("click", function () {
+
+
+        let formIndex = parseInt(
+            totalForms.value
+        );
+
+
+        let newRow = emptyForm.replace(
+            /__prefix__/g,
+            formIndex
+        );
+
+
+        tableBody.insertAdjacentHTML(
+            "beforeend",
+            newRow
+        );
+
+
+        totalForms.value = formIndex + 1;
+
+
+        calculateTotals();
+
+
+    });
+
+
+
+    // ==========================
+    // REMOVE ITEM
+    // ==========================
+
+    document.addEventListener(
+        "click",
+        function(event){
+
+
+        if(
+            event.target.classList.contains(
+                "remove-row"
+            )
+        ){
+
+
+            let row = event.target.closest(
+                ".item-row"
+            );
+
+
+            if(row){
+
+                row.remove();
+
+                calculateTotals();
+
+            }
+
+
+        }
+
+
+    });
+
+
+
+    // ==========================
+    // AUTO CALCULATE
+    // ==========================
+
+    document.addEventListener(
+        "input",
+        function(event){
+
+
+        if(
+
+            event.target.name.includes(
+                "quantity"
+            )
+
+            ||
+
+            event.target.name.includes(
+                "unit_price"
+            )
+
+        ){
+
+            calculateTotals();
+
+        }
+
+
+    });
+
+
+
+
+    function calculateTotals(){
+
+
+        let grandTotal = 0;
+
+
+
+        document.querySelectorAll(
+            ".item-row"
+        ).forEach(function(row){
+
+
+
+            let quantityInput = row.querySelector(
+                "[name$='quantity']"
+            );
+
+
+            let priceInput = row.querySelector(
+                "[name$='unit_price']"
+            );
+
+
+
+            let totalInput = row.querySelector(
+                ".line-total"
+            );
+
+
+
+            if(
+                quantityInput &&
+                priceInput &&
+                totalInput
+            ){
+
+
+
+                let quantity = parseFloat(
+                    quantityInput.value
+                ) || 0;
+
+
+
+                let price = parseFloat(
+                    priceInput.value
+                ) || 0;
+
+
+
+                let total =
+                    quantity * price;
+
+
+
+                totalInput.value =
+                    total.toLocaleString(
+                        "en-US",
+                        {
+                            minimumFractionDigits:2,
+                            maximumFractionDigits:2
+                        }
+                    );
+
+
+
+                grandTotal += total;
+
+
+
+            }
+
+
+        });
+
+
+
+        let grandInput =
+            document.getElementById(
+                "grand-total"
+            );
+
+
+        if(grandInput){
+
+            grandInput.value =
+                grandTotal.toLocaleString(
+                    "en-US",
+                    {
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    }
+                );
+
+        }
+
+
+    }
+
+
+
+    calculateTotals();
+
+
+});
+
+</script>
+{%endblock%}

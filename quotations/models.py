@@ -360,27 +360,10 @@ class QuotationItem(models.Model):
     # =====================================================
     # ROUNDING LOGIC
     # =====================================================
-    def round_total_sqm(self, value):
+ 
+        
 
-        value = Decimal(value)
-
-        integer_part = int(value)
-
-        decimal_part = value - Decimal(integer_part)
-
-        # 3.5 -> 4
-        # 3.6 -> 4
-        # 3.9 -> 4
-        if decimal_part >= Decimal('0.5'):
-
-            return Decimal(integer_part + 1)
-
-        # 3.4 -> 3.4
-        return value.quantize(
-            Decimal('0.1'),
-            rounding=ROUND_HALF_UP
-        )
-
+    
     def save(self, *args, **kwargs):
 
         width = Decimal(self.width or 0)
@@ -389,51 +372,53 @@ class QuotationItem(models.Model):
         unit_price = Decimal(self.unit_price or 0)
 
         product_name = ""
+
         if self.product and self.product.name:
             product_name = self.product.name.strip().lower()
 
         # =========================================
         # SPECIAL RULE: ALUMINIUM TOILET DOOR
+        # & STEEL GATE
         # =========================================
-       # =========================================
-# SPECIAL RULE: ALUMINIUM TOILET DOOR & STEEL GATE
-# =========================================
-            if product_name in ["aluminium toilet door", "steel gates", "normal aluminium door", "toilet door first floor", "toilet door second floor", "toilet door ground floor","roller shatter"]:
+        if product_name in [
+            "aluminium toilet door",
+            "steel gates",
+            "normal aluminium door",
+            "toilet door first floor",
+            "toilet door second floor",
+            "toilet door ground floor",
+            "roller shatter",
+            "sensor door"
+        ]:
 
-                # IGNORE SQM COMPLETELY
-                self.sqm = Decimal(self.sqm or 0).quantize(
-                    Decimal("0.1"),
-                    rounding=ROUND_HALF_UP
+            # IGNORE SQM COMPLETELY
+            self.sqm = Decimal(self.sqm or 0)
+
+            self.total_sqm = self.sqm
+            self.total_price = unit_price
+
+        else:
+
+            # =========================================
+            # NORMAL PRODUCTS
+            # =========================================
+            if width > 0 and height > 0:
+
+                self.sqm = (
+                    (width * height) / Decimal('1000000')
                 )
 
-                self.total_sqm = self.sqm
-                self.total_price = unit_price
-
-                        
-
             else:
-                # =========================================
-                # NORMAL PRODUCTS
-                # =========================================
-                if width > 0 and height > 0:
-                    self.sqm = (
-                        (width * height) / Decimal('1000000')
-                    ).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
-                else:
-                    self.sqm = Decimal(self.sqm or 0).quantize(
-                        Decimal('0.1'),
-                        rounding=ROUND_HALF_UP
-                    )
 
-                raw_total_sqm = self.sqm * qty
+                self.sqm = Decimal(self.sqm or 0)
 
-                self.total_sqm = self.round_total_sqm(raw_total_sqm)
+            # KEEP THE ORIGINAL CALCULATION
+            self.total_sqm = self.sqm * qty
 
-                self.total_price = (
-                    self.total_sqm * unit_price
-                ).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            self.total_price = self.total_sqm * unit_price
 
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
-            if self.quotation_id:
-                self.quotation.calculate_totals()
+        if self.quotation_id:
+            self.quotation.calculate_totals()
+

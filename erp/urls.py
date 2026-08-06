@@ -28,6 +28,7 @@ urlpatterns = [
     path('expenses/', include('expenses.urls')),
     path('accounting/', include('accounting.urls')),
     path('payroll/', include('payroll.urls')),
+    path('reports/', include('reports.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

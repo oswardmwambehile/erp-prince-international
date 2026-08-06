@@ -1,0 +1,628 @@
+{% load humanize %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+
+<style>
+
+@page {
+    size: A4;
+    margin: 25px;
+}
+
+
+body {
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #333;
+
+}
+
+
+/* HEADER */
+
+.header-table {
+
+    width:100%;
+    border-bottom:2px solid #15803d;
+    padding-bottom:10px;
+
+}
+
+
+.company-name {
+
+    font-size:22px;
+    font-weight:bold;
+    color:#166534;
+
+}
+
+
+.company-info {
+
+    font-size:11px;
+    line-height:18px;
+
+}
+
+
+
+.logo {
+
+    width:90px;
+    height:auto;
+
+}
+
+
+/* TITLE */
+
+.title {
+
+    text-align:center;
+    margin-top:20px;
+
+}
+
+
+.title h1 {
+
+    font-size:24px;
+    color:#166534;
+    margin:0;
+
+}
+
+
+.title p {
+
+    margin-top:5px;
+
+}
+
+
+
+/* CUSTOMER */
+
+.info-table {
+
+    width:100%;
+    margin-top:25px;
+
+}
+
+
+.info-box {
+
+    border:1px solid #ddd;
+    padding:10px;
+
+}
+
+
+.label {
+
+    color:#666;
+    font-size:11px;
+
+}
+
+
+.value {
+
+    font-size:14px;
+    font-weight:bold;
+
+}
+
+
+
+/* ITEMS */
+
+.items {
+
+    width:100%;
+    border-collapse:collapse;
+    margin-top:25px;
+
+}
+
+
+
+.items th {
+
+    background:#166534;
+    color:white;
+    padding:8px;
+    border:1px solid #166534;
+
+}
+
+
+.items td {
+
+    padding:8px;
+    border:1px solid #ddd;
+
+}
+
+
+
+.right {
+
+    text-align:right;
+
+}
+
+
+.center {
+
+    text-align:center;
+
+}
+
+
+/* TOTAL */
+
+.total-table {
+
+    width:100%;
+    margin-top:20px;
+
+}
+
+
+.total-box {
+
+    width:300px;
+    border:1px solid #15803d;
+    background:#f0fdf4;
+    padding:15px;
+
+}
+
+
+.total-title {
+
+    font-size:12px;
+    color:#666;
+
+}
+
+
+.total-value {
+
+    font-size:22px;
+    font-weight:bold;
+    color:#166534;
+
+}
+
+
+
+/* FOOTER */
+
+.footer {
+
+    margin-top:50px;
+    text-align:center;
+    font-size:10px;
+    color:#777;
+
+}
+
+
+.signature {
+
+    margin-top:60px;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<!-- ================= HEADER ================= -->
+
+
+
+<!-- ===================== HEADER ===================== -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="border-collapse:collapse; font-family:Arial; margin-bottom:8px;">
+
+    <tr>
+
+        <!-- ================= CUSTOMER ================= -->
+        <td width="25%" valign="top">
+
+            <div style="
+                font-size:14px;
+                font-weight:bold;
+                color:#008000
+               
+            ">
+                CUSTOMER DETAILS
+            </div>
+
+            <div style="
+                font-size:10px;
+                line-height:1.45;
+            ">
+
+                <strong>CUSTOMER NAME:</strong><br>
+                {{ quotation.customer.full_name|upper }}<br>
+
+                <strong>PROJECT LOCATION:</strong><br>
+                {{ quotation.project_location|upper }}<br>
+
+                <strong>PHONE:</strong>
+                {{ quotation.customer.phone|default:"N/A"|upper }}<br>
+
+                <strong>QUOTATION NO:</strong>
+                {{ quotation.quotation_no }}<br>
+
+                <strong>DATE:</strong>
+                {{ quotation.quotation_date }}<br>
+
+                <strong>TIME:</strong>
+                {{ quotation.created_at|date:"H:i" }} EAT<br>
+
+            </div>
+
+        </td>
+
+       <td width="35%" valign="top">
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+           style="border-collapse:collapse;">
+
+        <!-- LOGO -->
+        <tr>
+            <td align="center"
+                style="padding:0; margin:0; line-height:0;">
+                <img src="{{company_logo}}"
+                     style="width:180px; height:auto;">
+            </td>
+        </tr>
+
+        <!-- QR -->
+        <tr>
+            <td align="right"
+                style="padding:0; margin:0; line-height:0;">
+                <img src="{{company_logos}}"
+                     style="width:75px; height:75px;">
+            </td>
+        </tr>
+
+    </table>
+
+</td>
+        <!-- ================= COMPANY ================= -->
+        <td width="40%" valign="top" align="left">
+
+            <div style="
+                font-size:14px;
+                font-weight:bold;
+                color: #008000;
+            ">
+                PRINCE INTERNATIONAL
+            </div>
+
+            <div style="
+                font-size:12px;
+                line-height:1.45;
+                margin-top:1px;
+            ">
+
+                <strong>P.O.Box 14491</strong><br>
+
+                Coca-Cola Road,
+
+                Mikocheni Light Industrial Area,
+
+                Opp Tumaini University,<br>
+
+                Kinondoni, Dar es Salaam<br>
+
+                <strong>Mobile:</strong>
+                +255 703 210 000<br>
+
+                Foshan Guangdong <br>
+                China Branch 
+                +86 198 2030 3848<br>
+
+                <strong>Email:</strong>
+                info@princeinternational.co.tz<br>
+
+                <strong>Web:</strong>
+                www.princeinternational.co.tz<br>
+
+                <strong>TIN:</strong>
+                119-708-125<br>
+
+                
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+<!-- GREEN LINE -->
+<table width="100%" cellpadding="0" cellspacing="0"
+       style="border-collapse:collapse; margin-top:4px;">
+    <tr>
+        <td style="height:4px; background:#18a558;"></td>
+    </tr>
+</table>
+
+
+
+
+<div style="
+    font-family:'Times New Roman', serif;
+    color:#111;
+    padding:12px;
+    margin-bottom:12px;
+    font-style:italic;
+">
+
+   <!-- TITLE -->
+
+<div style="
+    text-align:center;
+    font-size:22px;
+    font-weight:900;
+    color:#000;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin:0;
+    padding:0;
+    line-height:1;
+">
+    CIVIL & BUILDING CONTRACTOR
+</div>
+
+<!-- DESCRIPTION -->
+<div style="
+    font-size:14px;
+    line-height:1.2;
+    text-align:justify;
+    text-align-last:center;
+    max-width:900px;
+    margin:0;
+    padding:0 8px;
+">
+    Supply & installation of
+    Aluminium, uPVC & Glass Works . Skimming & Paintings. Prefabs & Carpentry.
+    Elavator & Escalators. Welding. Solar Energy & Electrical Works. Plumbing.
+    Roofing & Ceilings,Dry wall & Tiles .
+</div>
+
+    
+
+</div>
+<!-- GREEN LINE -->
+<table width="100%" cellpadding="0" cellspacing="0"
+       style="border-collapse:collapse; margin-top:4px;">
+    <tr>
+        <td style="height:4px; background:#18a558;"></td>
+    </tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+<!-- ITEMS -->
+
+
+<table class="items">
+
+
+<thead>
+
+
+<tr>
+
+
+<th width="8%">
+
+#
+
+</th>
+
+
+<th>
+
+DESCRIPTION
+
+</th>
+
+
+<th width="15%">
+
+QTY
+
+</th>
+
+
+<th width="20%">
+
+UNIT PRICE
+
+</th>
+
+
+<th width="20%">
+
+TOTAL
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody>
+
+
+{% for item in items %}
+
+
+<tr>
+
+
+<td class="center">
+
+{{ forloop.counter }}
+
+</td>
+
+
+
+<td>
+
+{{ item.product }}
+
+</td>
+
+
+
+<td class="center">
+
+{{ item.quantity }}
+
+</td>
+
+
+
+<td class="right">
+
+{{ item.unit_price|floatformat:2|intcomma }}
+
+</td>
+
+
+
+<td class="right">
+
+{{ item.total_price|floatformat:2|intcomma }}
+
+</td>
+
+
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+
+
+
+<!-- TOTAL -->
+
+
+<table class="total-table">
+
+
+<tr>
+
+
+<td>
+
+
+</td>
+
+
+<td width="300">
+
+
+<div class="total-box">
+
+
+<div class="total-title">
+
+GRAND TOTAL
+
+</div>
+
+
+<div class="total-value">
+
+
+{{ quotation.total_amount|floatformat:2|intcomma }}
+
+ TZS
+
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+</tr>
+
+
+</table>
+
+
+
+
+
+<!-- SIGNATURE -->
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

@@ -114,14 +114,7 @@
                                 {{ form.item_code }}
                             </div>
 
-                            <!-- METHOD -->
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-500 mb-1">
-                                    Methodology
-                                </label>
-                                {{ form.methodology }}
-                            </div>
-
+                            
                             <!-- PROFILE -->
                             <div>
                                 <label class="block text-xs font-semibold text-gray-500 mb-1">
@@ -276,12 +269,7 @@
                 {{ item_formset.empty_form.item_code }}
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">
-                    Methodology
-                </label>
-                {{ item_formset.empty_form.methodology }}
-            </div>
+           
 
             <div>
                 <label class="block text-xs font-semibold text-gray-500 mb-1">
@@ -371,13 +359,49 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const container = document.getElementById("items-container");
-
     const totalFormsInput = document.getElementById("id_items-TOTAL_FORMS");
 
     let formIndex = parseInt(totalFormsInput.value);
 
+
     // =====================================
-    // ROUND TOTAL SQM ONLY
+    // AUTO ITEM CODE (A01, A02, A03...)
+    // =====================================
+    function updateItemCodes() {
+
+        let visibleIndex = 1;
+
+        document.querySelectorAll(".item-form").forEach(function(row){
+
+            // ignore deleted/hidden rows
+            if(row.style.display === "none"){
+                return;
+            }
+
+
+            const itemCodeInput = row.querySelector(
+                "input[name$='-item_code']"
+            );
+
+
+            if(itemCodeInput){
+
+                itemCodeInput.value =
+                    "A" + String(visibleIndex).padStart(2, "0");
+
+            }
+
+
+            visibleIndex++;
+
+        });
+
+    }
+
+
+
+    // =====================================
+    // ROUND TOTAL SQM
     // =====================================
     function roundTotalSQM(value) {
 
@@ -387,194 +411,264 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let decimalPart = value - integerPart;
 
-        // 3.5 => 4
-        // 3.6 => 4
-        if (decimalPart >= 0.5) {
+
+        if(decimalPart >= 0.5){
+
             return integerPart + 1;
+
         }
 
-        // 3.2 => 3.2
+
         return parseFloat(value.toFixed(1));
+
     }
+
+
 
     // =====================================
     // CALCULATE ROW
     // =====================================
-    function calculateRow(row) {
+    function calculateRow(row){
 
-        // INPUTS
-        const widthInput = row.querySelector("input[name$='-width']");
-        const heightInput = row.querySelector("input[name$='-height']");
-        const qtyInput = row.querySelector("input[name$='-quantity']");
-        const sqmInput = row.querySelector("input[name$='-sqm']");
-        const totalSQMInput = row.querySelector("input[name$='-total_sqm']");
-        const unitPriceInput = row.querySelector("input[name$='-unit_price']");
-        const totalPriceInput = row.querySelector("input[name$='-total_price']");
 
-        // VALUES
+        const widthInput = row.querySelector(
+            "input[name$='-width']"
+        );
+
+        const heightInput = row.querySelector(
+            "input[name$='-height']"
+        );
+
+        const qtyInput = row.querySelector(
+            "input[name$='-quantity']"
+        );
+
+        const sqmInput = row.querySelector(
+            "input[name$='-sqm']"
+        );
+
+        const totalSQMInput = row.querySelector(
+            "input[name$='-total_sqm']"
+        );
+
+        const unitPriceInput = row.querySelector(
+            "input[name$='-unit_price']"
+        );
+
+        const totalPriceInput = row.querySelector(
+            "input[name$='-total_price']"
+        );
+
+
         let width = parseFloat(widthInput?.value) || 0;
+
         let height = parseFloat(heightInput?.value) || 0;
 
-        // DEFAULT QTY = 1
         let qty = parseFloat(qtyInput?.value) || 1;
 
         let unitPrice = parseFloat(unitPriceInput?.value) || 0;
 
-        // =====================================
-        // SQM = WIDTH × HEIGHT / 1000000
-        // =====================================
+
+
+        // SQM
         let sqm = (width * height) / 1000000;
 
         sqm = parseFloat(sqm.toFixed(1));
 
-        // AUTO FILL SQM
-        if (sqmInput) {
+
+        if(sqmInput){
 
             sqmInput.value = sqm;
 
         }
 
-        // =====================================
-        // TOTAL SQM = SQM × QTY
-        // =====================================
+
+
+        // TOTAL SQM
         let totalSQM = sqm * qty;
 
         totalSQM = roundTotalSQM(totalSQM);
 
-        // AUTO FILL TOTAL SQM
-        if (totalSQMInput) {
+
+        if(totalSQMInput){
 
             totalSQMInput.value = totalSQM;
 
         }
 
-        // =====================================
-        // TOTAL PRICE = TOTAL SQM × UNIT PRICE
-        // =====================================
+
+
+        // TOTAL PRICE
         let totalPrice = totalSQM * unitPrice;
 
-        // AUTO FILL TOTAL PRICE
-        if (totalPriceInput) {
 
-            totalPriceInput.value = totalPrice.toFixed(2);
+        if(totalPriceInput){
+
+            totalPriceInput.value =
+                totalPrice.toFixed(2);
 
         }
+
 
     }
 
+
+
     // =====================================
-    // BIND EVENTS
+    // BIND INPUT EVENTS
     // =====================================
-    function bindEvents(row) {
+    function bindEvents(row){
 
-        const widthInput = row.querySelector("input[name$='-width']");
-        const heightInput = row.querySelector("input[name$='-height']");
-        const qtyInput = row.querySelector("input[name$='-quantity']");
-        const unitPriceInput = row.querySelector("input[name$='-unit_price']");
 
-        // WIDTH
-        if (widthInput) {
+        const inputs = row.querySelectorAll(
+            "input[name$='-width'], " +
+            "input[name$='-height'], " +
+            "input[name$='-quantity'], " +
+            "input[name$='-unit_price']"
+        );
 
-            widthInput.addEventListener("input", function () {
 
-                calculateRow(row);
+        inputs.forEach(function(input){
 
-            });
 
-        }
+            input.addEventListener(
+                "input",
+                function(){
 
-        // HEIGHT
-        if (heightInput) {
+                    calculateRow(row);
 
-            heightInput.addEventListener("input", function () {
+                }
+            );
 
-                calculateRow(row);
 
-            });
+        });
 
-        }
 
-        // QUANTITY
-        if (qtyInput) {
-
-            qtyInput.addEventListener("input", function () {
-
-                calculateRow(row);
-
-            });
-
-        }
-
-        // UNIT PRICE
-        if (unitPriceInput) {
-
-            unitPriceInput.addEventListener("input", function () {
-
-                calculateRow(row);
-
-            });
-
-        }
-
-        // INITIAL CALCULATION
         calculateRow(row);
 
     }
 
+
+
+
     // =====================================
-    // EXISTING ROWS
+    // EXISTING ITEMS
     // =====================================
-    document.querySelectorAll(".item-form").forEach(function (row) {
+    document.querySelectorAll(".item-form")
+    .forEach(function(row){
 
         bindEvents(row);
 
     });
 
+
+    updateItemCodes();
+
+
+
+
     // =====================================
     // ADD ITEM
     // =====================================
-    window.addItem = function () {
+    window.addItem = function(){
 
-        let template = document.getElementById("empty-form").innerHTML;
 
-        template = template.replace(/__prefix__/g, formIndex);
+        let template =
+            document.getElementById("empty-form").innerHTML;
 
-        container.insertAdjacentHTML("beforeend", template);
 
-        const newRow = container.lastElementChild;
+
+        template = template.replace(
+            /__prefix__/g,
+            formIndex
+        );
+
+
+
+        container.insertAdjacentHTML(
+            "beforeend",
+            template
+        );
+
+
+
+        const newRow =
+            container.lastElementChild;
+
+
 
         bindEvents(newRow);
 
+
+
         formIndex++;
+
 
         totalFormsInput.value = formIndex;
 
+
+
+        updateItemCodes();
+
+
     };
+
+
+
+
 
     // =====================================
     // REMOVE ITEM
     // =====================================
-    window.removeItem = function (button) {
+    window.removeItem = function(button){
 
-        const row = button.closest(".item-form");
 
-        const deleteInput = row.querySelector(
-            "input[type='checkbox'][name$='-DELETE']"
-        );
+        const row =
+            button.closest(".item-form");
 
-        if (deleteInput) {
 
+
+        const deleteInput =
+            row.querySelector(
+                "input[type='checkbox'][name$='-DELETE']"
+            );
+
+
+
+        if(deleteInput){
+
+
+            // EXISTING DATABASE ITEM
+            // mark for deletion
             deleteInput.checked = true;
+
 
             row.style.display = "none";
 
-        } else {
 
+        }else{
+
+
+            // NEW UNSAVED ITEM
             row.remove();
+
+
+            formIndex--;
+
+
+            totalFormsInput.value =
+                formIndex;
+
 
         }
 
+
+
+        updateItemCodes();
+
+
     };
+
 
 });
 </script>

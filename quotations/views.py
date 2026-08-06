@@ -109,8 +109,6 @@ def create_quotation(request):
     })
 
 
-
-@login_required(login_url='login')
 @login_required(login_url='login')
 def sales_create_quotation(request):
 
@@ -140,7 +138,7 @@ def sales_create_quotation(request):
         prefix="items"
     )
 
-    print(request.POST)  # DEBUG
+    print(request.POST)
 
     # -----------------------------------
     # VALIDATE FORMS
@@ -161,26 +159,12 @@ def sales_create_quotation(request):
             item.cts = item.cts or 0
             item.sqm = item.sqm or 0
 
-            # normalize product name safely
-            product_name = ""
-            if item.product and getattr(item.product, "name", None):
-                product_name = item.product.name.strip().lower()
-
-            # -----------------------------------
-            # SPECIAL RULE: ALUMINIUM TOILET DOOR
-            # -----------------------------------
-            if product_name == "Aluminium Toilet Door":
-                # DO NOT USE sqm CALCULATION
-                item.total_sqm = item.sqm  # or set 1 if you want fixed unit logic
-                item.total_price = item.unit_price
-
-            else:
-                # NORMAL CALCULATION
-                item.total_sqm = item.sqm * item.cts
-                item.total_price = item.total_sqm * item.unit_price
-
             # attach quotation
             item.quotation = quotation
+
+            # IMPORTANT:
+            # item.save() calls QuotationItem.save()
+            # where SQM and total_sqm are calculated.
             item.save()
 
         # handle deleted items
@@ -191,7 +175,11 @@ def sales_create_quotation(request):
             quotation.calculate_totals()
 
         messages.success(request, "Quotation created successfully")
-        return redirect("quotations:sales_quotation_detail", pk=quotation.pk)
+
+        return redirect(
+            "quotations:sales_quotation_detail",
+            pk=quotation.pk
+        )
 
     # -----------------------------------
     # ERRORS
@@ -206,6 +194,8 @@ def sales_create_quotation(request):
         "item_formset": item_formset,
         "is_update": False,
     })
+
+
 
 from decimal import Decimal
 from collections import defaultdict
